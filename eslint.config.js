@@ -15,6 +15,7 @@ export default defineConfig([
   {
     rules: {
       'react/react-in-jsx-scope': 'off', // Deactivate for React 17+
+      'react/prop-types': 'off', // Disable prop-types validation for TypeScript
     },
   },
 ]);

@@ -41,7 +41,7 @@ const NavBar: React.FC<NavBarProps> = ({ toggleTheme }) => {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Toolbar disableGutters>
           {/* Logo / Title for larger screens */}
           <OfflineBoltIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
