@@ -1,7 +1,8 @@
 import { Box, Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
 import { EnergyType } from '../types/EnergyTypes';
-import { TechnologyType } from '../types/TechnologyTypes';
+import { TechnologyType, TechnologyTypes } from '../types/TechnologyTypes';
 import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
+import EnergyIcon from './EnergyIcon';
 
 // TODO: Add conditions (for systemPoints)
 interface ProgressCardProps {
@@ -10,7 +11,7 @@ interface ProgressCardProps {
   text: string;
   explanation: string;
   basePoints?: number;
-  systemPoints: number;
+  systemPoints?: number;
   price: number;
   resources: number;
   type: EnergyCharacteristics;
@@ -31,8 +32,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
   return (
     <Card sx={{ width: 225, height: 400, position: 'relative', padding: 0 }}>
       <Box sx={{ position: 'absolute', top: 2, left: 2 }}>
-        {/* TODO: Add icon here */}
-        {type.technology}
+        <EnergyIcon {...type} />
       </Box>
       <Box sx={{ position: 'absolute', top: 60, left: 2 }}>
         {/* TODO: Add price and resources here */}
@@ -53,7 +53,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
       <CardContent sx={{ padding: 0 }}>
         <Box
           sx={{
-            backgroundColor: 'primary.main',
+            backgroundColor: TechnologyTypes[type.technology].color,
             padding: 0.5,
             textAlign: 'center',
             marginTop: 1,
@@ -64,7 +64,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
             {title}
           </Typography>
         </Box>
-        <Typography variant="body2" sx={{ marginLeft: 0.5, marginRight: 0.5 }}>
+        <Typography variant="body2" sx={{ marginLeft: 0.5, marginRight: 0.5, lineHeight: 1 }}>
           {text}
         </Typography>
 
@@ -75,7 +75,8 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
           sx={{
             position: 'absolute',
             top: 330,
-            fontSize: '0.8rem',
+            fontSize: '0.7rem',
+            lineHeight: 1,
             marginTop: 1,
             marginLeft: 0.5,
             marginRight: 0.5,

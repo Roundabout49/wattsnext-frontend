@@ -4,6 +4,7 @@ import About from './pages/About';
 import NavBar from './components/NavBar';
 import Play from './pages/Play';
 import Rules from './pages/Rules';
+import { Box } from '@mui/material';
 
 interface AppProps {
   toggleTheme: () => void;
@@ -13,12 +14,14 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
   return (
     <div>
       <NavBar toggleTheme={toggleTheme} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/play" element={<Play />} />
-        <Route path="/rules" element={<Rules />} />
-      </Routes>
+      <Box sx={{ padding: 2 }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/play" element={<Play />} />
+          <Route path="/rules" element={<Rules />} />
+        </Routes>
+      </Box>
     </div>
   );
 };
