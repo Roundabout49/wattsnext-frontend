@@ -27,14 +27,12 @@ export type Shape = keyof typeof shapes;
 
 const EnergyIcon: React.FC<EnergyCharacteristics> = ({ technology, energy, size }) => {
   const { color, shape } = TechnologyTypes[technology];
-  const validShape = shape ? shape : 'circle'; // TODO: better solution for ClimateAction
-  const validEnergy = energy ? energy : 'Electricity'; // TODO: better solution for ClimateAction
-  const IconComponent = EnergyTypes[validEnergy].icon;
+  const IconComponent = EnergyTypes[energy].icon;
 
   return (
     <Box position="relative" width={50} height={50} display="inline-block">
       <SvgIcon component="svg" viewBox="0 0 100 100" sx={{ fontSize: 60, color }}>
-        {shapes[validShape]}
+        {shapes[shape]}
       </SvgIcon>
       <Box position="absolute" top="65%" left="42%" sx={{ transform: 'translate(-50%, -50%)' }}>
         <IconComponent fontSize="large" />

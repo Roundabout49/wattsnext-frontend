@@ -3,6 +3,6 @@ import { TechnologyType } from './TechnologyTypes';
 
 export interface EnergyCharacteristics {
   technology: TechnologyType;
-  energy?: EnergyType;
-  size?: number;
+  energy: EnergyType;
+  size: number;
 }

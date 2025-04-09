@@ -1,26 +1,39 @@
 import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
 import { Box, CardMedia } from '@mui/material';
 import EnergyIcon from './EnergyIcon';
+import { Icon } from '../types/ProgressCards';
 
 interface ProgressCardTopProps {
   title: string;
   image: string;
   price: number;
   resources: number;
-  type: EnergyCharacteristics;
+  type: 'technology' | 'climateAction';
 }
 
-const ProgressCardTop: React.FC<ProgressCardTopProps> = ({
-  title,
-  image,
-  price,
-  resources,
-  type,
+interface TechnologyCardTopProps extends ProgressCardTopProps {
+  type: 'technology';
+  energyCharacteristics: EnergyCharacteristics;
+}
+
+interface ClimateActionCardTopProps extends ProgressCardTopProps {
+  type: 'climateAction';
+  icon?: Icon;
+}
+
+const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCardTopProps }> = ({
+  card,
 }) => {
+  const IconComponent = card.type === 'climateAction' ? (card.icon ? card.icon : null) : null;
+
   return (
     <div style={{ width: 225, height: 150, position: 'relative', padding: 0 }}>
       <Box sx={{ position: 'absolute', top: 2, left: 2 }}>
-        <EnergyIcon {...type} />
+        {card.type === 'technology' ? (
+          <EnergyIcon {...card.energyCharacteristics} />
+        ) : (
+          IconComponent && <IconComponent />
+        )}
       </Box>
       <Box
         sx={{
@@ -30,7 +43,7 @@ const ProgressCardTop: React.FC<ProgressCardTopProps> = ({
           width: 35,
           height: 35,
           borderRadius: '50%',
-          backgroundColor: 'gold',
+          backgroundColor: 'brown',
           color: 'black',
           display: 'flex',
           alignItems: 'center',
@@ -40,7 +53,7 @@ const ProgressCardTop: React.FC<ProgressCardTopProps> = ({
           border: '2px solid black',
         }}
       >
-        {price}
+        {card.price}
       </Box>
       <Box
         sx={{
@@ -59,13 +72,13 @@ const ProgressCardTop: React.FC<ProgressCardTopProps> = ({
           border: '2px solid black',
         }}
       >
-        {resources}
+        {card.resources}
       </Box>
       <CardMedia
         component="img"
         sx={{ width: 150, height: 150, marginTop: 1, marginRight: 1, marginLeft: 'auto' }}
-        image={image}
-        alt={title}
+        image={card.image}
+        alt={card.title}
       />
     </div>
   );

@@ -1,20 +1,12 @@
 import React from 'react';
-import { ProgressCardProps } from './ProgressCard';
 import { Card, CardContent, Typography, Box, Popover } from '@mui/material';
 import { TechnologyTypes } from '../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
 import ProgressCard from './ProgressCard';
+import { ClimateActionCardProps, TechnologyCardProps } from '../types/ProgressCards';
 
-const ProgressCardSmall: React.FC<ProgressCardProps> = ({
-  title,
-  image,
-  text,
-  explanation,
-  basePoints,
-  systemPoints,
-  price,
-  resources,
-  type,
+const ProgressCardSmall: React.FC<{ card: TechnologyCardProps | ClimateActionCardProps }> = ({
+  card,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
@@ -27,6 +19,11 @@ const ProgressCardSmall: React.FC<ProgressCardProps> = ({
   };
 
   const open = Boolean(anchorEl);
+
+  const color =
+    card.type === 'technology'
+      ? TechnologyTypes[card.energyCharacteristics.technology].color
+      : 'green';
   return (
     <div>
       <Card
@@ -43,18 +40,34 @@ const ProgressCardSmall: React.FC<ProgressCardProps> = ({
             left: 0,
           }}
         >
-          <ProgressCardTop
-            title={title}
-            image={image}
-            price={price}
-            resources={resources}
-            type={type}
-          ></ProgressCardTop>
+          {card.type === 'technology' ? (
+            <ProgressCardTop
+              card={{
+                title: card.title,
+                image: card.image,
+                price: card.price,
+                resources: card.resources,
+                type: card.type,
+                energyCharacteristics: card.energyCharacteristics,
+              }}
+            ></ProgressCardTop>
+          ) : (
+            <ProgressCardTop
+              card={{
+                title: card.title,
+                image: card.image,
+                price: card.price,
+                resources: card.resources,
+                type: card.type,
+                icon: card.icon,
+              }}
+            ></ProgressCardTop>
+          )}
         </Box>
         <CardContent sx={{ padding: 0 }}>
           <Box
             sx={{
-              backgroundColor: TechnologyTypes[type.technology].color,
+              backgroundColor: color,
               padding: 0.5,
               textAlign: 'center',
               marginTop: 1,
@@ -70,7 +83,7 @@ const ProgressCardSmall: React.FC<ProgressCardProps> = ({
             }}
           >
             <Typography variant="h6" sx={{ fontSize: '0.7rem', lineHeight: 1 }}>
-              {title}
+              {card.title}
             </Typography>
           </Box>
           <Typography
@@ -85,7 +98,7 @@ const ProgressCardSmall: React.FC<ProgressCardProps> = ({
               left: 0,
             }}
           >
-            {text}
+            {card.text}
           </Typography>
         </CardContent>
       </Card>
@@ -105,17 +118,7 @@ const ProgressCardSmall: React.FC<ProgressCardProps> = ({
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <ProgressCard
-          title={title}
-          image={image}
-          text={text}
-          explanation={explanation}
-          basePoints={basePoints}
-          systemPoints={systemPoints}
-          price={price}
-          resources={resources}
-          type={type}
-        />
+        <ProgressCard card={card}></ProgressCard>
       </Popover>
     </div>
   );

@@ -1,49 +1,46 @@
-import { Box, Card, CardContent, CardMedia, Divider, Typography } from '@mui/material';
-import { EnergyType } from '../types/EnergyTypes';
-import { TechnologyType, TechnologyTypes } from '../types/TechnologyTypes';
-import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
-import EnergyIcon from './EnergyIcon';
+import { Box, Card, CardContent, Divider, Typography } from '@mui/material';
+import { TechnologyTypes } from '../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
+import { ClimateActionCardProps, TechnologyCardProps } from '../types/ProgressCards';
 
-// TODO: Add conditions (for systemPoints)
-export interface ProgressCardProps {
-  title: string;
-  image: string;
-  text: string;
-  explanation: string;
-  basePoints?: number;
-  systemPoints?: number;
-  price: number;
-  resources: number;
-  type: EnergyCharacteristics;
-}
-
-// TODO: Climate Actions
-const ProgressCard: React.FC<ProgressCardProps> = ({
-  title,
-  image,
-  text,
-  explanation,
-  basePoints,
-  systemPoints,
-  price,
-  resources,
-  type,
+const ProgressCard: React.FC<{ card: TechnologyCardProps | ClimateActionCardProps }> = ({
+  card,
 }) => {
+  const color =
+    card.type === 'technology'
+      ? TechnologyTypes[card.energyCharacteristics.technology].color
+      : 'green';
+
   return (
     <Card sx={{ width: 225, height: 400, position: 'relative', padding: 0 }}>
-      <ProgressCardTop
-        title={title}
-        image={image}
-        price={price}
-        resources={resources}
-        type={type}
-      ></ProgressCardTop>
+      {card.type === 'technology' ? (
+        <ProgressCardTop
+          card={{
+            title: card.title,
+            image: card.image,
+            price: card.price,
+            resources: card.resources,
+            type: card.type,
+            energyCharacteristics: card.energyCharacteristics,
+          }}
+        ></ProgressCardTop>
+      ) : (
+        <ProgressCardTop
+          card={{
+            title: card.title,
+            image: card.image,
+            price: card.price,
+            resources: card.resources,
+            type: card.type,
+            icon: card.icon,
+          }}
+        ></ProgressCardTop>
+      )}
 
       <CardContent sx={{ padding: 0 }}>
         <Box
           sx={{
-            backgroundColor: TechnologyTypes[type.technology].color,
+            backgroundColor: color,
             padding: 0.5,
             textAlign: 'center',
             marginTop: 1,
@@ -51,11 +48,11 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
           }}
         >
           <Typography variant="h6" sx={{ fontSize: '1rem' }}>
-            {title}
+            {card.title}
           </Typography>
         </Box>
         <Typography variant="body2" sx={{ marginLeft: 1, marginRight: 1, lineHeight: 1 }}>
-          {text}
+          {card.text}
         </Typography>
 
         <Divider sx={{ position: 'absolute', top: 330, left: 0, right: 0 }} />
@@ -72,7 +69,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
             marginRight: 1,
           }}
         >
-          {explanation}
+          {card.explanation}
         </Typography>
       </CardContent>
     </Card>
