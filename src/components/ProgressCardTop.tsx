@@ -22,12 +22,43 @@ const ProgressCardTop: React.FC<ProgressCardTopProps> = ({
       <Box sx={{ position: 'absolute', top: 2, left: 2 }}>
         <EnergyIcon {...type} />
       </Box>
-      <Box sx={{ position: 'absolute', top: 60, left: 2 }}>
-        {/* TODO: Add price and resources here */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 70,
+          left: 12.5,
+          width: 35,
+          height: 35,
+          borderRadius: '50%',
+          backgroundColor: 'gold',
+          color: 'black',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: 'bold',
+          fontSize: '1rem',
+          border: '2px solid black',
+        }}
+      >
         {price}
       </Box>
-      <Box sx={{ position: 'absolute', top: 100, left: 2 }}>
-        {/* TODO: Add price and resources here */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 115,
+          left: 15,
+          width: 30,
+          height: 30,
+          backgroundColor: 'lightgray',
+          color: 'black',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: 'bold',
+          fontSize: '1rem',
+          border: '2px solid black',
+        }}
+      >
         {resources}
       </Box>
       <CardMedia
