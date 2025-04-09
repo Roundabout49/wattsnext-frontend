@@ -4,7 +4,7 @@ import { TechnologyTypes } from '../types/TechnologyTypes';
 import { EnergyTypes } from '../types/EnergyTypes';
 
 const shapes = {
-  circle: <circle cx="50" cy="50" r="43" fill="currentColor" stroke="black" strokeWidth="3" />,
+  circle: <circle cx="50" cy="50" r="42" fill="currentColor" stroke="black" strokeWidth="3" />,
   star: (
     <polygon
       points="92.74,50.0 78.93,34.42 75.36,13.91 54.57,15.0 36.32,5.0 24.2,21.93 5.0,29.97 10.69,50.0 5.0,70.03 24.2,78.07 36.32,95.0 54.57,85.0 75.36,86.09 78.93,65.58"

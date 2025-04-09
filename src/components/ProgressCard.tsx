@@ -3,9 +3,10 @@ import { EnergyType } from '../types/EnergyTypes';
 import { TechnologyType, TechnologyTypes } from '../types/TechnologyTypes';
 import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
 import EnergyIcon from './EnergyIcon';
+import ProgressCardTop from './ProgressCardTop';
 
 // TODO: Add conditions (for systemPoints)
-interface ProgressCardProps {
+export interface ProgressCardProps {
   title: string;
   image: string;
   text: string;
@@ -31,24 +32,13 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
 }) => {
   return (
     <Card sx={{ width: 225, height: 400, position: 'relative', padding: 0 }}>
-      <Box sx={{ position: 'absolute', top: 2, left: 2 }}>
-        <EnergyIcon {...type} />
-      </Box>
-      <Box sx={{ position: 'absolute', top: 60, left: 2 }}>
-        {/* TODO: Add price and resources here */}
-        {price}
-      </Box>
-      <Box sx={{ position: 'absolute', top: 100, left: 2 }}>
-        {/* TODO: Add price and resources here */}
-        {resources}
-      </Box>
-
-      <CardMedia
-        component="img"
-        sx={{ width: 150, height: 150, marginTop: 1, marginRight: 1, marginLeft: 'auto' }}
+      <ProgressCardTop
+        title={title}
         image={image}
-        alt={title}
-      />
+        price={price}
+        resources={resources}
+        type={type}
+      ></ProgressCardTop>
 
       <CardContent sx={{ padding: 0 }}>
         <Box
@@ -64,7 +54,7 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
             {title}
           </Typography>
         </Box>
-        <Typography variant="body2" sx={{ marginLeft: 0.5, marginRight: 0.5, lineHeight: 1 }}>
+        <Typography variant="body2" sx={{ marginLeft: 1, marginRight: 1, lineHeight: 1 }}>
           {text}
         </Typography>
 
@@ -78,8 +68,8 @@ const ProgressCard: React.FC<ProgressCardProps> = ({
             fontSize: '0.7rem',
             lineHeight: 1,
             marginTop: 1,
-            marginLeft: 0.5,
-            marginRight: 0.5,
+            marginLeft: 1,
+            marginRight: 1,
           }}
         >
           {explanation}
