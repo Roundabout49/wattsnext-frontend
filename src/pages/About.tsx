@@ -1,4 +1,4 @@
-import ProgressCard from '../components/ProgressCard';
+import ProgressCardLarge from '../components/ProgressCardLarge';
 import ProgressCardSmall from '../components/ProgressCardSmall';
 
 export default function About() {
@@ -21,7 +21,7 @@ export default function About() {
         ></ProgressCardSmall>
       </div>
       <div style={{ display: 'flex', gap: '20px' }}>
-        <ProgressCard
+        <ProgressCardLarge
           card={{
             title: 'Photovoltaik auf dem Dach',
             image: '/images/photovoltaik.png',
@@ -34,8 +34,8 @@ export default function About() {
             energyCharacteristics: { technology: 'Generation', energy: 'Electricity', size: 1 },
             type: 'technology',
           }}
-        ></ProgressCard>
-        <ProgressCard
+        ></ProgressCardLarge>
+        <ProgressCardLarge
           card={{
             title: 'Fernwärmenetz',
             image: '/images/fernwaerme.png',
@@ -47,8 +47,8 @@ export default function About() {
             energyCharacteristics: { technology: 'Distribution', energy: 'Heat', size: 2 },
             type: 'technology',
           }}
-        ></ProgressCard>
-        <ProgressCard
+        ></ProgressCardLarge>
+        <ProgressCardLarge
           card={{
             title: 'Großer Wasserstoffspeicher',
             image: '/images/wasserstoffspeicher.png',
@@ -59,7 +59,7 @@ export default function About() {
             energyCharacteristics: { technology: 'Storage', energy: 'Electricity', size: 4 },
             type: 'technology',
           }}
-        ></ProgressCard>
+        ></ProgressCardLarge>
       </div>
       <div style={{ display: 'flex', gap: '20px' }}>
         <ProgressCardSmall

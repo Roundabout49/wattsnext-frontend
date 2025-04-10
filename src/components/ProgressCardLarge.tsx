@@ -1,11 +1,9 @@
 import { Box, Card, CardContent, Divider, Typography } from '@mui/material';
 import { TechnologyTypes } from '../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
-import { ClimateActionCardProps, TechnologyCardProps } from '../types/ProgressCards';
+import { ProgressCardProps } from '../types/ProgressCards';
 
-const ProgressCard: React.FC<{ card: TechnologyCardProps | ClimateActionCardProps }> = ({
-  card,
-}) => {
+const ProgressCardLarge: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
   const color =
     card.type === 'technology'
       ? TechnologyTypes[card.energyCharacteristics.technology].color
@@ -76,4 +74,4 @@ const ProgressCard: React.FC<{ card: TechnologyCardProps | ClimateActionCardProp
   );
 };
 
-export default ProgressCard;
+export default ProgressCardLarge;

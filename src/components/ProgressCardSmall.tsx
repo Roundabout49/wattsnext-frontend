@@ -2,12 +2,10 @@ import React from 'react';
 import { Card, CardContent, Typography, Box, Popover } from '@mui/material';
 import { TechnologyTypes } from '../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
-import ProgressCard from './ProgressCard';
-import { ClimateActionCardProps, TechnologyCardProps } from '../types/ProgressCards';
+import ProgressCardLarge from './ProgressCardLarge';
+import { ProgressCardProps } from '../types/ProgressCards';
 
-const ProgressCardSmall: React.FC<{ card: TechnologyCardProps | ClimateActionCardProps }> = ({
-  card,
-}) => {
+const ProgressCardSmall: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -118,7 +116,7 @@ const ProgressCardSmall: React.FC<{ card: TechnologyCardProps | ClimateActionCar
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <ProgressCard card={card}></ProgressCard>
+        <ProgressCardLarge card={card}></ProgressCardLarge>
       </Popover>
     </div>
   );
