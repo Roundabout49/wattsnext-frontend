@@ -2,6 +2,7 @@ import { Box, Card, CardContent, Divider, Typography } from '@mui/material';
 import { TechnologyTypes } from '../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
 import { ProgressCardProps } from '../types/ProgressCards';
+import CardPoints from './CardPoints';
 
 const ProgressCardLarge: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
   const color =
@@ -52,6 +53,10 @@ const ProgressCardLarge: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
         <Typography variant="body2" sx={{ marginLeft: 1, marginRight: 1, lineHeight: 1 }}>
           {card.text}
         </Typography>
+
+        <Box sx={{ position: 'absolute', top: 280, left: 0, right: 0 }}>
+          {card.points && <CardPoints points={card.points} />}
+        </Box>
 
         <Divider sx={{ position: 'absolute', top: 330, left: 0, right: 0 }} />
         <Typography

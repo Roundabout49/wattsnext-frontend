@@ -9,15 +9,18 @@ export const climateActionCards: ClimateActionCardProps[] = [
       'Das von Kraftwerken ausgestoßene CO2 wird herausgefiltert. Dieses abgeschiedene CO2 kann als Rohstoff z.B. in der Chemie-Industrie dienen.',
     price: 2,
     resources: 0,
-    basePoints: 0,
-    systemPoints: 2,
-    conditions: [
-      {
-        technology: 'Generation',
-        energy: 'Electricity',
-        size: 3,
-      },
-    ],
+    points: {
+      basePoints: 0,
+      systemPoints: 2,
+      conditions: [
+        {
+          technology: 'Generation',
+          energy: 'Electricity',
+          size: 3,
+        },
+      ],
+    },
+
     icon: 'CarbonCapture',
     type: 'climateAction',
   },
@@ -29,9 +32,7 @@ export const climateActionCards: ClimateActionCardProps[] = [
       'Wasserstoff (H2) gilt als alternativer grüner Kraftstoff. Die Nutzung bietet sich vor allem auf langen Strecken an, da Batterien nicht die notwendige Reichweite bieten können.',
     price: 2,
     resources: 0,
-    basePoints: 0,
-    systemPoints: 2,
-    conditions: ['ChemicalEnergy'],
+    points: { basePoints: 0, systemPoints: 2, conditions: ['ChemicalEnergy'] },
     type: 'climateAction',
   },
   {
@@ -42,20 +43,22 @@ export const climateActionCards: ClimateActionCardProps[] = [
       'Power-to-X Technologien speichern Stromüberschüsse aus erneuerbaren Energien und wandeln sie in chemische Energieträger (z.B. H2) für Langfristspeicherung und Verkehr um.',
     price: 2,
     resources: 0,
-    basePoints: 0,
-    systemPoints: 2,
-    conditions: [
-      {
-        technology: 'Distribution',
-        energy: 'Electricity',
-        size: 3,
-      },
-      {
-        technology: 'Generation',
-        energy: 'Electricity',
-        size: 3,
-      },
-    ],
+    points: {
+      basePoints: 0,
+      systemPoints: 2,
+      conditions: [
+        {
+          technology: 'Distribution',
+          energy: 'Electricity',
+          size: 3,
+        },
+        {
+          technology: 'Generation',
+          energy: 'Electricity',
+          size: 3,
+        },
+      ],
+    },
     icon: 'ChemicalEnergy',
     type: 'climateAction',
   },
@@ -67,8 +70,7 @@ export const generationCards: TechnologyCardProps[] = [
     image: '/images/photovoltaik.png',
     text: 'Um das volle Potenzial nutzen zu können, muss in sonnenreichen Stunden Strom gespeichert werden.',
     explanation: 'Photovoltaik generiert aus Sonnenlicht Strom.',
-    basePoints: 2,
-    systemPoints: 5,
+    points: { basePoints: 2, systemPoints: 5 },
     price: 1,
     resources: 1,
     energyCharacteristics: { technology: 'Generation', energy: 'Electricity', size: 1 },
@@ -96,6 +98,11 @@ export const storageCards: TechnologyCardProps[] = [
     image: '/images/wasserstoffspeicher.png',
     text: 'Überschüssige Energie wird im Sommer für den Winter gespeichert.',
     explanation: 'Mit Hilfe von Wasserstoff kann Energie gespeichert werden.',
+    points: {
+      basePoints: 8,
+      systemPoints: 13,
+      conditions: [{ technology: 'Generation', energy: 'Electricity', size: 4 }],
+    },
     price: 10,
     resources: 4,
     energyCharacteristics: { technology: 'Storage', energy: 'Electricity', size: 4 },

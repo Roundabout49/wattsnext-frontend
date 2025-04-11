@@ -9,9 +9,7 @@ export interface IProgressCardProps {
   image: string;
   text: string;
   explanation: string;
-  basePoints?: number;
-  systemPoints?: number;
-  conditions?: (EnergyCharacteristics | Icon)[];
+  points?: Points;
   price: number;
   resources: number;
   type: 'technology' | 'climateAction';
@@ -43,3 +41,9 @@ export const Icons: Record<string, IconInfo> = {
 } as const;
 
 export type Icon = keyof typeof Icons;
+
+export interface Points {
+  basePoints?: number;
+  systemPoints: number;
+  conditions?: (EnergyCharacteristics | Icon)[];
+}
