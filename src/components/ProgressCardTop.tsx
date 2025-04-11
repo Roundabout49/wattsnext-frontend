@@ -1,7 +1,7 @@
 import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
 import { Box, CardMedia } from '@mui/material';
 import EnergyIcon from './EnergyIcon';
-import { Icon } from '../types/ProgressCards';
+import { Icon, Icons } from '../types/ProgressCards';
 
 interface ProgressCardTopProps {
   title: string;
@@ -24,7 +24,8 @@ interface ClimateActionCardTopProps extends ProgressCardTopProps {
 const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCardTopProps }> = ({
   card,
 }) => {
-  const IconComponent = card.type === 'climateAction' ? (card.icon ? card.icon : null) : null;
+  const IconComponent =
+    card.type === 'climateAction' ? (card.icon ? Icons[card.icon].icon : null) : null;
 
   return (
     <div style={{ width: 225, height: 150, position: 'relative', padding: 0 }}>
@@ -32,7 +33,11 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
         {card.type === 'technology' ? (
           <EnergyIcon {...card.energyCharacteristics} />
         ) : (
-          IconComponent && <IconComponent />
+          IconComponent && (
+            <Box sx={{ position: 'absolute', top: 0, left: 8 }}>
+              <IconComponent sx={{ fontSize: 40 }} />
+            </Box>
+          )
         )}
       </Box>
       <Box

@@ -14,7 +14,7 @@ const Board: React.FC = () => {
     <Box
       sx={{
         position: 'relative',
-        width: 650,
+        width: 610,
         backgroundColor: 'lightgrey',
         border: '2px solid black',
         padding: 1,
