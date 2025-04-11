@@ -19,11 +19,13 @@ export interface IProgressCardProps {
 
 export interface TechnologyCardProps extends IProgressCardProps {
   energyCharacteristics: EnergyCharacteristics;
+  // TODO: Multiplier
   type: 'technology';
 }
 
 export interface ClimateActionCardProps extends IProgressCardProps {
   icon?: string;
+  // TODO: effect
   type: 'climateAction';
 }
 

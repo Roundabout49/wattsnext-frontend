@@ -11,13 +11,24 @@ export interface GameState {
   drawPileBadEvents: EventCard[];
 }
 
-interface Player {
+export interface Player {
   name: string;
   hand: ProgressCardProps[];
 }
 
-interface BoardProps {
-  climateActions: ClimateActionCardProps[];
+export interface BoardProps {
+  climateActions: [
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+    ClimateActionCardProps | null,
+  ];
   generation: [ProgressCardProps | null, ProgressCardProps | null, ProgressCardProps | null];
   storage: [ProgressCardProps | null, ProgressCardProps | null, ProgressCardProps | null];
   distribution: [ProgressCardProps | null, ProgressCardProps | null, ProgressCardProps | null];

@@ -25,7 +25,7 @@ const ProgressCardSmall: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
   return (
     <div>
       <Card
-        sx={{ width: 112, height: 200, position: 'relative', padding: 0 }}
+        sx={{ width: 112, height: 160, position: 'relative', padding: 0 }}
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
       >

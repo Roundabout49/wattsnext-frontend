@@ -11,7 +11,7 @@ interface GameContextType {
 const initialGameState: GameState = {
   players: [],
   board: {
-    climateActions: [],
+    climateActions: [null, null, null, null, null, null, null, null, null, null],
     generation: [null, null, null],
     storage: [null, null, null],
     distribution: [null, null, null],
@@ -32,6 +32,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     <GameContext.Provider value={{ gameState, setGameState }}>{children}</GameContext.Provider>
   );
 }
+
+export { GameContext };
 
 export function useGame() {
   const context = useContext(GameContext);

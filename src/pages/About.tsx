@@ -1,3 +1,4 @@
+import EmptyCardSmall from '../components/EmptyCardSmall';
 import ProgressCardLarge from '../components/ProgressCardLarge';
 import ProgressCardSmall from '../components/ProgressCardSmall';
 
@@ -19,6 +20,7 @@ export default function About() {
             type: 'technology',
           }}
         ></ProgressCardSmall>
+        <EmptyCardSmall />
       </div>
       <div style={{ display: 'flex', gap: '20px' }}>
         <ProgressCardLarge
@@ -58,6 +60,19 @@ export default function About() {
             resources: 4,
             energyCharacteristics: { technology: 'Storage', energy: 'Electricity', size: 4 },
             type: 'technology',
+          }}
+        ></ProgressCardLarge>
+        <ProgressCardLarge
+          card={{
+            title: 'CO2-Abscheidung',
+            image: '/images/klimaaktion.png',
+            text: 'Ihr erhaltet 2 Ressourcen.',
+            explanation:
+              'Das von Kraftwerken ausgestoßene CO2 wird herausgefiltert. Dieses abgeschiedene CO2 kann als Rohstoff z.B. in der Chemie-Industrie dienen.',
+            price: 2,
+            resources: 0,
+            icon: 'CarbonCapture',
+            type: 'climateAction',
           }}
         ></ProgressCardLarge>
       </div>
