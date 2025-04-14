@@ -54,7 +54,7 @@ const ProgressCardLarge: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
           {card.text}
         </Typography>
 
-        <Box sx={{ position: 'absolute', top: 280, left: 0, right: 0 }}>
+        <Box sx={{ position: 'absolute', top: 272, left: 0, right: 0 }}>
           {card.points && <CardPoints points={card.points} />}
         </Box>
 

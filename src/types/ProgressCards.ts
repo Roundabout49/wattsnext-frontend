@@ -47,3 +47,7 @@ export interface Points {
   systemPoints: number;
   conditions?: (EnergyCharacteristics | Icon)[];
 }
+
+export function isIcon(condition: EnergyCharacteristics | Icon): condition is Icon {
+  return typeof condition === 'string' && condition in Icons;
+}

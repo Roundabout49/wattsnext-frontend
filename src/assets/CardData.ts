@@ -32,7 +32,11 @@ export const climateActionCards: ClimateActionCardProps[] = [
       'Wasserstoff (H2) gilt als alternativer grüner Kraftstoff. Die Nutzung bietet sich vor allem auf langen Strecken an, da Batterien nicht die notwendige Reichweite bieten können.',
     price: 2,
     resources: 0,
-    points: { basePoints: 0, systemPoints: 2, conditions: ['ChemicalEnergy'] },
+    points: {
+      basePoints: 0,
+      systemPoints: 2,
+      conditions: ['ChemicalEnergy'],
+    },
     type: 'climateAction',
   },
   {
@@ -57,6 +61,39 @@ export const climateActionCards: ClimateActionCardProps[] = [
           energy: 'Electricity',
           size: 3,
         },
+        {
+          technology: 'Generation',
+          energy: 'Electricity',
+          size: 3,
+        },
+      ],
+    },
+    icon: 'ChemicalEnergy',
+    type: 'climateAction',
+  },
+  {
+    title: 'Power-to-X',
+    image: '/images/klimaaktion.png',
+    text: 'Für ein gebautes Gaskraftwerk erhaltet ihr 5 zusätzliche Fortschrittspunkte.',
+    explanation:
+      'Power-to-X Technologien speichern Stromüberschüsse aus erneuerbaren Energien und wandeln sie in chemische Energieträger (z.B. H2) für Langfristspeicherung und Verkehr um.',
+    price: 2,
+    resources: 0,
+    points: {
+      basePoints: 0,
+      systemPoints: 2,
+      conditions: [
+        {
+          technology: 'Distribution',
+          energy: 'Electricity',
+          size: 3,
+        },
+        'ChemicalEnergy',
+        {
+          technology: 'Generation',
+          energy: 'Electricity',
+          size: 3,
+        },
       ],
     },
     icon: 'ChemicalEnergy',
@@ -70,7 +107,11 @@ export const generationCards: TechnologyCardProps[] = [
     image: '/images/photovoltaik.png',
     text: 'Um das volle Potenzial nutzen zu können, muss in sonnenreichen Stunden Strom gespeichert werden.',
     explanation: 'Photovoltaik generiert aus Sonnenlicht Strom.',
-    points: { basePoints: 2, systemPoints: 5 },
+    points: {
+      basePoints: 2,
+      systemPoints: 5,
+      conditions: [{ technology: 'Storage', energy: 'Electricity', size: 1 }],
+    },
     price: 1,
     resources: 1,
     energyCharacteristics: { technology: 'Generation', energy: 'Electricity', size: 1 },

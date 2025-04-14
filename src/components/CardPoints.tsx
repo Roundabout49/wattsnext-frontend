@@ -1,15 +1,80 @@
-import { FC } from 'react';
+import { createElement, FC } from 'react';
 import SpaIcon from '@mui/icons-material/Spa';
-import { Points } from '../types/ProgressCards';
+import { Icons, Icon, isIcon, Points } from '../types/ProgressCards';
 import { Box, Stack, Typography } from '@mui/material';
-import { ArrowForward } from '@mui/icons-material';
+import EnergyIcon from './EnergyIcon';
 
 const CardPoints: FC<{ points: Points }> = ({ points }) => {
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 2 }}>
-      <Stack direction="row" spacing={2} alignItems="center">
-        {points.basePoints != null && <PointsIcon points={points.basePoints} color="grey" />}
-        <ArrowForward sx={{ fontSize: 32 }} />
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        p: 1,
+        width: 225,
+      }}
+    >
+      <Stack direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
+        {points.basePoints != null ? (
+          <PointsIcon points={points.basePoints} color="grey" />
+        ) : (
+          <Box sx={{ width: 32 }} />
+        )}
+
+        <Box sx={{ flex: 1, mx: 1, position: 'relative', height: 50 }}>
+          <Stack
+            direction="row"
+            spacing={-1}
+            justifyContent="center"
+            alignItems="center"
+            sx={{ position: 'absolute', top: -15, width: '100%' }}
+          >
+            {points.conditions && points.conditions.every(isIcon)
+              ? points.conditions.map((cond, index) => (
+                  <Box key={index} sx={{ position: 'relative', top: 10, padding: 1 }}>
+                    {createElement(Icons[cond as Icon].icon, { sx: { fontSize: 28 } })}
+                  </Box>
+                ))
+              : points.conditions &&
+                points.conditions.map((cond, index) =>
+                  isIcon(cond) ? (
+                    <Box key={index} sx={{ position: 'relative', top: 0, padding: 1 }}>
+                      {createElement(Icons[cond as Icon].icon, { sx: { fontSize: 28 } })}
+                    </Box>
+                  ) : (
+                    <Box key={index} sx={{ position: 'relative', top: 0, transform: 'scale(0.6)' }}>
+                      <EnergyIcon {...cond} />
+                    </Box>
+                  )
+                )}
+          </Stack>
+
+          <svg width="100%" height="70">
+            <defs>
+              <marker
+                id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="10"
+                refY="3.5"
+                orient="auto"
+              >
+                <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+              </marker>
+            </defs>
+            <line
+              x1="0"
+              y1="40"
+              x2="100%"
+              y2="40"
+              stroke="black"
+              strokeWidth="2"
+              markerEnd="url(#arrowhead)"
+            />
+          </svg>
+        </Box>
+
         <PointsIcon points={points.systemPoints} color="green" />
       </Stack>
     </Box>
@@ -24,8 +89,8 @@ const PointsIcon: FC<{ points: number; color: string }> = ({ points, color }) =>
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 40,
-        height: 40,
+        width: 35,
+        height: 35,
         borderRadius: '50%',
         border: '2px solid black',
         backgroundColor: 'transparent',
@@ -35,8 +100,8 @@ const PointsIcon: FC<{ points: number; color: string }> = ({ points, color }) =>
       <SpaIcon
         sx={{
           position: 'absolute',
-          bottom: 0,
-          left: 0,
+          bottom: -2,
+          left: -2,
           fontSize: 16,
           color: color,
         }}

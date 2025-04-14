@@ -4,6 +4,7 @@ import { TechnologyTypes } from '../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
 import ProgressCardLarge from './ProgressCardLarge';
 import { ProgressCardProps } from '../types/ProgressCards';
+import CardPoints from './CardPoints';
 
 const ProgressCardSmall: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -84,20 +85,18 @@ const ProgressCardSmall: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
               {card.title}
             </Typography>
           </Box>
-          <Typography
-            variant="body2"
+          <Box
             sx={{
-              marginLeft: 0.5,
-              marginRight: 0.5,
-              lineHeight: 1,
-              fontSize: '0.5rem',
+              transform: 'scale(0.5)',
+              transformOrigin: 'top left',
               position: 'absolute',
-              top: 120,
+              top: 125,
               left: 0,
+              right: 0,
             }}
           >
-            {card.text}
-          </Typography>
+            {card.points && <CardPoints points={card.points} />}
+          </Box>
         </CardContent>
       </Card>
       <Popover
