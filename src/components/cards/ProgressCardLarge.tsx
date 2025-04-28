@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Divider, Typography } from '@mui/material';
-import { TechnologyTypes } from '../types/TechnologyTypes';
+import { TechnologyTypes } from '../../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
-import { ProgressCardProps } from '../types/ProgressCards';
+import { ProgressCardProps } from '../../types/ProgressCards';
 import CardPoints from './CardPoints';
 
 const ProgressCardLarge: React.FC<{ card: ProgressCardProps }> = ({ card }) => {

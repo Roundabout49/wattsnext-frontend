@@ -16,7 +16,7 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
     <GameProvider>
       <div>
         <NavBar toggleTheme={toggleTheme} />
-        <Box sx={{ padding: 2 }}>
+        <Box sx={{ padding: 0 }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />

@@ -1,7 +1,9 @@
-import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
+import { EnergyCharacteristics } from '../../types/EnergyCharacteristics';
 import { Box, CardMedia } from '@mui/material';
-import EnergyIcon from './EnergyIcon';
-import { Icon, Icons } from '../types/ProgressCards';
+import EnergyIcon from '../EnergyIcon';
+import { Icon, Icons } from '../../types/ProgressCards';
+import PriceIcon from '../PriceIcon';
+import ResourcesIcon from '../ResourcesIcon';
 
 interface ProgressCardTopProps {
   title: string;
@@ -45,39 +47,18 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
           position: 'absolute',
           top: 70,
           left: 12.5,
-          width: 35,
-          height: 35,
-          borderRadius: '50%',
-          backgroundColor: 'brown',
-          color: 'black',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontWeight: 'bold',
-          fontSize: '1rem',
-          border: '2px solid black',
         }}
       >
-        {card.price}
+        <PriceIcon price={card.price} />
       </Box>
       <Box
         sx={{
           position: 'absolute',
           top: 115,
           left: 15,
-          width: 30,
-          height: 30,
-          backgroundColor: 'lightgray',
-          color: 'black',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontWeight: 'bold',
-          fontSize: '1rem',
-          border: '2px solid black',
         }}
       >
-        {card.resources}
+        <ResourcesIcon resources={card.resources} />
       </Box>
       <CardMedia
         component="img"

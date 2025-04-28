@@ -1,8 +1,8 @@
 import { createElement, FC } from 'react';
 import SpaIcon from '@mui/icons-material/Spa';
-import { Icons, Icon, isIcon, Points } from '../types/ProgressCards';
+import { Icons, Icon, isIcon, Points } from '../../types/ProgressCards';
 import { Box, Stack, Typography } from '@mui/material';
-import EnergyIcon from './EnergyIcon';
+import EnergyIcon from '../EnergyIcon';
 
 const CardPoints: FC<{ points: Points }> = ({ points }) => {
   return (

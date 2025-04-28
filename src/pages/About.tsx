@@ -1,6 +1,6 @@
-import EmptyCardSmall from '../components/EmptyCardSmall';
-import ProgressCardLarge from '../components/ProgressCardLarge';
-import ProgressCardSmall from '../components/ProgressCardSmall';
+import EmptyCardSmall from '../components/cards/EmptyCardSmall';
+import ProgressCardLarge from '../components/cards/ProgressCardLarge';
+import ProgressCardSmall from '../components/cards/ProgressCardSmall';
 
 export default function About() {
   return (

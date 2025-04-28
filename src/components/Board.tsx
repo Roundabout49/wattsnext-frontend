@@ -1,7 +1,7 @@
 import { Box, Grid, IconButton, Stack, Typography } from '@mui/material';
 import { useGame } from '../context/GameContext';
-import EmptyCardSmall from './EmptyCardSmall';
-import ProgressCardSmall from './ProgressCardSmall';
+import EmptyCardSmall from './cards/EmptyCardSmall';
+import ProgressCardSmall from './cards/ProgressCardSmall';
 import { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
