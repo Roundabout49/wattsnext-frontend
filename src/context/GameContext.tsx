@@ -14,7 +14,7 @@ interface GameContextType {
   setGameState: React.Dispatch<React.SetStateAction<GameState>>;
 }
 
-const emptyGameState: GameState = {
+/* const emptyGameState: GameState = {
   players: [],
   board: {
     climateActions: [null, null, null, null, null, null, null, null, null, null],
@@ -35,7 +35,7 @@ const emptyGameState: GameState = {
   drawPileProgress: [],
   drawPileEvents: [],
   drawPileBadEvents: [],
-};
+}; */
 
 const exampleGameState: GameState = {
   players: [],
@@ -72,6 +72,41 @@ const exampleGameState: GameState = {
   phase: 1,
   turn: 8,
   turnsInPhase: 12,
+  phaseObjectives: {
+    1: {
+      objective: {
+        progressPoints: 25,
+        technologyTypes: {
+          Generation: 3,
+          Distribution: 3,
+          Storage: 0,
+        },
+        energyTypes: ['Electricity', 'Heat'],
+      },
+    },
+    2: {
+      objective: {
+        progressPoints: 50,
+        technologyTypes: {
+          Generation: 6,
+          Distribution: 6,
+          Storage: 3,
+        },
+        energyTypes: ['Electricity', 'Heat'],
+      },
+    },
+    3: {
+      objective: {
+        progressPoints: 75,
+        technologyTypes: {
+          Generation: 9,
+          Distribution: 9,
+          Storage: 6,
+        },
+        energyTypes: ['Electricity', 'Heat'],
+      },
+    },
+  },
 };
 
 export function GameProvider({ children }: { children: ReactNode }) {

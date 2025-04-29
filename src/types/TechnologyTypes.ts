@@ -13,5 +13,6 @@ export const TechnologyTypes: Record<string, TechnologyTypeInfo> = {
 } as const;
 
 export type TechnologyType = keyof typeof TechnologyTypes;
-
 // Example usage: const { label, color } = TechnologyTypes[type];
+
+export const orderedTechnologyTypes: TechnologyType[] = ['Generation', 'Distribution', 'Storage'];

@@ -18,15 +18,13 @@ export default function Play() {
 
       <Box
         sx={{
-          width: 200,
+          width: 180,
           display: 'flex',
           flexDirection: 'column',
           paddingTop: 1,
         }}
       >
-        <Box>
-          <Status />
-        </Box>
+        <Status />
 
         <Box
           sx={{

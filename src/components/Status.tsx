@@ -7,22 +7,19 @@ import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
 import PointsIcon from './PointsIcon';
 import React from 'react';
 import PhaseObjective from './PhaseObjective';
-import { TechnologyType } from '../types/TechnologyTypes';
-import { EnergyType } from '../types/EnergyTypes';
+import { orderedTechnologyTypes } from '../types/TechnologyTypes';
+import { orderedEnergyTypes } from '../types/EnergyTypes';
 
 const Status = () => {
   const { gameState } = useGame();
   const { phase, turn, turnsInPhase, progressPoints, money, resources, technologySizes } =
     gameState;
 
-  const orderedTechnologyTypes: TechnologyType[] = ['Generation', 'Distribution', 'Storage'];
-  const orderedEnergyTypes: EnergyType[] = ['Electricity', 'Heat'];
-
   return (
     <Box
       sx={{
         position: 'relative',
-        width: 200,
+        width: '100%',
         height: 500,
         backgroundColor: 'lightgrey',
         padding: 1,
@@ -31,7 +28,7 @@ const Status = () => {
         gap: 2,
       }}
     >
-      <Typography variant="h6">
+      <Typography variant="h6" fontSize="1.2rem">
         Phase {phase}, Zug {turn}/{turnsInPhase}
       </Typography>
 

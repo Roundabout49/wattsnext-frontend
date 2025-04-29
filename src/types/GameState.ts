@@ -16,6 +16,7 @@ export interface GameState {
   phase: number;
   turn: number;
   turnsInPhase: number;
+  phaseObjectives: PhaseObjectives;
 }
 
 export interface Player {
@@ -41,6 +42,18 @@ export interface BoardProps {
   distribution: [ProgressCardProps | null, ProgressCardProps | null, ProgressCardProps | null];
   event?: EventCard | null;
   badEvent?: EventCard | null;
+}
+
+export interface PhaseObjectives {
+  [phase: number]: {
+    objective: PhaseObjective;
+  };
+}
+
+interface PhaseObjective {
+  progressPoints: number;
+  technologyTypes: Record<TechnologyType, number>;
+  energyTypes: EnergyType[];
 }
 
 type TechnologyEnergyMatrix = {

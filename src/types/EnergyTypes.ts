@@ -13,3 +13,5 @@ export const EnergyTypes: Record<string, EnergyTypeInfo> = {
 } as const;
 
 export type EnergyType = keyof typeof EnergyTypes;
+
+export const orderedEnergyTypes: EnergyType[] = ['Electricity', 'Heat'];
