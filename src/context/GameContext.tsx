@@ -26,6 +26,12 @@ const emptyGameState: GameState = {
   },
   money: 0,
   resources: 0,
+  progressPoints: 0,
+  technologySizes: {
+    Storage: { Electricity: 0, Heat: 0 },
+    Generation: { Electricity: 0, Heat: 0 },
+    Distribution: { Electricity: 0, Heat: 0 },
+  },
   drawPileProgress: [],
   drawPileEvents: [],
   drawPileBadEvents: [],
@@ -52,11 +58,20 @@ const exampleGameState: GameState = {
     event: null,
     badEvent: null,
   },
-  money: 0,
-  resources: 0,
+  money: 5,
+  resources: 13,
+  progressPoints: 17,
+  technologySizes: {
+    Storage: { Electricity: 2, Heat: 0 },
+    Generation: { Electricity: 4, Heat: 2 },
+    Distribution: { Electricity: 3, Heat: 3 },
+  },
   drawPileProgress: [],
   drawPileEvents: [],
   drawPileBadEvents: [],
+  phase: 1,
+  turn: 8,
+  turnsInPhase: 12,
 };
 
 export function GameProvider({ children }: { children: ReactNode }) {

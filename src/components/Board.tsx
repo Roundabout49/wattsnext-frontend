@@ -56,16 +56,16 @@ const Board: React.FC = () => {
         </Grid>
         <Grid size={5}>
           <Stack spacing={1}>
-            <Typography variant="h6">Speicher</Typography>
-            {storage.map((card, index) =>
+            <Typography variant="h6">Verteilung</Typography>
+            {distribution.map((card, index) =>
               card ? <ProgressCardSmall card={card} key={index} /> : <EmptyCardSmall key={index} />
             )}
           </Stack>
         </Grid>
         <Grid size={5}>
           <Stack spacing={1}>
-            <Typography variant="h6">Verteilung</Typography>
-            {distribution.map((card, index) =>
+            <Typography variant="h6">Speicher</Typography>
+            {storage.map((card, index) =>
               card ? <ProgressCardSmall card={card} key={index} /> : <EmptyCardSmall key={index} />
             )}
           </Stack>

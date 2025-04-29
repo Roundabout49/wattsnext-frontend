@@ -1,8 +1,8 @@
 import { createElement, FC } from 'react';
-import SpaIcon from '@mui/icons-material/Spa';
 import { Icons, Icon, isIcon, Points } from '../../types/ProgressCards';
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import EnergyIcon from '../EnergyIcon';
+import PointsIcon from '../PointsIcon';
 
 const CardPoints: FC<{ points: Points }> = ({ points }) => {
   return (
@@ -77,35 +77,6 @@ const CardPoints: FC<{ points: Points }> = ({ points }) => {
 
         <PointsIcon points={points.systemPoints} color="green" />
       </Stack>
-    </Box>
-  );
-};
-
-const PointsIcon: FC<{ points: number; color: string }> = ({ points, color }) => {
-  return (
-    <Box
-      sx={{
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 35,
-        height: 35,
-        borderRadius: '50%',
-        border: '2px solid black',
-        backgroundColor: 'transparent',
-      }}
-    >
-      <Typography fontWeight="bold">{points}</Typography>
-      <SpaIcon
-        sx={{
-          position: 'absolute',
-          bottom: -2,
-          left: -2,
-          fontSize: 16,
-          color: color,
-        }}
-      />
     </Box>
   );
 };

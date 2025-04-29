@@ -55,7 +55,7 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
         sx={{
           position: 'absolute',
           top: 115,
-          left: 15,
+          left: 12.5,
         }}
       >
         <ResourcesIcon resources={card.resources} />

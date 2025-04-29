@@ -8,8 +8,8 @@ const ResourcesIcon: React.FC<ResourcesIconProps> = ({ resources }) => {
   return (
     <Box
       sx={{
-        width: 30,
-        height: 30,
+        width: 35,
+        height: 35,
         backgroundColor: 'lightgray',
         color: 'black',
         display: 'flex',

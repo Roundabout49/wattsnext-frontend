@@ -1,14 +1,21 @@
+import { EnergyType } from './EnergyTypes';
 import { EventCard } from './EventCards';
 import { ClimateActionCardProps, ProgressCardProps } from './ProgressCards';
+import { TechnologyType } from './TechnologyTypes';
 
 export interface GameState {
   players: Player[];
   board: BoardProps;
   money: number;
   resources: number;
+  progressPoints: number;
+  technologySizes: TechnologyEnergyMatrix;
   drawPileProgress: ProgressCardProps[];
   drawPileEvents: EventCard[];
   drawPileBadEvents: EventCard[];
+  phase: number;
+  turn: number;
+  turnsInPhase: number;
 }
 
 export interface Player {
@@ -35,3 +42,9 @@ export interface BoardProps {
   event?: EventCard | null;
   badEvent?: EventCard | null;
 }
+
+type TechnologyEnergyMatrix = {
+  [tech in TechnologyType]: {
+    [energy in EnergyType]: number;
+  };
+};
