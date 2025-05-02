@@ -63,8 +63,8 @@ const exampleGameState: GameState = {
   progressPoints: 17,
   technologySizes: {
     Storage: { Electricity: 2, Heat: 0 },
-    Generation: { Electricity: 4, Heat: 2 },
-    Distribution: { Electricity: 3, Heat: 3 },
+    Generation: { Electricity: 4, Heat: 0 },
+    Distribution: { Electricity: 3, Heat: 0 },
   },
   drawPileProgress: [],
   drawPileEvents: [],

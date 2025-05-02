@@ -3,7 +3,6 @@ import { useGame } from '../context/GameContext';
 import PriceIcon from './PriceIcon';
 import ResourcesIcon from './ResourcesIcon';
 import EnergyIcon from './EnergyIcon';
-import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
 import PointsIcon from './PointsIcon';
 import React from 'react';
 import PhaseObjective from './PhaseObjective';
@@ -20,7 +19,7 @@ const Status = () => {
       sx={{
         position: 'relative',
         width: '100%',
-        height: 500,
+        height: 550,
         backgroundColor: 'lightgrey',
         padding: 1,
         display: 'flex',
@@ -61,30 +60,24 @@ const Status = () => {
             }}
           >
             {orderedEnergyTypes.map((energyType) => (
-              <SmallEnergyIcon
+              <Box
+                sx={{
+                  transform: 'scale(0.8)',
+                }}
                 key={`${technologyType}-${energyType}`}
-                technology={technologyType}
-                energy={energyType}
-                size={technologySizes[technologyType][energyType]}
-              />
+              >
+                <EnergyIcon
+                  technology={technologyType}
+                  energy={energyType}
+                  size={technologySizes[technologyType][energyType]}
+                />
+              </Box>
             ))}
           </Box>
         ))}
       </Box>
 
       <PhaseObjective />
-    </Box>
-  );
-};
-
-const SmallEnergyIcon: React.FC<EnergyCharacteristics> = ({ technology, energy, size }) => {
-  return (
-    <Box
-      sx={{
-        transform: 'scale(0.8)',
-      }}
-    >
-      <EnergyIcon technology={technology} energy={energy} size={size} />
     </Box>
   );
 };

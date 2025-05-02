@@ -1,7 +1,7 @@
 import { Box, SvgIcon, Typography } from '@mui/material';
 import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
 import { TechnologyTypes } from '../types/TechnologyTypes';
-import { EnergyTypes } from '../types/EnergyTypes';
+import { EnergyType, EnergyTypes } from '../types/EnergyTypes';
 
 const shapes = {
   circle: <circle cx="50" cy="50" r="42" fill="currentColor" stroke="black" strokeWidth="3" />,
@@ -23,26 +23,32 @@ const shapes = {
   ),
 };
 
+type EnergyIconProps = Omit<EnergyCharacteristics, 'energy'> & {
+  energy?: EnergyType;
+};
+
 export type Shape = keyof typeof shapes;
 
-const EnergyIcon: React.FC<EnergyCharacteristics> = ({ technology, energy, size }) => {
+const EnergyIcon: React.FC<EnergyIconProps> = ({ technology, energy, size }) => {
   const { color, shape } = TechnologyTypes[technology];
-  const IconComponent = EnergyTypes[energy].icon;
+  const IconComponent = energy ? EnergyTypes[energy].icon : null;
 
   return (
     <Box position="relative" width={50} height={50} display="inline-block">
       <SvgIcon component="svg" viewBox="0 0 100 100" sx={{ fontSize: 60, color }}>
         {shapes[shape]}
       </SvgIcon>
-      <Box position="absolute" top="65%" left="42%" sx={{ transform: 'translate(-50%, -50%)' }}>
-        <IconComponent fontSize="large" />
-      </Box>
+      {IconComponent && (
+        <Box position="absolute" top="65%" left="42%" sx={{ transform: 'translate(-50%, -50%)' }}>
+          <IconComponent fontSize="large" />
+        </Box>
+      )}
       <Typography
         variant="h5"
         sx={{
           position: 'absolute',
-          top: '55%',
-          right: '10%',
+          top: '57%',
+          right: IconComponent ? '10%' : '27%',
           transform: 'translateY(-50%)',
           fontWeight: 'bold',
         }}
