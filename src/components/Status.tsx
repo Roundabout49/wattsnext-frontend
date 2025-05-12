@@ -4,7 +4,6 @@ import PriceIcon from './PriceIcon';
 import ResourcesIcon from './ResourcesIcon';
 import EnergyIcon from './EnergyIcon';
 import PointsIcon from './PointsIcon';
-import React from 'react';
 import PhaseObjective from './PhaseObjective';
 import { orderedTechnologyTypes } from '../types/TechnologyTypes';
 import { orderedEnergyTypes } from '../types/EnergyTypes';

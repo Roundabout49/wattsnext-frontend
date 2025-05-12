@@ -16,7 +16,7 @@ const Board: React.FC = () => {
         position: 'relative',
         width: 610,
         backgroundColor: 'lightgrey',
-        border: '2px solid black',
+        boxShadow: 2,
         padding: 1,
       }}
     >

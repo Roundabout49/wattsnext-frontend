@@ -126,6 +126,7 @@ const PhaseObjective = () => {
         </Box>
       ))}
 
+      {/*TODO: Color should only depend on fulfillment in current (maybe also past) phases*/}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
         {objective.energyTypes.map((energyType) => {
           const IconComponent = EnergyTypes[energyType].icon;
