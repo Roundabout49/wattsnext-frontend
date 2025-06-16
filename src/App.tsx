@@ -6,6 +6,8 @@ import Play from './pages/Play';
 import Rules from './pages/Rules';
 import { Box } from '@mui/material';
 import { GameProvider } from './context/GameContext';
+import { ActionProvider } from './context/ActionContext';
+import { AnimationProvider } from './context/AnimationContext';
 
 interface AppProps {
   toggleTheme: () => void;
@@ -14,17 +16,21 @@ interface AppProps {
 const App: React.FC<AppProps> = ({ toggleTheme }) => {
   return (
     <GameProvider>
-      <div>
-        <NavBar toggleTheme={toggleTheme} />
-        <Box sx={{ padding: 0 }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/play" element={<Play />} />
-            <Route path="/rules" element={<Rules />} />
-          </Routes>
-        </Box>
-      </div>
+      <ActionProvider>
+        <AnimationProvider>
+          <div>
+            <NavBar toggleTheme={toggleTheme} />
+            <Box sx={{ padding: 0 }}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/play" element={<Play />} />
+                <Route path="/rules" element={<Rules />} />
+              </Routes>
+            </Box>
+          </div>
+        </AnimationProvider>
+      </ActionProvider>
     </GameProvider>
   );
 };

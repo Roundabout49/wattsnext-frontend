@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Box, Paper, Typography, IconButton, Collapse } from '@mui/material';
+import { Box, Paper, Typography, IconButton, Collapse, Button } from '@mui/material';
 import ProgressCardSmall from './cards/ProgressCardSmall';
+import { AnimationContext } from '../context/AnimationContext';
 
 const HandCards = () => {
   const { gameState } = useGame();
   const { players } = gameState;
+
+  const { registerCardRef, getCardRef, startAnimation } = useContext(AnimationContext);
 
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
 
@@ -25,7 +28,6 @@ const HandCards = () => {
 
         return (
           <Paper key={player.name} variant="outlined" sx={{ p: 1 }}>
-            {/* Header mit Name und Toggle */}
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Typography variant="h6">{player.name}</Typography>
               <IconButton onClick={() => toggleOpen(player.name)}>
@@ -33,14 +35,44 @@ const HandCards = () => {
               </IconButton>
             </Box>
 
-            {/* Handkarten ein-/ausklappbar */}
             <Collapse in={isOpen}>
               <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
-                {player.hand.map((card, idx) => (
-                  <ProgressCardSmall key={idx} card={card} />
-                ))}
+                {player.hand.map((card) => {
+                  const cardRef = useRef<HTMLDivElement>(null);
+
+                  useEffect(() => {
+                    registerCardRef(card.title, cardRef);
+                  }, [card.title]);
+                  return (
+                    <div ref={cardRef} key={card.title}>
+                      <ProgressCardSmall card={card} />
+                    </div>
+                  );
+                })}
               </Box>
             </Collapse>
+            <Button
+              variant="contained"
+              onClick={() => {
+                const fromRef = getCardRef(player.hand[0].title);
+                const toRef = getCardRef('generation-2');
+
+                if (fromRef?.current && toRef?.current) {
+                  startAnimation(
+                    player.hand[0].title,
+                    'generation-2',
+                    <ProgressCardSmall card={player.hand[0]} />,
+                    () => {
+                      console.log('Animation abgeschlossen');
+                    }
+                  );
+                } else {
+                  console.log('Karte oder Ziel nicht gefunden.');
+                }
+              }}
+            >
+              Animation Hand → Platz
+            </Button>
           </Paper>
         );
       })}

@@ -1,13 +1,11 @@
 import { EnergyType } from './EnergyTypes';
 import { EventCard } from './EventCards';
-import { Move } from './Move';
 import { ClimateActionCardProps, ProgressCardProps } from './ProgressCards';
 import { TechnologyType } from './TechnologyTypes';
 
 export interface GameState {
   players: Player[];
   currentPlayerName: string;
-  chosenAction?: Move;
   board: BoardProps;
   money: number;
   resources: number;
@@ -17,6 +15,7 @@ export interface GameState {
   turn: number;
   turnsInPhase: number;
   phaseObjectives: PhaseObjectives;
+  canSearchPile: boolean;
 }
 
 export interface Player {

@@ -2,13 +2,15 @@ import { Box, Grid, IconButton, Stack, Typography } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import EmptyCardSmall from './cards/EmptyCardSmall';
 import ProgressCardSmall from './cards/ProgressCardSmall';
-import { useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { AnimationContext } from '../context/AnimationContext';
 
 const Board: React.FC = () => {
   const [showClimateActions, setShowClimateActions] = useState(true);
   const { gameState } = useGame();
   const { climateActions, generation, storage, distribution, event, badEvent } = gameState.board;
+  const { registerCardRef } = useContext(AnimationContext);
 
   return (
     <Box
@@ -36,11 +38,21 @@ const Board: React.FC = () => {
           </Stack>
         </Grid>
         {showClimateActions &&
-          climateActions.map((card, index) => (
-            <Grid size={4} key={index}>
-              {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
-            </Grid>
-          ))}
+          climateActions.map((card, index) => {
+            const cardId = `climate-action-${index}`;
+            const cardRef = useRef<HTMLDivElement>(null);
+            useEffect(() => {
+              registerCardRef(cardId, cardRef);
+            }, [cardId]);
+            return (
+              <Grid size={4} key={index}>
+                <div ref={cardRef}>
+                  {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
+                </div>
+              </Grid>
+            );
+          })}
+
         <Grid size={20}>
           <Box sx={{ height: 16 }} />
         </Grid>
@@ -49,25 +61,58 @@ const Board: React.FC = () => {
         <Grid size={5}>
           <Stack spacing={1}>
             <Typography variant="h6">Erzeugung</Typography>
-            {generation.map((card, index) =>
-              card ? <ProgressCardSmall card={card} key={index} /> : <EmptyCardSmall key={index} />
-            )}
+            {generation.map((card, index) => {
+              const cardId = `generation-${index}`;
+              const cardRef = useRef<HTMLDivElement>(null);
+
+              useEffect(() => {
+                registerCardRef(cardId, cardRef);
+              }, [cardId]);
+
+              return (
+                <div ref={cardRef} key={index}>
+                  {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
+                </div>
+              );
+            })}
           </Stack>
         </Grid>
         <Grid size={5}>
           <Stack spacing={1}>
             <Typography variant="h6">Verteilung</Typography>
-            {distribution.map((card, index) =>
-              card ? <ProgressCardSmall card={card} key={index} /> : <EmptyCardSmall key={index} />
-            )}
+            {distribution.map((card, index) => {
+              const cardId = `distribution-${index}`;
+              const cardRef = useRef<HTMLDivElement>(null);
+
+              useEffect(() => {
+                registerCardRef(cardId, cardRef);
+              }, [cardId]);
+
+              return (
+                <div ref={cardRef} key={index}>
+                  {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
+                </div>
+              );
+            })}
           </Stack>
         </Grid>
         <Grid size={5}>
           <Stack spacing={1}>
             <Typography variant="h6">Speicher</Typography>
-            {storage.map((card, index) =>
-              card ? <ProgressCardSmall card={card} key={index} /> : <EmptyCardSmall key={index} />
-            )}
+            {storage.map((card, index) => {
+              const cardId = `storage-${index}`;
+              const cardRef = useRef<HTMLDivElement>(null);
+
+              useEffect(() => {
+                registerCardRef(cardId, cardRef);
+              }, [cardId]);
+
+              return (
+                <div ref={cardRef} key={index}>
+                  {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
+                </div>
+              );
+            })}
           </Stack>
         </Grid>
         <Grid size={1} />
