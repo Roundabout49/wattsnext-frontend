@@ -155,15 +155,17 @@ export const storageCards: TechnologyCardProps[] = [
 export const exampleGameState: GameState = {
   players: [
     {
+      id: 'player1',
       name: 'Player 1',
       hand: [generationCards[0], climateActionCards[0], climateActionCards[1]],
     },
     {
+      id: 'player2',
       name: 'Player 2',
       hand: [climateActionCards[2], storageCards[0], distributionCards[0]],
     },
   ],
-  currentPlayerName: 'Player 1',
+  currentPlayerId: 'player1',
   board: {
     climateActions: [
       climateActionCards[0],
@@ -229,4 +231,5 @@ export const exampleGameState: GameState = {
       },
     },
   },
+  canSearchPile: false,
 };

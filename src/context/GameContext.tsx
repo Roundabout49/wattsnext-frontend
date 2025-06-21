@@ -17,8 +17,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export { GameContext };
-
 export function useGame() {
   const context = useContext(GameContext);
   if (!context) {

@@ -29,6 +29,8 @@ export interface PlayCardActionState extends BaseActionState {
 
 export interface EarnMoneyActionState extends BaseActionState {
   type: 'earnMoney';
+  step: 'confirm' | 'waitForGameState' | 'done';
+  amount: number | null;
 }
 
 /*export interface DiscardCardsActionState extends BaseActionState {

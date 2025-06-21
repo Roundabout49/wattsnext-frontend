@@ -1,24 +1,19 @@
-import { useState, useEffect } from 'react';
 import { Box, Button, Typography, Stack } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import { useAction } from '../context/ActionContext';
 import { ActionKind, actionKinds } from '../types/Actions';
+import { usePlayer } from '../context/PlayerContext';
 
 const ActionBar = () => {
   const { gameState } = useGame();
-  const { currentPlayerName } = gameState;
-  const [playerName, setPlayerName] = useState<string | null>(null);
+  const { currentPlayerId, players } = gameState;
+  const { playerId } = usePlayer();
 
   const { selectedAction, setSelectedAction, actionState } = useAction();
 
-  useEffect(() => {
-    const storedName = localStorage.getItem('playerName');
-    if (storedName) {
-      setPlayerName(storedName);
-    }
-  }, []);
-
-  const isCurrentPlayer = currentPlayerName === playerName;
+  const isCurrentPlayer = currentPlayerId === playerId;
+  const currentPlayerName =
+    players.find((p) => p.id === currentPlayerId)?.name || 'Unbekannter Spieler';
 
   const renderActionInstruction = () => {
     if (!actionState) return null;
@@ -36,6 +31,18 @@ const ActionBar = () => {
             return 'Möchtest du Ressourcen zurückerhalten?';
           case 'confirm':
             return 'Bestätige deinen Spielzug.';
+          default:
+            return null;
+        }
+
+      case 'earnMoney':
+        switch (actionState.step) {
+          case 'confirm':
+            return 'Bestätige, dass du Geld verdienen möchtest.';
+          case 'waitForGameState':
+            return 'Würfeln ...';
+          case 'done':
+            return `Würfle einen Würfel, um ${actionState.amount} Geld zu verdienen.`;
           default:
             return null;
         }

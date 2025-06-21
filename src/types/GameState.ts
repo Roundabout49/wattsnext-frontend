@@ -5,7 +5,7 @@ import { TechnologyType } from './TechnologyTypes';
 
 export interface GameState {
   players: Player[];
-  currentPlayerName: string;
+  currentPlayerId: string;
   board: BoardProps;
   money: number;
   resources: number;
@@ -19,6 +19,7 @@ export interface GameState {
 }
 
 export interface Player {
+  id: string;
   name: string;
   hand: ProgressCardProps[];
 }

@@ -2,19 +2,18 @@ import { PlayCardActionState } from '../types/Actions';
 
 // TODO: Add submit action?
 export type PlayCardAction =
-  | { type: 'PLAY_CARD_INIT_STATE' }
-  | { type: 'SELECT_CARD'; cardId: string }
-  | { type: 'SELECT_POSITION'; selectedPosition: number }
-  | { type: 'SET_CAN_RECOVER'; canRecover: boolean }
-  | { type: 'SELECT_RECOVER_RESOURCES'; recover: boolean }
-  | { type: 'RESET' };
+  | { type: 'PLAY_CARD_INIT' }
+  | { type: 'PLAY_CARD_SELECT_CARD'; cardId: string }
+  | { type: 'PLAY_CARD_SELECT_POSITION'; selectedPosition: number }
+  | { type: 'PLAY_CARD_SET_CAN_RECOVER'; canRecover: boolean }
+  | { type: 'PLAY_CARD_SELECT_RECOVER_RESOURCES'; recover: boolean };
 
 export function playCardReducer(
   state: PlayCardActionState | null,
   action: PlayCardAction
 ): PlayCardActionState | null {
   if (!state) {
-    if (action.type === 'PLAY_CARD_INIT_STATE') {
+    if (action.type === 'PLAY_CARD_INIT') {
       return {
         type: 'playCard',
         step: 'selectCard',
@@ -26,7 +25,7 @@ export function playCardReducer(
     return null; // No valid state to handle the action
   }
   switch (action.type) {
-    case 'PLAY_CARD_INIT_STATE':
+    case 'PLAY_CARD_INIT':
       return {
         type: 'playCard',
         step: 'selectCard',
@@ -34,7 +33,7 @@ export function playCardReducer(
         selectedPosition: null,
         recoverResources: null,
       };
-    case 'SELECT_CARD':
+    case 'PLAY_CARD_SELECT_CARD':
       return {
         ...state,
         cardId: action.cardId,
@@ -42,27 +41,25 @@ export function playCardReducer(
         recoverResources: null,
         step: 'selectPosition',
       };
-    case 'SELECT_POSITION':
+    case 'PLAY_CARD_SELECT_POSITION':
       return {
         ...state,
         selectedPosition: action.selectedPosition,
         recoverResources: null,
         step: 'waitIfRecoverPossible',
       };
-    case 'SET_CAN_RECOVER':
+    case 'PLAY_CARD_SET_CAN_RECOVER':
       return {
         ...state,
         recoverResources: action.canRecover ? null : false,
         step: action.canRecover ? 'selectRecoverResources' : 'confirm',
       };
-    case 'SELECT_RECOVER_RESOURCES':
+    case 'PLAY_CARD_SELECT_RECOVER_RESOURCES':
       return {
         ...state,
         recoverResources: action.recover,
         step: 'confirm',
       };
-    case 'RESET':
-      return null;
     default:
       return state;
   }

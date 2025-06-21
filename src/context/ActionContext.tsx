@@ -1,8 +1,14 @@
 import { createContext, ReactNode, useContext, useReducer, useState } from 'react';
-import { ActionKind, ActionState, PlayCardActionState } from '../types/Actions';
+import {
+  ActionKind,
+  ActionState,
+  EarnMoneyActionState,
+  PlayCardActionState,
+} from '../types/Actions';
 import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
+import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
 
-type GameAction = PlayCardAction /* | EarnMoneyAction | ... */;
+type GameAction = PlayCardAction | EarnMoneyAction | { type: 'RESET' } /* ... */;
 
 type ActionDispatch = (action: GameAction) => void;
 
@@ -23,21 +29,29 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     state;
 
   const combinedReducer = (state: ActionState | null, action: GameAction): ActionState | null => {
+    if (action.type === 'RESET') {
+      // TODO: Send reset to backend
+      return null;
+    }
+
     if (!state) {
       switch (action.type) {
-        case 'PLAY_CARD_INIT_STATE':
+        case 'PLAY_CARD_INIT':
           return playCardReducer(null, action);
+        case 'EARN_MONEY_INIT':
+          return earnMoneyReducer(null, action);
+        // TODO: Add other action initial states
         default:
           return null;
       }
     }
 
     switch (state.type) {
+      // TODO: Is there a way to avoid the type castings?
       case 'playCard':
-        return playCardReducer(state as PlayCardActionState, action);
+        return playCardReducer(state as PlayCardActionState, action as PlayCardAction);
       case 'earnMoney':
-        // return earnMoneyReducer(state as EarnMoneyActionState, action);
-        return state; // Platzhalter
+        return earnMoneyReducer(state as EarnMoneyActionState, action as EarnMoneyAction);
       /*case 'discardCards':
         // return discardCardsReducer(state as DiscardCardsActionState, action);
         return state;
@@ -56,13 +70,12 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
 
     switch (action) {
       case 'playCard':
-        console.log('Selected action: playCard');
         dispatch({
-          type: 'PLAY_CARD_INIT_STATE',
+          type: 'PLAY_CARD_INIT',
         } as PlayCardAction);
         break;
       case 'earnMoney':
-        // dispatch({ type: 'INIT_EARN_MONEY' } as EarnMoneyAction);
+        dispatch({ type: 'EARN_MONEY_INIT' } as EarnMoneyAction);
         break;
       /*case 'discardCards':
         // dispatch({ type: 'INIT_DISCARD_CARDS' } as DiscardCardsAction);
