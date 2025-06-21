@@ -12,6 +12,17 @@ const Board: React.FC = () => {
   const { climateActions, generation, storage, distribution, event, badEvent } = gameState.board;
   const { registerCardRef } = useContext(AnimationContext);
 
+  const climateRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    if (!showClimateActions) return;
+
+    climateActions.forEach((_, index) => {
+      const cardId = `climate-action-${index}`;
+      registerCardRef(cardId, { current: climateRefs.current[index] });
+    });
+  }, [climateActions, showClimateActions, registerCardRef]);
+
   return (
     <Box
       sx={{
@@ -39,14 +50,13 @@ const Board: React.FC = () => {
         </Grid>
         {showClimateActions &&
           climateActions.map((card, index) => {
-            const cardId = `climate-action-${index}`;
-            const cardRef = useRef<HTMLDivElement>(null);
-            useEffect(() => {
-              registerCardRef(cardId, cardRef);
-            }, [cardId]);
             return (
               <Grid size={4} key={index}>
-                <div ref={cardRef}>
+                <div
+                  ref={(el) => {
+                    climateRefs.current[index] = el;
+                  }}
+                >
                   {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
                 </div>
               </Grid>

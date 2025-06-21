@@ -1,4 +1,11 @@
-export type ActionKind = 'playCard' | 'earnMoney' | 'discardCards' | 'searchDeck' | null;
+export type ActionKind = 'playCard' | 'earnMoney' /*| 'discardCards' | 'searchDeck'*/ | null;
+
+export const actionKinds: Exclude<ActionKind, null>[] = [
+  'playCard',
+  'earnMoney',
+  /*'discardCards',
+  'searchDeck',*/
+];
 
 interface BaseActionState {
   type: ActionKind;
@@ -24,16 +31,14 @@ export interface EarnMoneyActionState extends BaseActionState {
   type: 'earnMoney';
 }
 
-export interface DiscardCardsActionState extends BaseActionState {
+/*export interface DiscardCardsActionState extends BaseActionState {
   type: 'discardCards';
 }
 
 export interface SearchDeckActionState extends BaseActionState {
   type: 'searchDeck';
-}
+}*/
 
-export type ActionState =
-  | PlayCardActionState
-  | EarnMoneyActionState
-  | DiscardCardsActionState
-  | SearchDeckActionState;
+export type ActionState = PlayCardActionState | EarnMoneyActionState;
+/*| DiscardCardsActionState
+  | SearchDeckActionState;*/

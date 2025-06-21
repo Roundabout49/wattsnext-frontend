@@ -23,7 +23,14 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     state;
 
   const combinedReducer = (state: ActionState | null, action: GameAction): ActionState | null => {
-    if (!state) return state;
+    if (!state) {
+      switch (action.type) {
+        case 'PLAY_CARD_INIT_STATE':
+          return playCardReducer(null, action);
+        default:
+          return null;
+      }
+    }
 
     switch (state.type) {
       case 'playCard':
@@ -31,12 +38,12 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       case 'earnMoney':
         // return earnMoneyReducer(state as EarnMoneyActionState, action);
         return state; // Platzhalter
-      case 'discardCards':
+      /*case 'discardCards':
         // return discardCardsReducer(state as DiscardCardsActionState, action);
         return state;
       case 'searchDeck':
         // return searchDeckReducer(state as SearchDeckActionState, action);
-        return state;
+        return state;*/
       default:
         return fallbackReducer(state, action);
     }
@@ -49,19 +56,20 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
 
     switch (action) {
       case 'playCard':
+        console.log('Selected action: playCard');
         dispatch({
-          type: 'INIT_STATE',
+          type: 'PLAY_CARD_INIT_STATE',
         } as PlayCardAction);
         break;
       case 'earnMoney':
         // dispatch({ type: 'INIT_EARN_MONEY' } as EarnMoneyAction);
         break;
-      case 'discardCards':
+      /*case 'discardCards':
         // dispatch({ type: 'INIT_DISCARD_CARDS' } as DiscardCardsAction);
         break;
       case 'searchDeck':
         // dispatch({ type: 'INIT_SEARCH_DECK' } as SearchDeckAction);
-        break;
+        break;*/
       case null:
       default:
         dispatch({ type: 'RESET' } as GameAction);

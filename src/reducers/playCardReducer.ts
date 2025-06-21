@@ -2,7 +2,7 @@ import { PlayCardActionState } from '../types/Actions';
 
 // TODO: Add submit action?
 export type PlayCardAction =
-  | { type: 'INIT_STATE' }
+  | { type: 'PLAY_CARD_INIT_STATE' }
   | { type: 'SELECT_CARD'; cardId: string }
   | { type: 'SELECT_POSITION'; selectedPosition: number }
   | { type: 'SET_CAN_RECOVER'; canRecover: boolean }
@@ -10,11 +10,23 @@ export type PlayCardAction =
   | { type: 'RESET' };
 
 export function playCardReducer(
-  state: PlayCardActionState,
+  state: PlayCardActionState | null,
   action: PlayCardAction
 ): PlayCardActionState | null {
+  if (!state) {
+    if (action.type === 'PLAY_CARD_INIT_STATE') {
+      return {
+        type: 'playCard',
+        step: 'selectCard',
+        cardId: null,
+        selectedPosition: null,
+        recoverResources: null,
+      };
+    }
+    return null; // No valid state to handle the action
+  }
   switch (action.type) {
-    case 'INIT_STATE':
+    case 'PLAY_CARD_INIT_STATE':
       return {
         type: 'playCard',
         step: 'selectCard',
