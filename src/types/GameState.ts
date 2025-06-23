@@ -6,6 +6,7 @@ import { TechnologyType } from './TechnologyTypes';
 export interface GameState {
   players: Player[];
   currentPlayerId: string;
+  // TODO: Add available actions (?)
   board: BoardProps;
   money: number;
   resources: number;

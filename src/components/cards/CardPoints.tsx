@@ -1,8 +1,8 @@
 import { createElement, FC } from 'react';
 import { Icons, Icon, isIcon, Points } from '../../types/ProgressCards';
 import { Box, Stack } from '@mui/material';
-import EnergyIcon from '../EnergyIcon';
-import PointsIcon from '../PointsIcon';
+import EnergyIcon from '../icons/EnergyIcon';
+import PointsIcon from '../icons/PointsIcon';
 
 const CardPoints: FC<{ points: Points }> = ({ points }) => {
   return (

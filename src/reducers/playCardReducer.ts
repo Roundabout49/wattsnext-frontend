@@ -6,7 +6,8 @@ export type PlayCardAction =
   | { type: 'PLAY_CARD_SELECT_CARD'; cardId: string }
   | { type: 'PLAY_CARD_SELECT_POSITION'; selectedPosition: number }
   | { type: 'PLAY_CARD_SET_CAN_RECOVER'; canRecover: boolean }
-  | { type: 'PLAY_CARD_SELECT_RECOVER_RESOURCES'; recover: boolean };
+  | { type: 'PLAY_CARD_SELECT_RECOVER_RESOURCES'; recover: boolean }
+  | { type: 'PLAY_CARD_CONFIRM' };
 
 export function playCardReducer(
   state: PlayCardActionState | null,
@@ -59,6 +60,11 @@ export function playCardReducer(
         ...state,
         recoverResources: action.recover,
         step: 'confirm',
+      };
+    case 'PLAY_CARD_CONFIRM':
+      return {
+        ...state,
+        step: 'done',
       };
     default:
       return state;

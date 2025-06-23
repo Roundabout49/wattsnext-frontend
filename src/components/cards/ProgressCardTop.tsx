@@ -1,9 +1,9 @@
 import { EnergyCharacteristics } from '../../types/EnergyCharacteristics';
 import { Box, CardMedia } from '@mui/material';
-import EnergyIcon from '../EnergyIcon';
+import EnergyIcon from '../icons/EnergyIcon';
 import { Icon, Icons } from '../../types/ProgressCards';
-import PriceIcon from '../PriceIcon';
-import ResourcesIcon from '../ResourcesIcon';
+import PriceIcon from '../icons/PriceIcon';
+import ResourcesIcon from '../icons/ResourcesIcon';
 
 interface ProgressCardTopProps {
   title: string;

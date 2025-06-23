@@ -1,4 +1,4 @@
-import { Shape } from '../components/EnergyIcon';
+import { Shape } from '../components/icons/EnergyIcon';
 
 interface TechnologyTypeInfo {
   label: string;

@@ -1,7 +1,7 @@
 import { Box, SvgIcon, Typography } from '@mui/material';
-import { EnergyCharacteristics } from '../types/EnergyCharacteristics';
-import { TechnologyTypes } from '../types/TechnologyTypes';
-import { EnergyType, EnergyTypes } from '../types/EnergyTypes';
+import { EnergyCharacteristics } from '../../types/EnergyCharacteristics';
+import { TechnologyTypes } from '../../types/TechnologyTypes';
+import { EnergyType, EnergyTypes } from '../../types/EnergyTypes';
 
 const shapes = {
   circle: <circle cx="50" cy="50" r="42" fill="currentColor" stroke="black" strokeWidth="3" />,

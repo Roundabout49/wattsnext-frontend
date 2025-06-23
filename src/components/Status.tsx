@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import { useGame } from '../context/GameContext';
-import PriceIcon from './PriceIcon';
-import ResourcesIcon from './ResourcesIcon';
-import EnergyIcon from './EnergyIcon';
-import PointsIcon from './PointsIcon';
+import PriceIcon from './icons/PriceIcon';
+import ResourcesIcon from './icons/ResourcesIcon';
+import EnergyIcon from './icons/EnergyIcon';
+import PointsIcon from './icons/PointsIcon';
 import PhaseObjective from './PhaseObjective';
 import { orderedTechnologyTypes } from '../types/TechnologyTypes';
 import { orderedEnergyTypes } from '../types/EnergyTypes';

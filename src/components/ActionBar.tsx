@@ -3,64 +3,70 @@ import { useGame } from '../context/GameContext';
 import { useAction } from '../context/ActionContext';
 import { ActionKind, actionKinds } from '../types/Actions';
 import { usePlayer } from '../context/PlayerContext';
+import { ActionHandlers, actionUIConfig } from '../ui/actionConfig';
 
 const ActionBar = () => {
   const { gameState } = useGame();
   const { currentPlayerId, players } = gameState;
   const { playerId } = usePlayer();
 
-  const { selectedAction, setSelectedAction, actionState } = useAction();
+  const { selectedAction, setSelectedAction, actionState, dispatchGameAction } = useAction();
 
   const isCurrentPlayer = currentPlayerId === playerId;
   const currentPlayerName =
     players.find((p) => p.id === currentPlayerId)?.name || 'Unbekannter Spieler';
 
-  const renderActionInstruction = () => {
+  const actionLabels: Record<Exclude<ActionKind, null>, string> = {
+    playCard: 'Karte ausspielen',
+    earnMoney: 'Geld verdienen',
+    /*discardCards: 'Karten abwerfen',
+     searchDeck: 'Nach Karte suchen',*/
+  };
+
+  const resetAction = () => setSelectedAction(null);
+
+  const handlers: ActionHandlers = {
+    onRecoverChoice: (recover: boolean) => {
+      if (actionState?.type === 'playCard' && actionState.step === 'selectRecoverResources') {
+        dispatchGameAction({
+          type: 'PLAY_CARD_SELECT_RECOVER_RESOURCES',
+          recover,
+        });
+      }
+    },
+    onConfirmAction: () => {
+      if (actionState?.type === 'playCard' && actionState.step === 'confirm') {
+        dispatchGameAction({
+          type: 'PLAY_CARD_CONFIRM',
+        });
+      } else if (actionState?.type === 'earnMoney' && actionState.step === 'confirm') {
+        dispatchGameAction({
+          type: 'EARN_MONEY_CONFIRM',
+        });
+      }
+    },
+  };
+
+  const renderSelectedAction = () => {
     if (!actionState) return null;
+    const config = actionUIConfig[actionState.type]?.[actionState.step];
+    if (!config) return null;
 
-    switch (actionState.type) {
-      case 'playCard':
-        switch (actionState.step) {
-          case 'selectCard':
-            return 'Wähle eine Karte aus deiner Hand.';
-          case 'selectPosition':
-            return 'Wähle eine Position, um die Karte zu spielen.';
-          case 'waitIfRecoverPossible':
-            return 'Warte auf Informationen zur Ressourcenrückgewinnung...';
-          case 'selectRecoverResources':
-            return 'Möchtest du Ressourcen zurückerhalten?';
-          case 'confirm':
-            return 'Bestätige deinen Spielzug.';
-          default:
-            return null;
-        }
-
-      case 'earnMoney':
-        switch (actionState.step) {
-          case 'confirm':
-            return 'Bestätige, dass du Geld verdienen möchtest.';
-          case 'waitForGameState':
-            return 'Würfeln ...';
-          case 'done':
-            return `Würfle einen Würfel, um ${actionState.amount} Geld zu verdienen.`;
-          default:
-            return null;
-        }
-      // TODO: Add other actions
-      default:
-        return null;
-    }
+    return (
+      <>
+        <Typography variant="body1" sx={{ mr: 2 }}>
+          {config.instruction(actionState)}
+        </Typography>
+        <Stack direction="row" spacing={1}>
+          {config.buttons(resetAction, actionState, handlers)}
+        </Stack>
+      </>
+    );
   };
 
   const renderOwnTurn = () => {
     if (!selectedAction) {
       // TODO: Limit actions based on game state
-      const actionLabels: Record<Exclude<ActionKind, null>, string> = {
-        playCard: 'Karte ausspielen',
-        earnMoney: 'Geld verdienen',
-        /*discardCards: 'Karten abwerfen',
-        searchDeck: 'Nach Karte suchen',*/
-      };
       return (
         <>
           <Typography variant="body1" sx={{ mr: 2 }}>
@@ -76,16 +82,7 @@ const ActionBar = () => {
         </>
       );
     } else {
-      return (
-        <>
-          <Typography variant="body1" sx={{ mr: 2 }}>
-            {renderActionInstruction()}
-          </Typography>
-          <Button variant="contained" color="error" onClick={() => setSelectedAction(null)}>
-            Abbrechen
-          </Button>
-        </>
-      );
+      return renderSelectedAction();
     }
   };
 
@@ -96,7 +93,7 @@ const ActionBar = () => {
       return (
         <Typography variant="body1">
           {currentPlayerName} führt gerade die Aktion&nbsp;
-          <strong>{selectedAction}</strong> aus.
+          <strong>{actionLabels[selectedAction]}</strong> aus.
         </Typography>
       );
     }

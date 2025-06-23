@@ -1,11 +1,11 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import { useGame } from '../context/GameContext';
-import PointsIcon from './PointsIcon';
+import PointsIcon from './icons/PointsIcon';
 import { useState } from 'react';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { orderedTechnologyTypes } from '../types/TechnologyTypes';
-import EnergyIcon from './EnergyIcon';
+import EnergyIcon from './icons/EnergyIcon';
 import { EnergyTypes } from '../types/EnergyTypes';
 
 const PhaseObjective = () => {

@@ -16,7 +16,7 @@ interface ActionContextType {
   selectedAction: ActionKind;
   setSelectedAction: (action: ActionKind) => void;
   actionState: ActionState | null;
-  dispatch: ActionDispatch;
+  dispatchGameAction: ActionDispatch;
 }
 
 const ActionContext = createContext<ActionContextType | undefined>(undefined);
@@ -63,19 +63,19 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const [actionState, dispatch] = useReducer(combinedReducer, null);
+  const [actionState, dispatchGameAction] = useReducer(combinedReducer, null);
 
   const setSelectedAction = (action: ActionKind) => {
     _setSelectedAction(action);
 
     switch (action) {
       case 'playCard':
-        dispatch({
+        dispatchGameAction({
           type: 'PLAY_CARD_INIT',
         } as PlayCardAction);
         break;
       case 'earnMoney':
-        dispatch({ type: 'EARN_MONEY_INIT' } as EarnMoneyAction);
+        dispatchGameAction({ type: 'EARN_MONEY_INIT' } as EarnMoneyAction);
         break;
       /*case 'discardCards':
         // dispatch({ type: 'INIT_DISCARD_CARDS' } as DiscardCardsAction);
@@ -85,7 +85,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         break;*/
       case null:
       default:
-        dispatch({ type: 'RESET' } as GameAction);
+        dispatchGameAction({ type: 'RESET' } as GameAction);
         break;
     }
   };
@@ -96,7 +96,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         selectedAction,
         setSelectedAction,
         actionState,
-        dispatch,
+        dispatchGameAction: dispatchGameAction,
       }}
     >
       {children}

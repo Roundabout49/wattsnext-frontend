@@ -19,7 +19,8 @@ export interface PlayCardActionState extends BaseActionState {
     | 'selectPosition'
     | 'waitIfRecoverPossible'
     | 'selectRecoverResources'
-    | 'confirm';
+    | 'confirm'
+    | 'done';
   cardId: string | null;
   selectedPosition: number | null;
   recoverResources: boolean | null;
