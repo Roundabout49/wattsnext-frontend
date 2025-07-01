@@ -9,6 +9,8 @@ import { GameProvider } from './context/GameContext';
 import { ActionProvider } from './context/ActionContext';
 import { AnimationProvider } from './context/AnimationContext';
 import { PlayerIdProvider } from './context/PlayerContext';
+import { WebSocketProvider } from './ws/WebSocketProvider';
+import { SendMessageProvider } from './context/SendMessageContext';
 
 interface AppProps {
   toggleTheme: () => void;
@@ -16,25 +18,29 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({ toggleTheme }) => {
   return (
-    <GameProvider>
-      <ActionProvider>
-        <AnimationProvider>
-          <PlayerIdProvider>
-            <div>
-              <NavBar toggleTheme={toggleTheme} />
-              <Box sx={{ padding: 0 }}>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/play" element={<Play />} />
-                  <Route path="/rules" element={<Rules />} />
-                </Routes>
-              </Box>
-            </div>
-          </PlayerIdProvider>
-        </AnimationProvider>
-      </ActionProvider>
-    </GameProvider>
+    <WebSocketProvider>
+      <SendMessageProvider useMock={true}>
+        <GameProvider>
+          <ActionProvider>
+            <AnimationProvider>
+              <PlayerIdProvider>
+                <div>
+                  <NavBar toggleTheme={toggleTheme} />
+                  <Box sx={{ padding: 0 }}>
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/play" element={<Play />} />
+                      <Route path="/rules" element={<Rules />} />
+                    </Routes>
+                  </Box>
+                </div>
+              </PlayerIdProvider>
+            </AnimationProvider>
+          </ActionProvider>
+        </GameProvider>
+      </SendMessageProvider>
+    </WebSocketProvider>
   );
 };
 

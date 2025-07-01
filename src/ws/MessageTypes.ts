@@ -1,14 +1,16 @@
 import { TechnologyType } from '../types/TechnologyTypes';
 
-export interface RecoverPossiblePayload {
+export interface RecoverPossibleMessage {
   cardId: string;
   position: [TechnologyType, number];
 }
 
-export interface PlayCardPayload {
+export interface PlayCardMessage {
   cardId: string;
   position: number;
   recover: boolean;
 }
 
-export interface EarnMoneyPayload {}
+export interface EarnMoneyMessage {}
+
+export type OutgoingMessage = RecoverPossibleMessage | PlayCardMessage | EarnMoneyMessage;
