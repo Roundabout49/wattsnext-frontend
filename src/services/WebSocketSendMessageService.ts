@@ -1,3 +1,4 @@
+import { PlayCardMessage, RecoverPossibleMessage } from '../ws/MessageTypes';
 import { useWebSocket } from '../ws/WebSocketProvider';
 import { SendMessageService } from './SendMessageService';
 
@@ -5,16 +6,16 @@ export function useWebsocketSendMessageService(): SendMessageService {
   const { sendMessage } = useWebSocket();
 
   return {
-    sendPlayCardIntent: (cardId: string, position: number) => {
-      sendMessage('/app/playCardIntent', { cardId, position });
+    sendPlayCardIntent: (data: RecoverPossibleMessage) => {
+      sendMessage('/app/playCardIntent', data);
     },
 
-    sendPlayCard: (cardId: string, position: number, recoverResources: boolean) => {
-      sendMessage('/app/playCard', { cardId, position, recoverResources });
+    sendPlayCard: (data: PlayCardMessage) => {
+      sendMessage('/app/playCard', data);
     },
 
     sendEarnMoney: () => {
-      sendMessage('/app/earnMoney', {});
+      sendMessage('/app/earnMoney', null);
     },
   };
 }
