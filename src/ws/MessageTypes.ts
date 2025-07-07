@@ -1,8 +1,6 @@
-import { TechnologyType } from '../types/TechnologyTypes';
-
 export interface RecoverPossibleMessage {
   cardId: string;
-  position: [TechnologyType, number];
+  position: number;
 }
 
 export interface PlayCardMessage {
@@ -11,6 +9,4 @@ export interface PlayCardMessage {
   recover: boolean;
 }
 
-export interface EarnMoneyMessage {}
-
-export type OutgoingMessage = RecoverPossibleMessage | PlayCardMessage | EarnMoneyMessage;
+export type OutgoingMessage = RecoverPossibleMessage | PlayCardMessage | null;
