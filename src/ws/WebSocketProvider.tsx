@@ -3,8 +3,6 @@ import { Client, IMessage } from '@stomp/stompjs';
 import { OutgoingMessage } from './MessageTypes';
 import { useGame } from '../context/GameContext';
 
-const { setGameState } = useGame();
-
 const WebSocketContext = createContext<WebSocketContextType>({ sendMessage: () => {} });
 
 type WebSocketContextType = {
@@ -13,8 +11,9 @@ type WebSocketContextType = {
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const clientRef = useRef<Client>(null);
+  // const { setGameState } = useGame();
 
-  useEffect(() => {
+  /*useEffect(() => {
     const client = new Client({
       // TODO: Replace with actual WebSocket URL
       brokerURL: 'ws://localhost:8080/ws',
@@ -40,7 +39,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     return () => {
       client.deactivate();
     };
-  }, []);
+  }, []);*/
 
   const sendMessage = (destination: string, body: OutgoingMessage) => {
     clientRef.current?.publish({

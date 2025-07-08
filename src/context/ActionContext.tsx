@@ -8,7 +8,11 @@ import {
 import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
 import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
 
-type GameAction = PlayCardAction | EarnMoneyAction | { type: 'RESET' } /* ... */;
+type GameAction =
+  | PlayCardAction
+  | EarnMoneyAction
+  | { type: 'RESET' }
+  | { type: 'FINISH_ACTION' } /* ... */;
 
 type ActionDispatch = (action: GameAction) => void;
 
@@ -31,6 +35,11 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const combinedReducer = (state: ActionState | null, action: GameAction): ActionState | null => {
     if (action.type === 'RESET') {
       // TODO: Send reset to backend
+      return null;
+    }
+
+    if (action.type === 'FINISH_ACTION') {
+      _setSelectedAction(null);
       return null;
     }
 

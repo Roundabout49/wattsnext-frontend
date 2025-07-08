@@ -19,9 +19,9 @@ interface AppProps {
 const App: React.FC<AppProps> = ({ toggleTheme }) => {
   return (
     <WebSocketProvider>
-      <SendMessageProvider useMock={true}>
-        <GameProvider>
-          <ActionProvider>
+      <GameProvider>
+        <ActionProvider>
+          <SendMessageProvider useMock={true}>
             <AnimationProvider>
               <PlayerIdProvider>
                 <div>
@@ -37,9 +37,9 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
                 </div>
               </PlayerIdProvider>
             </AnimationProvider>
-          </ActionProvider>
-        </GameProvider>
-      </SendMessageProvider>
+          </SendMessageProvider>
+        </ActionProvider>
+      </GameProvider>
     </WebSocketProvider>
   );
 };

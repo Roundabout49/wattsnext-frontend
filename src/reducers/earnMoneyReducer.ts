@@ -1,12 +1,9 @@
-import { useSendMessage } from '../context/SendMessageContext';
 import { EarnMoneyActionState } from '../types/Actions';
 
 export type EarnMoneyAction =
   | { type: 'EARN_MONEY_INIT' }
   | { type: 'EARN_MONEY_CONFIRM' }
   | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number };
-
-const { sendEarnMoney } = useSendMessage();
 
 export function earnMoneyReducer(
   state: EarnMoneyActionState | null,
@@ -31,7 +28,6 @@ export function earnMoneyReducer(
         amount: null,
       };
     case 'EARN_MONEY_CONFIRM':
-      sendEarnMoney();
       return {
         ...state,
         step: 'waitForGameState',

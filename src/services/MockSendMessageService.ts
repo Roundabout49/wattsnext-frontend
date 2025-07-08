@@ -1,8 +1,14 @@
 import { useAction } from '../context/ActionContext';
 import { useGame } from '../context/GameContext';
 import { cards } from '../data/cards';
+import { Player } from '../types/GameState';
 import { PlayCardMessage, RecoverPossibleMessage } from '../ws/MessageTypes';
 import { SendMessageService } from './SendMessageService';
+
+const getNextPlayer = (players: Player[], currentPlayerId: string): Player => {
+  const currentPlayerIndex = players.findIndex((player) => player.id === currentPlayerId);
+  return players[(currentPlayerIndex + 1) % players.length];
+};
 
 export function useMockSendMessageService(): SendMessageService {
   const { dispatchGameAction } = useAction();
@@ -24,11 +30,7 @@ export function useMockSendMessageService(): SendMessageService {
       const card = cards[cardId];
 
       // update player
-      const currentPlayerIndex = gameState.players.findIndex(
-        (player) => player.id === gameState.currentPlayerId
-      );
-      const nextPlayerIndex = (currentPlayerIndex + 1) % gameState.players.length;
-      const nextPlayer = gameState.players[nextPlayerIndex];
+      const nextPlayer = getNextPlayer(gameState.players, gameState.currentPlayerId);
 
       // Update board
       const updatedClimateActions = [
@@ -94,15 +96,26 @@ export function useMockSendMessageService(): SendMessageService {
             : gameState.technologySizes,
         turn: gameState.turn + 1,
       });
+      dispatchGameAction({
+        type: 'FINISH_ACTION',
+      });
     },
 
     sendEarnMoney: () => {
       console.log('[Mock] sendEarnMoney');
+
+      // update player
+      const nextPlayer = getNextPlayer(gameState.players, gameState.currentPlayerId);
+
       const amount = Math.floor(Math.random() * 6) + 1;
       dispatchGameAction({ type: 'EARN_MONEY_SET_AMOUNT', amount: amount });
       setGameState({
         ...gameState,
+        currentPlayerId: nextPlayer.id,
         money: gameState.money + amount,
+      });
+      dispatchGameAction({
+        type: 'FINISH_ACTION',
       });
     },
   };

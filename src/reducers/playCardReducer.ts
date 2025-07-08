@@ -1,7 +1,5 @@
-import { useSendMessage } from '../context/SendMessageContext';
 import { PlayCardActionState } from '../types/Actions';
 
-// TODO: Add submit action?
 export type PlayCardAction =
   | { type: 'PLAY_CARD_INIT' }
   | { type: 'PLAY_CARD_SELECT_CARD'; cardId: string }
@@ -10,8 +8,6 @@ export type PlayCardAction =
   | { type: 'PLAY_CARD_SELECT_RECOVER_RESOURCES'; recover: boolean }
   | { type: 'PLAY_CARD_CONFIRM' }
   | { type: 'PLAY_CARD_DONE' };
-
-const { sendPlayCardIntent, sendPlayCard } = useSendMessage();
 
 export function playCardReducer(
   state: PlayCardActionState | null,
@@ -47,10 +43,6 @@ export function playCardReducer(
         step: 'selectPosition',
       };
     case 'PLAY_CARD_SELECT_POSITION':
-      sendPlayCardIntent({
-        cardId: state.cardId!,
-        position: state.selectedPosition!,
-      });
       return {
         ...state,
         selectedPosition: action.selectedPosition,
@@ -70,11 +62,6 @@ export function playCardReducer(
         step: 'confirm',
       };
     case 'PLAY_CARD_CONFIRM':
-      sendPlayCard({
-        cardId: state.cardId!,
-        position: state.selectedPosition!,
-        recover: state.recoverResources!,
-      });
       return {
         ...state,
         step: 'waitForDone',
