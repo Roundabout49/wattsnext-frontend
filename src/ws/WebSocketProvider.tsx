@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useEffect, useRef } from 'react';
-import { Client, IMessage } from '@stomp/stompjs';
+import React, { createContext, useContext, useRef } from 'react';
+import { Client } from '@stomp/stompjs';
 import { OutgoingMessage } from './MessageTypes';
-import { useGame } from '../context/GameContext';
-import { useAction } from '../context/ActionContext';
+// import { useGame } from '../context/GameContext';
+// import { useAction } from '../context/ActionContext';
 
 const WebSocketContext = createContext<WebSocketContextType>({ sendMessage: () => {} });
 
@@ -12,8 +12,8 @@ type WebSocketContextType = {
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const clientRef = useRef<Client>(null);
-  const { setGameState } = useGame();
-  const { dispatchGameAction } = useAction();
+  // const { setGameState } = useGame();
+  // const { dispatchGameAction } = useAction();
 
   /*useEffect(() => {
     const client = new Client({
