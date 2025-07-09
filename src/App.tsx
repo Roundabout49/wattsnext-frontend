@@ -7,10 +7,11 @@ import Rules from './pages/Rules';
 import { Box } from '@mui/material';
 import { GameProvider } from './context/GameContext';
 import { ActionProvider } from './context/ActionContext';
-import { AnimationProvider } from './context/AnimationContext';
+import { CardAnimationProvider } from './context/CardAnimationContext';
 import { PlayerIdProvider } from './context/PlayerContext';
 import { WebSocketProvider } from './ws/WebSocketProvider';
 import { SendMessageProvider } from './context/SendMessageContext';
+import { DieAnimationProvider } from './context/DieAnimationContext';
 
 interface AppProps {
   toggleTheme: () => void;
@@ -18,29 +19,31 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({ toggleTheme }) => {
   return (
-    <WebSocketProvider>
-      <GameProvider>
-        <ActionProvider>
+    <GameProvider>
+      <ActionProvider>
+        <WebSocketProvider>
           <SendMessageProvider useMock={true}>
-            <AnimationProvider>
-              <PlayerIdProvider>
-                <div>
-                  <NavBar toggleTheme={toggleTheme} />
-                  <Box sx={{ padding: 0 }}>
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/play" element={<Play />} />
-                      <Route path="/rules" element={<Rules />} />
-                    </Routes>
-                  </Box>
-                </div>
-              </PlayerIdProvider>
-            </AnimationProvider>
+            <DieAnimationProvider>
+              <CardAnimationProvider>
+                <PlayerIdProvider>
+                  <div>
+                    <NavBar toggleTheme={toggleTheme} />
+                    <Box sx={{ padding: 0 }}>
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/play" element={<Play />} />
+                        <Route path="/rules" element={<Rules />} />
+                      </Routes>
+                    </Box>
+                  </div>
+                </PlayerIdProvider>
+              </CardAnimationProvider>
+            </DieAnimationProvider>
           </SendMessageProvider>
-        </ActionProvider>
-      </GameProvider>
-    </WebSocketProvider>
+        </WebSocketProvider>
+      </ActionProvider>
+    </GameProvider>
   );
 };
 

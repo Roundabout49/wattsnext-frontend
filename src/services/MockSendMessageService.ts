@@ -2,6 +2,7 @@ import { useAction } from '../context/ActionContext';
 import { useGame } from '../context/GameContext';
 import { cards } from '../data/cards';
 import { Player } from '../types/GameState';
+import { handleEarnMoneyResult } from '../ws/MessageHandler';
 import { PlayCardMessage, RecoverPossibleMessage } from '../ws/MessageTypes';
 import { SendMessageService } from './SendMessageService';
 
@@ -108,15 +109,18 @@ export function useMockSendMessageService(): SendMessageService {
       const nextPlayer = getNextPlayer(gameState.players, gameState.currentPlayerId);
 
       const amount = Math.floor(Math.random() * 6) + 1;
-      dispatchGameAction({ type: 'EARN_MONEY_SET_AMOUNT', amount: amount });
-      setGameState({
+      handleEarnMoneyResult(
+        {
+          playerId: gameState.currentPlayerId,
+          amount,
+        },
+        dispatchGameAction
+      );
+      /*setGameState({
         ...gameState,
         currentPlayerId: nextPlayer.id,
         money: gameState.money + amount,
-      });
-      dispatchGameAction({
-        type: 'FINISH_ACTION',
-      });
+      });*/
     },
   };
 }

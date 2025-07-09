@@ -1,22 +1,27 @@
-import React, { createContext, useState, useRef, RefObject, ReactNode } from 'react';
+import React, { createContext, useState, useRef, RefObject, ReactNode, useContext } from 'react';
 import FlyingCard from '../components/cards/FlyingCard';
 
-export const AnimationContext = createContext<AnimationContextType>({
+const CardAnimationContext = createContext<CardAnimationContextType>({
   registerCardRef: () => {},
   getCardRef: () => null,
-  startAnimation: (_fromId, _toId, _content, onDone) => onDone(),
+  startCardAnimation: (_fromId, _toId, _content, onDone) => onDone(),
 });
 
-interface AnimationContextType {
+interface CardAnimationContextType {
   registerCardRef: (
     id: string,
     ref: RefObject<HTMLDivElement> | RefObject<HTMLDivElement | null> | null
   ) => void;
   getCardRef: (id: string) => RefObject<HTMLDivElement> | RefObject<HTMLDivElement | null> | null;
-  startAnimation: (fromId: string, toId: string, content: ReactNode, onDone: () => void) => void;
+  startCardAnimation: (
+    fromId: string,
+    toId: string,
+    content: ReactNode,
+    onDone: () => void
+  ) => void;
 }
 
-export const AnimationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const CardAnimationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const cardRefs = useRef<
     Map<string, React.RefObject<HTMLDivElement> | React.RefObject<HTMLDivElement | null> | null>
   >(new Map());
@@ -36,7 +41,12 @@ export const AnimationProvider: React.FC<{ children: ReactNode }> = ({ children 
 
   const getCardRef = (id: string) => cardRefs.current.get(id) ?? null;
 
-  const startAnimation = (fromId: string, toId: string, content: ReactNode, onDone: () => void) => {
+  const startCardAnimation = (
+    fromId: string,
+    toId: string,
+    content: ReactNode,
+    onDone: () => void
+  ) => {
     const fromRef = getCardRef(fromId);
     const toRef = getCardRef(toId);
     if (fromRef?.current && toRef?.current) {
@@ -49,7 +59,9 @@ export const AnimationProvider: React.FC<{ children: ReactNode }> = ({ children 
   };
 
   return (
-    <AnimationContext.Provider value={{ registerCardRef, getCardRef, startAnimation }}>
+    <CardAnimationContext.Provider
+      value={{ registerCardRef, getCardRef, startCardAnimation: startCardAnimation }}
+    >
       {children}
       {animation && (
         <FlyingCard
@@ -62,6 +74,14 @@ export const AnimationProvider: React.FC<{ children: ReactNode }> = ({ children 
           }}
         />
       )}
-    </AnimationContext.Provider>
+    </CardAnimationContext.Provider>
   );
+};
+
+export const useCardAnimation = () => {
+  const context = useContext(CardAnimationContext);
+  if (!context) {
+    throw new Error('useCardAnimation must be used within an CardAnimationProvider');
+  }
+  return context;
 };

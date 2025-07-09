@@ -5,10 +5,13 @@ import HandCards from '../components/HandCards';
 import ActionBar from '../components/ActionBar';
 import { PlayCardHandler } from '../handlers/PlayCardHandler';
 import { EarnMoneyHandler } from '../handlers/EarnMoneyHandler';
+import AnimationOverlay from '../components/AnimationOverlay';
 
 export default function Play() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: 1 }}>
+      <AnimationOverlay />
+
       <ActionBar />
 
       <PlayCardHandler />

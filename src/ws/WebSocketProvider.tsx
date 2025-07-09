@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useRef } from 'react';
 import { Client, IMessage } from '@stomp/stompjs';
 import { OutgoingMessage } from './MessageTypes';
 import { useGame } from '../context/GameContext';
+import { useAction } from '../context/ActionContext';
 
 const WebSocketContext = createContext<WebSocketContextType>({ sendMessage: () => {} });
 
@@ -11,7 +12,8 @@ type WebSocketContextType = {
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const clientRef = useRef<Client>(null);
-  // const { setGameState } = useGame();
+  const { setGameState } = useGame();
+  const { dispatchGameAction } = useAction();
 
   /*useEffect(() => {
     const client = new Client({
@@ -30,7 +32,12 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
         setGameState(gameState);
       });
 
-      // Weitere Subscriptions
+      client.subscribe('/topic/earnMoneyResult', (message: IMessage) => {
+        const result = JSON.parse(message.body);
+        handleEarnMoneyResult(result, dispatchGameAction);
+      });
+
+      // TODO: Weitere Subscriptions für andere Nachrichten
     };
 
     client.activate();

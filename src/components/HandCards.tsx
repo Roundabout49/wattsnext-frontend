@@ -1,15 +1,15 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Box, Paper, Typography, IconButton, Collapse, Button } from '@mui/material';
 import ProgressCardSmall from './cards/ProgressCardSmall';
-import { AnimationContext } from '../context/AnimationContext';
+import { useCardAnimation } from '../context/CardAnimationContext';
 
 const HandCards = () => {
   const { gameState } = useGame();
   const { players } = gameState;
 
-  const { registerCardRef, getCardRef, startAnimation } = useContext(AnimationContext);
+  const { registerCardRef, getCardRef, startCardAnimation: startAnimation } = useCardAnimation();
 
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
 

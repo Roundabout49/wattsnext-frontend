@@ -2,15 +2,15 @@ import { Box, Grid, IconButton, Stack, Typography } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import EmptyCardSmall from './cards/EmptyCardSmall';
 import ProgressCardSmall from './cards/ProgressCardSmall';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { AnimationContext } from '../context/AnimationContext';
+import { useCardAnimation } from '../context/CardAnimationContext';
 
 const Board: React.FC = () => {
   const [showClimateActions, setShowClimateActions] = useState(true);
   const { gameState } = useGame();
   const { climateActions, generation, storage, distribution, event, badEvent } = gameState.board;
-  const { registerCardRef } = useContext(AnimationContext);
+  const { registerCardRef } = useCardAnimation();
 
   const climateRefs = useRef<(HTMLDivElement | null)[]>([]);
 
