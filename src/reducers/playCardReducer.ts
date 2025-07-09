@@ -43,6 +43,10 @@ export function playCardReducer(
         step: 'selectPosition',
       };
     case 'PLAY_CARD_SELECT_POSITION':
+      sendPlayCardIntent({
+        cardId: state.cardId!,
+        position: state.selectedPosition!,
+      });
       return {
         ...state,
         selectedPosition: action.selectedPosition,
@@ -62,8 +66,14 @@ export function playCardReducer(
         step: 'confirm',
       };
     case 'PLAY_CARD_CONFIRM':
+      sendPlayCard({
+        cardId: state.cardId!,
+        position: state.selectedPosition!,
+        recover: state.recoverResources!,
+      });
       return {
         ...state,
+        step: 'waitForDone',
         step: 'waitForDone',
       };
     default:
