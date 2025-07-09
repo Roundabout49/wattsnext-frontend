@@ -6,7 +6,6 @@ type DieAnimationStep = 'hidden' | 'rolling' | 'showResult';
 type DieAnimationData = {
   playerName: string;
   result: number;
-  duration: number;
 };
 
 type DieAnimationContextType = {
