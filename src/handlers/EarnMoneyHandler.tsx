@@ -12,7 +12,7 @@ export function EarnMoneyHandler() {
 
   // Ref-Guards to make sure to only handle each step once
   const didHandleWaitRef = useRef(false);
-  const didHandleDoneRef = useRef(false);
+  const didHandleAnimateDieRef = useRef(false);
 
   const currentPlayer = gameState.players.find((p) => p.id === gameState.currentPlayerId);
 
@@ -29,8 +29,8 @@ export function EarnMoneyHandler() {
       didHandleWaitRef.current = false;
     }
 
-    if (step === 'done' && !didHandleDoneRef.current) {
-      didHandleDoneRef.current = true;
+    if (step === 'animateDie' && !didHandleAnimateDieRef.current) {
+      didHandleAnimateDieRef.current = true;
 
       setShowDieAnimation(true);
       setDieAnimationData({
@@ -43,15 +43,15 @@ export function EarnMoneyHandler() {
 
       setTimeout(() => {
         setShowDieAnimation(false);
+        dispatchGameAction({ type: 'DIE_ANIMATION_FINISHED' });
         animateMoneyChange(actionState.amount ?? 0, () => {
-          console.log('Money change animation finished');
           dispatchGameAction({ type: 'FINISH_ACTION' });
         });
       }, 5000);
     }
 
     if (step !== 'done') {
-      didHandleDoneRef.current = false;
+      didHandleAnimateDieRef.current = false;
     }
   }, [
     actionState,

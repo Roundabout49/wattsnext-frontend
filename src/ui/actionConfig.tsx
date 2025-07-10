@@ -81,6 +81,10 @@ export const actionUIConfig: ActionUIConfig = {
       instruction: () => 'Würfeln ...',
       buttons: () => [],
     },
+    animateDie: {
+      instruction: () => 'Würfeln ...',
+      buttons: () => [],
+    },
     done: {
       instruction: (actionState) =>
         actionState.type === 'earnMoney' ? `Du hast ${actionState.amount} Geld verdient.` : '',

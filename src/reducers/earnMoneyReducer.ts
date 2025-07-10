@@ -3,7 +3,8 @@ import { EarnMoneyActionState } from '../types/Actions';
 export type EarnMoneyAction =
   | { type: 'EARN_MONEY_INIT' }
   | { type: 'EARN_MONEY_CONFIRM' }
-  | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number };
+  | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number }
+  | { type: 'DIE_ANIMATION_FINISHED' };
 
 export function earnMoneyReducer(
   state: EarnMoneyActionState | null,
@@ -35,8 +36,13 @@ export function earnMoneyReducer(
     case 'EARN_MONEY_SET_AMOUNT':
       return {
         ...state,
-        step: 'done',
+        step: 'animateDie',
         amount: action.amount,
+      };
+    case 'DIE_ANIMATION_FINISHED':
+      return {
+        ...state,
+        step: 'done',
       };
     default:
       return state;
