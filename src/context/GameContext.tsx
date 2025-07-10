@@ -12,15 +12,13 @@ interface GameContextType {
 
 export function GameProvider({ children }: { children: ReactNode }) {
   const [gameState, setGameState] = useState<GameState>(exampleGameState);
+  // useRef is necessary to only start interval after the first render
   const intervalRef = useRef<number>(undefined);
 
   function animateMoneyChange(amount: number, onComplete?: () => void) {
     const startMoney = gameState.money;
     const targetMoney = startMoney + amount;
-    let finished = false;
 
-    // Starte das Intervall – alles, was setState macht, läuft erst später,
-    // also nicht während Render!
     intervalRef.current = window.setInterval(() => {
       setGameState((prev) => {
         const current = prev.money;
@@ -28,8 +26,10 @@ export function GameProvider({ children }: { children: ReactNode }) {
           (amount > 0 && current >= targetMoney) || (amount < 0 && current <= targetMoney);
 
         if (done) {
-          finished = true;
           clearInterval(intervalRef.current);
+          setTimeout(() => {
+            if (onComplete) onComplete();
+          }, 0);
           return prev;
         }
 
@@ -38,11 +38,6 @@ export function GameProvider({ children }: { children: ReactNode }) {
           money: current + (amount > 0 ? 1 : -1),
         };
       });
-      if (finished && onComplete) {
-        setTimeout(() => {
-          onComplete();
-        }, 0);
-      }
     }, 250);
   }
 

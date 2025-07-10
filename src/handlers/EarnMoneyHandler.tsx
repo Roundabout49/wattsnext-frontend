@@ -44,8 +44,8 @@ export function EarnMoneyHandler() {
       setTimeout(() => {
         setShowDieAnimation(false);
         animateMoneyChange(actionState.amount ?? 0, () => {
+          console.log('Money change animation finished');
           dispatchGameAction({ type: 'FINISH_ACTION' });
-          setSelectedAction(null);
         });
       }, 5000);
     }
