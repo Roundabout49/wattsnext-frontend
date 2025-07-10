@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useReducer, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useReducer, useState } from 'react';
 import {
   ActionKind,
   ActionState,
@@ -7,6 +7,8 @@ import {
 } from '../types/Actions';
 import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
 import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
+import { useGame } from './GameContext';
+import { GameState } from '../types/GameState';
 
 type GameAction =
   | PlayCardAction
@@ -28,6 +30,10 @@ const ActionContext = createContext<ActionContextType | undefined>(undefined);
 export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [selectedAction, _setSelectedAction] = useState<ActionKind>(null);
 
+  const [pendingNewGameState, setPendingNewGameState] = useState<GameState | null>(null);
+
+  const { setGameState } = useGame();
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fallbackReducer = (state: ActionState | null, _action: GameAction): ActionState | null =>
     state;
@@ -39,7 +45,6 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (action.type === 'FINISH_ACTION') {
-      _setSelectedAction(null);
       return null;
     }
 
@@ -74,6 +79,26 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
 
   const [actionState, dispatchGameAction] = useReducer(combinedReducer, null);
 
+  const dispatchGameActionWithFinish = (action: GameAction) => {
+    if (action.type === 'FINISH_ACTION' && actionState?.newGameState) {
+      console.log(
+        'Finishing action with new game state:',
+        actionState.newGameState.currentPlayerId
+      );
+      setPendingNewGameState(actionState.newGameState);
+    }
+    dispatchGameAction(action);
+  };
+
+  useEffect(() => {
+    if (pendingNewGameState) {
+      console.log('Setting new game state:', pendingNewGameState.currentPlayerId);
+      setGameState(pendingNewGameState);
+      setPendingNewGameState(null);
+      _setSelectedAction(null);
+    }
+  }, [pendingNewGameState, setGameState]);
+
   const setSelectedAction = (action: ActionKind) => {
     _setSelectedAction(action);
 
@@ -105,7 +130,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         selectedAction,
         setSelectedAction,
         actionState,
-        dispatchGameAction: dispatchGameAction,
+        dispatchGameAction: dispatchGameActionWithFinish,
       }}
     >
       {children}

@@ -1,3 +1,5 @@
+import { GameState } from '../types/GameState';
+
 export interface RecoverPossibleMessage {
   playerId: string;
   cardId: string;
@@ -14,6 +16,7 @@ export interface PlayCardMessage {
 export interface EarnMoneyResult {
   playerId: string;
   amount: number;
+  newState: GameState;
 }
 
 export type OutgoingMessage = RecoverPossibleMessage | PlayCardMessage | null;

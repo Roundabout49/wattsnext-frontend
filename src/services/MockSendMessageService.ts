@@ -106,21 +106,22 @@ export function useMockSendMessageService(): SendMessageService {
       console.log('[Mock] sendEarnMoney');
 
       // update player
-      // const nextPlayer = getNextPlayer(gameState.players, gameState.currentPlayerId);
+      const nextPlayer = getNextPlayer(gameState.players, gameState.currentPlayerId);
 
       const amount = Math.floor(Math.random() * 6) + 1;
       handleEarnMoneyResult(
         {
           playerId: gameState.currentPlayerId,
           amount,
+          newState: {
+            ...gameState,
+            money: gameState.money + amount,
+            currentPlayerId: nextPlayer.id,
+            turn: gameState.turn + 1,
+          },
         },
         dispatchGameAction
       );
-      /*setGameState({
-        ...gameState,
-        currentPlayerId: nextPlayer.id,
-        money: gameState.money + amount,
-      });*/
     },
   };
 }

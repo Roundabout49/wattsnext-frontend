@@ -21,6 +21,7 @@ export function playCardReducer(
         cardId: null,
         selectedPosition: null,
         recoverResources: null,
+        newGameState: null,
       };
     }
     return null; // No valid state to handle the action
@@ -33,6 +34,7 @@ export function playCardReducer(
         cardId: null,
         selectedPosition: null,
         recoverResources: null,
+        newGameState: null,
       };
     case 'PLAY_CARD_SELECT_CARD':
       return {

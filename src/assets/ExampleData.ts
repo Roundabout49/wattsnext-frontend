@@ -156,12 +156,12 @@ export const exampleGameState: GameState = {
   players: [
     {
       id: 'player1',
-      name: 'Player 1',
+      name: 'Bob',
       hand: [generationCards[0], climateActionCards[0], climateActionCards[1]],
     },
     {
       id: 'player2',
-      name: 'Player 2',
+      name: 'Alice',
       hand: [climateActionCards[2], storageCards[0], distributionCards[0]],
     },
   ],

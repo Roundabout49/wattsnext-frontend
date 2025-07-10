@@ -112,6 +112,7 @@ const ActionBar = () => {
         top: 0,
         zIndex: 1000,
         boxShadow: 2,
+        minHeight: 40,
       }}
     >
       {currentPlayerName ? (

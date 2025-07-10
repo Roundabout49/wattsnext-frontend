@@ -1,9 +1,10 @@
 import { EarnMoneyActionState } from '../types/Actions';
+import { GameState } from '../types/GameState';
 
 export type EarnMoneyAction =
   | { type: 'EARN_MONEY_INIT' }
   | { type: 'EARN_MONEY_CONFIRM' }
-  | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number }
+  | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number; newGameState: GameState }
   | { type: 'DIE_ANIMATION_FINISHED' };
 
 export function earnMoneyReducer(
@@ -16,6 +17,7 @@ export function earnMoneyReducer(
         type: 'earnMoney',
         step: 'confirm',
         amount: null,
+        newGameState: null,
       };
     }
     return null;
@@ -27,6 +29,7 @@ export function earnMoneyReducer(
         type: 'earnMoney',
         step: 'confirm',
         amount: null,
+        newGameState: null,
       };
     case 'EARN_MONEY_CONFIRM':
       return {
@@ -38,6 +41,7 @@ export function earnMoneyReducer(
         ...state,
         step: 'animateDie',
         amount: action.amount,
+        newGameState: action.newGameState,
       };
     case 'DIE_ANIMATION_FINISHED':
       return {

@@ -39,13 +39,15 @@ export function EarnMoneyHandler() {
       });
       setDieAnimationStep('rolling');
 
-      setTimeout(() => setDieAnimationStep('showResult'), 3000);
+      setTimeout(() => {
+        setDieAnimationStep('showResult');
+        dispatchGameAction({ type: 'DIE_ANIMATION_FINISHED' });
+      }, 3000);
 
       setTimeout(() => {
         setShowDieAnimation(false);
-        dispatchGameAction({ type: 'DIE_ANIMATION_FINISHED' });
         animateMoneyChange(actionState.amount ?? 0, () => {
-          dispatchGameAction({ type: 'FINISH_ACTION' });
+          setTimeout(() => dispatchGameAction({ type: 'FINISH_ACTION' }), 1000);
         });
       }, 5000);
     }
