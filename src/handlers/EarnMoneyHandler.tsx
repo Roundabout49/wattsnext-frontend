@@ -42,14 +42,14 @@ export function EarnMoneyHandler() {
       setTimeout(() => {
         setDieAnimationStep('showResult');
         dispatchGameAction({ type: 'DIE_ANIMATION_FINISHED' });
-      }, 3000);
+      }, 2000);
 
       setTimeout(() => {
         setShowDieAnimation(false);
         animateMoneyChange(actionState.amount ?? 0, () => {
           setTimeout(() => dispatchGameAction({ type: 'FINISH_ACTION' }), 1000);
         });
-      }, 5000);
+      }, 4000);
     }
 
     if (step !== 'done') {

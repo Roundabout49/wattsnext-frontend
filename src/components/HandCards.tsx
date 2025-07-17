@@ -4,33 +4,59 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Box, Paper, Typography, IconButton, Collapse, Button } from '@mui/material';
 import ProgressCardSmall from './cards/ProgressCardSmall';
 import { useCardAnimation } from '../context/CardAnimationContext';
+import { usePlayer } from '../context/PlayerContext';
+import { useAction } from '../context/ActionContext';
 
 const HandCards = () => {
   const { gameState } = useGame();
-  const { players } = gameState;
+  const { players, currentPlayerId } = gameState;
+  const { playerId } = usePlayer();
+  const { actionState, dispatchGameAction } = useAction();
 
   const { registerCardRef, getCardRef, startCardAnimation: startAnimation } = useCardAnimation();
 
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
 
-  const toggleOpen = (playerName: string) => {
+  const toggleOpen = (playerId: string) => {
     setOpenStates((prev) => ({
       ...prev,
-      [playerName]: !prev[playerName],
+      [playerId]: !prev[playerId],
     }));
   };
 
-  // TODO: Closing currently needs 2 clicks ...
+  const reorderedPlayers = (() => {
+    const index = players.findIndex((p) => p.id === playerId);
+    if (index === -1) return players;
+    return [...players.slice(index), ...players.slice(0, index)];
+  })();
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-      {players.map((player) => {
-        const isOpen = openStates[player.name] ?? true;
+      {reorderedPlayers.map((player) => {
+        const isOwn = player.id === playerId;
+        const isCurrent = player.id === currentPlayerId;
+        const isPlayable =
+          isOwn &&
+          isCurrent &&
+          actionState?.type === 'playCard' &&
+          (actionState.step === 'selectCard' || actionState.step === 'selectPosition');
+        const isOpen = openStates[player.id] ?? true;
 
         return (
-          <Paper key={player.name} variant="outlined" sx={{ p: 1 }}>
+          <Paper
+            key={player.id}
+            variant="outlined"
+            sx={{
+              p: 1,
+              backgroundColor: isOwn ? 'lightblue' : 'white',
+              border: isOwn ? '2px solid #1976d2' : undefined,
+            }}
+          >
             <Box display="flex" alignItems="center" justifyContent="space-between">
-              <Typography variant="h6">{player.name}</Typography>
-              <IconButton onClick={() => toggleOpen(player.name)}>
+              <Typography variant="h6">
+                {player.name} {isOwn && '(Du)'}
+              </Typography>
+              <IconButton onClick={() => toggleOpen(player.id)}>
                 {isOpen ? <ExpandLess /> : <ExpandMore />}
               </IconButton>
             </Box>
@@ -38,19 +64,49 @@ const HandCards = () => {
             <Collapse in={isOpen}>
               <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
                 {player.hand.map((card) => {
+                  const isSelected =
+                    actionState?.type === 'playCard' && actionState.cardId === card.title;
+                  const isAnySelected = actionState?.type == 'playCard' && !!actionState.cardId;
+
                   const cardRef = useRef<HTMLDivElement>(null);
 
                   useEffect(() => {
                     registerCardRef(card.title, cardRef);
                   }, [card.title]);
+
+                  const handleClick = () => {
+                    if (isPlayable && !isSelected) {
+                      dispatchGameAction({ type: 'PLAY_CARD_SELECT_CARD', cardId: card.title });
+                    }
+                  };
+
                   return (
-                    <div ref={cardRef} key={card.title}>
+                    <div
+                      ref={cardRef}
+                      key={card.title}
+                      onClick={handleClick}
+                      style={{
+                        cursor: isPlayable ? 'pointer' : 'default',
+                        border: isPlayable
+                          ? isAnySelected
+                            ? isSelected
+                              ? '2px solid #4caf50'
+                              : '2px solid gray'
+                            : '2px solid #4caf50'
+                          : undefined,
+                        borderRadius: 4,
+                        boxShadow: isSelected ? '4px 4px 6px gray' : undefined,
+                        transform: isSelected ? 'translate(-3px, -3px)' : undefined,
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
                       <ProgressCardSmall card={card} />
                     </div>
                   );
                 })}
               </Box>
             </Collapse>
+
             <Button
               variant="contained"
               onClick={() => {
