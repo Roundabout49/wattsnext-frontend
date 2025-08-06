@@ -34,7 +34,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Photovoltaik auf dem Dach': {
     title: 'Photovoltaik auf dem Dach',
-    image: '',
+    image: '/images/photovoltaik.png',
     text: 'Um das volle Potenzial nutzen zu können, muss in sonnenreichen Stunden Strom gespeichert werden.',
     explanation: 'Photovoltaik generiert aus Sonnenlicht Strom.',
     price: 1,
@@ -634,7 +634,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   Fernwärmenetz: {
     title: 'Fernwärmenetz',
-    image: '',
+    image: '/images/fernwaerme.png',
     text: 'Diese Karte allein  gibt keine Punkte. Ein stabiles Energieverteilungsnetz ist eine Grundvoraussetzung für das Energiesystem.',
     explanation:
       'Das Fernwärmenetz transportiert zentral erzeugte Wärme oder Abwärme aus Fabriken oder Kraftwerken über mehrere Kilometer für die eigene Wärmeversorgung zu Hause.',
@@ -731,7 +731,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   Wasserstoffspeicher: {
     title: 'Wasserstoffspeicher',
-    image: '',
+    image: '/images/wasserstoffspeicher.png',
     text: 'Überschüssige Energie wird im Sommer für den Winter gespeichert.',
     explanation: 'Mit Hilfe von Wasserstoff kann Energie gespeichert werden.',
     price: 8,
@@ -756,7 +756,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Großer Wasserstoffspeicher': {
     title: 'Großer Wasserstoffspeicher',
-    image: '',
+    image: '/images/wasserstoffspeicher.png',
     text: 'Überschüssige Energie wird im Sommer für den Winter gespeichert.',
     explanation: 'Mit Hilfe von Wasserstoff kann Energie gespeichert werden.',
     price: 10,
@@ -1037,7 +1037,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   Gebäudeisolation: {
     title: 'Gebäudeisolation',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet jeweils 2 Einheiten Ressourcen und Geld.',
     explanation: 'Gut isolierte Gebäude brauchen weniger Energie zum Heizen/Kühlen.',
     price: 2,
@@ -1051,7 +1051,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Ausbau der Eisenbahn': {
     title: 'Ausbau der Eisenbahn',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: '',
     explanation:
       'Das Nutzen von öffentlichen Verkehrsmitteln reduziert Emissionen. Der Ausbau steigert die Attraktivität. Am Besten mit grünem Strom antreiben.',
@@ -1077,7 +1077,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Verbrenner-Aus': {
     title: 'Verbrenner-Aus',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet 2 Ressourcen.',
     explanation:
       'Das Verbieten von Neuzulassungen von Verbrennern ist eine sozialgerechte und effektive Möglichkeit die Emissionen im Verkehrssektor zu senken.',
@@ -1103,7 +1103,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Subventionierung von E-Autos': {
     title: 'Subventionierung von E-Autos',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: '',
     explanation: 'Elektromobilität ist ein wichtiger Pfeiler der Verkehrswende. ',
     price: 2,
@@ -1128,7 +1128,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'CO2-Abscheidung und -Speicherung': {
     title: 'CO2-Abscheidung und -Speicherung',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet 2 Ressourcen.',
     explanation:
       'Das von Kraftwerken ausgestoßene CO2 wird herausgefiltert. Dieses abgeschiedene CO2 kann als Rohstoff z.B. in der Chemie-Industrie dienen.',
@@ -1149,7 +1149,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'H2-betriebene Schiffe': {
     title: 'H2-betriebene Schiffe',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: '',
     explanation:
       'Wasserstoff (H2) gilt als alternativer grüner Kraftstoff. Die Nutzung bietet sich vor allem auf langen Strecken an, da Batterien nicht die notwendige Reichweite bieten können.',
@@ -1164,7 +1164,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'E-Buslinien in ländlicher Region': {
     title: 'E-Buslinien in ländlicher Region',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet 2 Ressourcen.',
     explanation:
       'Das Nutzen von öffentlichen Verkehrsmitteln reduziert Emissionen. Auf dem Land ist die Verfügbarkeit jedoch noch sehr dünn.​',
@@ -1190,7 +1190,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Power-to-X': {
     title: 'Power-to-X',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Für ein gebautes Gaskraftwerk erhaltet ihr 5 zusätzliche Fortschrittspunkte.',
     explanation:
       'Power-to-X Technologien speichern Stromüberschüsse aus erneuerbaren Energien und wandeln sie in chemische Energieträger (z.B. H2) für Langfristspeicherung und Verkehr um.',
@@ -1216,7 +1216,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'CO2-neutraler Flugverkehr': {
     title: 'CO2-neutraler Flugverkehr',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: '',
     explanation:
       'Die Nutzung von synthetischem Kerosin bietet eine grünere Alternative zu fossilem Kraftstoff, die für Flugzeuge geeignet ist.',
@@ -1231,7 +1231,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Verbot von Inlandsflügen': {
     title: 'Verbot von Inlandsflügen',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet 2 Ressourcen.',
     explanation:
       'Kurzstreckenflüge sind ineffizient, da Start und Landung viel Energie verbrauchen. Sie verursachen pro Person deutlich mehr CO₂ als Züge oder Busse.​',
@@ -1246,7 +1246,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Kunsstoff-Recycling': {
     title: 'Kunsstoff-Recycling',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet jeweils 2 Einheiten Ressourcen und Geld.',
     explanation:
       'Recycelter Kunststoff wird gereinigt, zerkleinert und geschmolzen, um neue Produkte wie Verpackungen oder Bauteile herzustellen.​',
@@ -1272,7 +1272,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Subventionierung von Erneuerbaren': {
     title: 'Subventionierung von Erneuerbaren',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Alle Wind- und Photovoltaik-Technologien kosten 2 Geldeinheiten weniger, aber mindestens 1 Geldeinheit.',
     explanation: 'Das Fördern von Erneuerbaren soll deren Ausbau Beschleunigen.',
     price: 2,
@@ -1292,7 +1292,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Batterie-Recycling': {
     title: 'Batterie-Recycling',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet jeweils 2 Einheiten Ressourcen und Geld.',
     explanation:
       'Recycling von Batterien ist wichtig, um wertvolle Rohstoffe zurückzugewinnen und sorgt für eine nachhaltigere Nutzung von Ressourcen.​',
@@ -1318,7 +1318,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Pendeln mit dem Fahrrad': {
     title: 'Pendeln mit dem Fahrrad',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet 2 Ressourcen.',
     explanation: 'Ab jetzt pendelt ihr mit dem Fahrrad zur Schule/Uni/Arbeit.',
     price: 0,
@@ -1332,7 +1332,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Sharing is Caring': {
     title: 'Sharing is Caring',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet 2 Ressourcen.',
     explanation:
       'Statt viel Geld für immer neue Dinge auszugeben tauscht oder leiht ihr. Wenn dies nicht möglich ist, kauft ihr second-hand.',
@@ -1347,7 +1347,7 @@ export const cards: Record<string, ProgressCardProps> = {
   },
   'Umweltbewusste Ernährung': {
     title: 'Umweltbewusste Ernährung',
-    image: '',
+    image: '/images/klimaaktion.png',
     text: 'Ihr erhaltet 2 Ressourcen.',
     explanation:
       'Ihr verzichtet weitestgehend auf tierische Produkte, achtest auf Regionalität und Saisonalität und verringert Lebensmittelverschwendung.',

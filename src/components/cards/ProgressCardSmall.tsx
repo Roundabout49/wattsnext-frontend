@@ -1,12 +1,19 @@
 import React from 'react';
-import { Card, CardContent, Typography, Box, Popover } from '@mui/material';
+import { CardContent, Typography, Box, Popover } from '@mui/material';
 import { TechnologyTypes } from '../../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
 import ProgressCardLarge from './ProgressCardLarge';
 import { ProgressCardProps } from '../../types/ProgressCards';
 import CardPoints from './CardPoints';
+import CardWrapperSmall, { Highlight } from './CardWrapperSmall';
 
-const ProgressCardSmall: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
+interface ProgressCardSmallProps {
+  card: ProgressCardProps;
+  highlight?: Highlight;
+  onClick?: () => void;
+}
+
+const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, onClick }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -25,10 +32,11 @@ const ProgressCardSmall: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
       : 'green';
   return (
     <div>
-      <Card
-        sx={{ width: 112, height: 160, position: 'relative', padding: 0 }}
+      <CardWrapperSmall
+        onClick={onClick}
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
+        highlight={highlight}
       >
         <Box
           sx={{
@@ -98,7 +106,7 @@ const ProgressCardSmall: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
             {card.points && <CardPoints points={card.points} />}
           </Box>
         </CardContent>
-      </Card>
+      </CardWrapperSmall>
       <Popover
         id="mouse-over-popover"
         sx={{ pointerEvents: 'none' }}

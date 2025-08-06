@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Box, Paper, Typography, IconButton, Collapse, Button, useTheme } from '@mui/material';
+import { Box, Paper, Typography, IconButton, Collapse, Button } from '@mui/material';
 import ProgressCardSmall from './cards/ProgressCardSmall';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { usePlayer } from '../context/PlayerContext';
@@ -14,8 +14,6 @@ const HandCards = () => {
   const { actionState, dispatchGameAction } = useAction();
 
   const { registerCardRef, getCardRef, startCardAnimation: startAnimation } = useCardAnimation();
-
-  const theme = useTheme();
 
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
 
@@ -41,7 +39,9 @@ const HandCards = () => {
           isOwn &&
           isCurrent &&
           actionState?.type === 'playCard' &&
-          (actionState.step === 'selectCard' || actionState.step === 'selectPosition');
+          (actionState.step === 'selectCard' ||
+            actionState.step === 'selectPosition' ||
+            actionState.step === 'confirm');
         const isOpen = openStates[player.id] ?? true;
 
         return (
@@ -87,26 +87,20 @@ const HandCards = () => {
                   };
 
                   return (
-                    <div
-                      ref={cardRef}
-                      key={card.title}
-                      onClick={handleClick}
-                      style={{
-                        cursor: isPlayable ? 'pointer' : 'default',
-                        border: isPlayable
-                          ? isAnySelected
-                            ? isSelected
-                              ? `3px solid ${theme.palette.success.main}`
-                              : `3px solid ${theme.palette.grey[400]}`
-                            : `3px solid ${theme.palette.primary.main}`
-                          : undefined,
-                        borderRadius: 4,
-                        boxShadow: isSelected ? '4px 4px 6px gray' : undefined,
-                        transform: isSelected ? 'translate(-3px, -3px)' : undefined,
-                        transition: 'all 0.2s ease',
-                      }}
-                    >
-                      <ProgressCardSmall card={card} />
+                    <div ref={cardRef} key={card.title}>
+                      <ProgressCardSmall
+                        card={card}
+                        highlight={
+                          isPlayable
+                            ? isAnySelected
+                              ? isSelected
+                                ? 'selected'
+                                : 'notSelected'
+                              : 'selectable'
+                            : undefined
+                        }
+                        onClick={handleClick}
+                      />
                     </div>
                   );
                 })}

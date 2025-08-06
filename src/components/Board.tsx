@@ -5,13 +5,20 @@ import ProgressCardSmall from './cards/ProgressCardSmall';
 import { useEffect, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCardAnimation } from '../context/CardAnimationContext';
+import { useAction } from '../context/ActionContext';
+import { usePlayer } from '../context/PlayerContext';
+import { cards } from '../data/cards';
+import { TechnologyType } from '../types/TechnologyTypes';
 
 const Board: React.FC = () => {
-  const [showClimateActions, setShowClimateActions] = useState(true);
   const { gameState } = useGame();
+  const { currentPlayerId } = gameState;
   const { climateActions, generation, storage, distribution, event, badEvent } = gameState.board;
   const { registerCardRef } = useCardAnimation();
+  const { actionState, dispatchGameAction } = useAction();
+  const { playerId } = usePlayer();
 
+  const [showClimateActions, setShowClimateActions] = useState(true);
   const climateRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -23,11 +30,46 @@ const Board: React.FC = () => {
     });
   }, [climateActions, showClimateActions, registerCardRef]);
 
+  const selectedCard = (() => {
+    if (actionState?.type === 'playCard' && actionState.cardId) {
+      const card = cards[actionState.cardId];
+      if (card) return card;
+    }
+    return null;
+  })();
+
+  const isCurrentPlayer = playerId === currentPlayerId;
+
+  const selectableClimateIndex =
+    isCurrentPlayer && selectedCard?.type === 'climateAction'
+      ? climateActions.findIndex((c) => c === null)
+      : -1;
+
+  const isSelectableTechnologySlot = (technology: TechnologyType) => {
+    if (!isCurrentPlayer) return false;
+    if (selectedCard?.type !== 'technology') return false;
+    if (selectedCard.energyCharacteristics.technology !== technology) return false;
+
+    return true;
+  };
+
+  const isSelected = (isSelectable: boolean, index: number) =>
+    isSelectable && actionState?.type === 'playCard' && actionState.selectedPosition === index;
+
+  const handleSelectPosition = (index: number) => {
+    if (isCurrentPlayer && actionState?.type === 'playCard') {
+      dispatchGameAction({
+        type: 'PLAY_CARD_SELECT_POSITION',
+        selectedPosition: index,
+      });
+    }
+  };
+
   return (
     <Box
       sx={{
         position: 'relative',
-        width: 610,
+        width: 640,
         backgroundColor: 'lightgrey',
         boxShadow: 2,
         padding: 1,
@@ -50,6 +92,11 @@ const Board: React.FC = () => {
         </Grid>
         {showClimateActions &&
           climateActions.map((card, index) => {
+            const isSelectable = index === selectableClimateIndex;
+            const selected = isSelected(isSelectable, index);
+            const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
+            const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
+
             return (
               <Grid size={4} key={index}>
                 <div
@@ -57,7 +104,11 @@ const Board: React.FC = () => {
                     climateRefs.current[index] = el;
                   }}
                 >
-                  {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
+                  {card ? (
+                    <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
+                  ) : (
+                    <EmptyCardSmall highlight={highlight} onClick={onClick} />
+                  )}
                 </div>
               </Grid>
             );
@@ -72,6 +123,21 @@ const Board: React.FC = () => {
           <Stack spacing={1}>
             <Typography variant="h6">Erzeugung</Typography>
             {generation.map((card, index) => {
+              const isSelectable = isSelectableTechnologySlot('Generation');
+              const selected = isSelected(isSelectable, index);
+              const anySelected =
+                isSelectable &&
+                actionState?.type === 'playCard' &&
+                actionState.selectedPosition !== null;
+              const highlight = selected
+                ? 'selected'
+                : anySelected
+                  ? 'notSelected'
+                  : isSelectable
+                    ? 'selectable'
+                    : undefined;
+              const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
+
               const cardId = `generation-${index}`;
               const cardRef = useRef<HTMLDivElement>(null);
 
@@ -81,7 +147,11 @@ const Board: React.FC = () => {
 
               return (
                 <div ref={cardRef} key={index}>
-                  {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
+                  {card ? (
+                    <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
+                  ) : (
+                    <EmptyCardSmall highlight={highlight} onClick={onClick} />
+                  )}
                 </div>
               );
             })}
@@ -91,6 +161,11 @@ const Board: React.FC = () => {
           <Stack spacing={1}>
             <Typography variant="h6">Verteilung</Typography>
             {distribution.map((card, index) => {
+              const isSelectable = isSelectableTechnologySlot('Distribution');
+              const selected = isSelected(isSelectable, index);
+              const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
+              const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
+
               const cardId = `distribution-${index}`;
               const cardRef = useRef<HTMLDivElement>(null);
 
@@ -100,7 +175,11 @@ const Board: React.FC = () => {
 
               return (
                 <div ref={cardRef} key={index}>
-                  {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
+                  {card ? (
+                    <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
+                  ) : (
+                    <EmptyCardSmall highlight={highlight} onClick={onClick} />
+                  )}
                 </div>
               );
             })}
@@ -110,6 +189,11 @@ const Board: React.FC = () => {
           <Stack spacing={1}>
             <Typography variant="h6">Speicher</Typography>
             {storage.map((card, index) => {
+              const isSelectable = isSelectableTechnologySlot('Storage');
+              const selected = isSelected(isSelectable, index);
+              const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
+              const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
+
               const cardId = `storage-${index}`;
               const cardRef = useRef<HTMLDivElement>(null);
 
@@ -119,7 +203,11 @@ const Board: React.FC = () => {
 
               return (
                 <div ref={cardRef} key={index}>
-                  {card ? <ProgressCardSmall card={card} /> : <EmptyCardSmall />}
+                  {card ? (
+                    <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
+                  ) : (
+                    <EmptyCardSmall highlight={highlight} onClick={onClick} />
+                  )}
                 </div>
               );
             })}

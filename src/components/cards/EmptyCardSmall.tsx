@@ -1,7 +1,12 @@
-import { Card } from '@mui/material';
+import CardWrapperSmall, { Highlight } from './CardWrapperSmall';
 
-const EmptyCardSmall = () => {
-  return <Card sx={{ width: 112, height: 160, position: 'relative', padding: 0 }} />;
+interface EmptyCardSmallProps {
+  highlight?: Highlight;
+  onClick?: () => void;
+}
+
+const EmptyCardSmall: React.FC<EmptyCardSmallProps> = ({ highlight, onClick }) => {
+  return <CardWrapperSmall highlight={highlight} onClick={onClick} />;
 };
 
 export default EmptyCardSmall;
