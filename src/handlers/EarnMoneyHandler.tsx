@@ -52,7 +52,7 @@ export function EarnMoneyHandler() {
       }, 4000);
     }
 
-    if (step !== 'done') {
+    if (step !== 'animateDie') {
       didHandleAnimateDieRef.current = false;
     }
   }, [

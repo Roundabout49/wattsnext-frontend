@@ -1,6 +1,6 @@
 import { GameState } from '../types/GameState';
 
-export interface RecoverPossibleMessage {
+export interface PlayCardIntentMessage {
   playerId: string;
   cardId: string;
   position: number;
@@ -19,4 +19,19 @@ export interface EarnMoneyResult {
   newState: GameState;
 }
 
-export type OutgoingMessage = RecoverPossibleMessage | PlayCardMessage | null;
+export interface PlayCardIntentResult {
+  playerId: string;
+  playPossible: boolean;
+  recoverPossible: boolean;
+  // TODO: More information about additional cost and recoverable resources?
+}
+
+export interface PlayCardResult {
+  playerId: string;
+  cardId: string;
+  position: number;
+  recover: boolean;
+  newState: GameState;
+}
+
+export type OutgoingMessage = PlayCardIntentMessage | PlayCardMessage | null;

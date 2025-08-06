@@ -1,7 +1,7 @@
-import { PlayCardMessage, RecoverPossibleMessage } from '../ws/MessageTypes';
+import { PlayCardMessage, PlayCardIntentMessage } from '../ws/MessageTypes';
 
 export interface SendMessageService {
-  sendPlayCardIntent: (data: RecoverPossibleMessage) => void;
+  sendPlayCardIntent: (data: PlayCardIntentMessage) => void;
   sendPlayCard: (data: PlayCardMessage) => void;
-  sendEarnMoney: () => void;
+  sendEarnMoney: () => void; // Todo: playerId required?
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Box, Paper, Typography, IconButton, Collapse, Button } from '@mui/material';
@@ -6,6 +6,7 @@ import ProgressCardSmall from './cards/ProgressCardSmall';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { usePlayer } from '../context/PlayerContext';
 import { useAction } from '../context/ActionContext';
+import { useCardRefs } from '../hooks/useCardRefs';
 
 const HandCards = () => {
   const { gameState } = useGame();
@@ -13,9 +14,21 @@ const HandCards = () => {
   const { playerId } = usePlayer();
   const { actionState, dispatchGameAction } = useAction();
 
-  const { registerCardRef, getCardRef, startCardAnimation: startAnimation } = useCardAnimation();
+  const { registerCardRef, getCardRef, startCardAnimation } = useCardAnimation();
 
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
+
+  const allCards = players.flatMap((p) => p.hand);
+  const cardRefs = useCardRefs(allCards);
+
+  useEffect(() => {
+    allCards.forEach((card) => {
+      const ref = cardRefs[card.title];
+      if (ref) {
+        registerCardRef(card.title, ref);
+      }
+    });
+  }, [allCards, cardRefs, registerCardRef]);
 
   const toggleOpen = (playerId: string) => {
     setOpenStates((prev) => ({
@@ -70,12 +83,6 @@ const HandCards = () => {
                     actionState?.type === 'playCard' && actionState.cardId === card.title;
                   const isAnySelected = actionState?.type == 'playCard' && !!actionState.cardId;
 
-                  const cardRef = useRef<HTMLDivElement>(null);
-
-                  useEffect(() => {
-                    registerCardRef(card.title, cardRef);
-                  }, [card.title]);
-
                   const handleClick = () => {
                     if (!isPlayable) return;
 
@@ -87,7 +94,7 @@ const HandCards = () => {
                   };
 
                   return (
-                    <div ref={cardRef} key={card.title}>
+                    <div ref={cardRefs[card.title]} key={card.title}>
                       <ProgressCardSmall
                         card={card}
                         highlight={
@@ -114,7 +121,7 @@ const HandCards = () => {
                 const toRef = getCardRef('generation-2');
 
                 if (fromRef?.current && toRef?.current) {
-                  startAnimation(
+                  startCardAnimation(
                     player.hand[0].title,
                     'generation-2',
                     <ProgressCardSmall card={player.hand[0]} />,

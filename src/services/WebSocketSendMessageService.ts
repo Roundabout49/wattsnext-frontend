@@ -1,4 +1,4 @@
-import { PlayCardMessage, RecoverPossibleMessage } from '../ws/MessageTypes';
+import { PlayCardMessage, PlayCardIntentMessage } from '../ws/MessageTypes';
 import { useWebSocket } from '../ws/WebSocketProvider';
 import { SendMessageService } from './SendMessageService';
 
@@ -6,7 +6,7 @@ export function useWebsocketSendMessageService(): SendMessageService {
   const { sendMessage } = useWebSocket();
 
   return {
-    sendPlayCardIntent: (data: RecoverPossibleMessage) => {
+    sendPlayCardIntent: (data: PlayCardIntentMessage) => {
       sendMessage('/app/playCardIntent', data);
     },
 

@@ -10,7 +10,7 @@ import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer'
 import { useGame } from './GameContext';
 import { GameState } from '../types/GameState';
 
-type GameAction =
+export type GameAction =
   | PlayCardAction
   | EarnMoneyAction
   | { type: 'RESET' }

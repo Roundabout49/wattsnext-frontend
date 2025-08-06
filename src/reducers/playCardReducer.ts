@@ -1,4 +1,5 @@
 import { PlayCardActionState } from '../types/Actions';
+import { GameState } from '../types/GameState';
 
 export type PlayCardAction =
   | { type: 'PLAY_CARD_INIT' }
@@ -8,6 +9,13 @@ export type PlayCardAction =
   | { type: 'PLAY_CARD_SET_CAN_RECOVER'; canRecover: boolean }
   | { type: 'PLAY_CARD_SELECT_RECOVER_RESOURCES'; recover: boolean }
   | { type: 'PLAY_CARD_CONFIRM' }
+  | {
+      type: 'PLAY_CARD_RESULT';
+      cardId: string;
+      position: number;
+      recover: boolean;
+      newGameState: GameState;
+    }
   | { type: 'PLAY_CARD_DONE' };
 
 export function playCardReducer(
@@ -75,7 +83,21 @@ export function playCardReducer(
     case 'PLAY_CARD_CONFIRM':
       return {
         ...state,
-        step: 'waitForDone',
+        step: 'waitForGameState',
+      };
+    case 'PLAY_CARD_RESULT':
+      return {
+        ...state,
+        step: 'animatePlayCard',
+        cardId: action.cardId,
+        selectedPosition: action.position,
+        recoverResources: action.recover,
+        newGameState: action.newGameState,
+      };
+    case 'PLAY_CARD_DONE':
+      return {
+        ...state,
+        step: 'done',
       };
     default:
       return state;

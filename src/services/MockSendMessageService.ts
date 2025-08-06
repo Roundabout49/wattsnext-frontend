@@ -2,8 +2,12 @@ import { useAction } from '../context/ActionContext';
 import { useGame } from '../context/GameContext';
 import { cards } from '../data/cards';
 import { Player } from '../types/GameState';
-import { handleEarnMoneyResult } from '../ws/MessageHandler';
-import { PlayCardMessage, RecoverPossibleMessage } from '../ws/MessageTypes';
+import {
+  handleEarnMoneyResult,
+  handlePlayCardIntentResult,
+  handlePlayCardResult,
+} from '../ws/MessageHandler';
+import { PlayCardMessage, PlayCardIntentMessage } from '../ws/MessageTypes';
 import { SendMessageService } from './SendMessageService';
 
 const getNextPlayer = (players: Player[], currentPlayerId: string): Player => {
@@ -13,11 +17,21 @@ const getNextPlayer = (players: Player[], currentPlayerId: string): Player => {
 
 export function useMockSendMessageService(): SendMessageService {
   const { dispatchGameAction } = useAction();
-  const { gameState, setGameState } = useGame();
+  const { gameState } = useGame();
 
   return {
-    sendPlayCardIntent: (data: RecoverPossibleMessage) => {
+    sendPlayCardIntent: (data: PlayCardIntentMessage) => {
       console.log('[Mock] sendPlayCardIntent', data);
+
+      handlePlayCardIntentResult(
+        {
+          playerId: data.playerId,
+          playPossible: true,
+          recoverPossible: false, // TODO: also test true
+        },
+        dispatchGameAction
+      );
+
       dispatchGameAction({
         type: 'PLAY_CARD_SET_CAN_RECOVER',
         canRecover: false,
@@ -27,7 +41,7 @@ export function useMockSendMessageService(): SendMessageService {
     sendPlayCard: (data: PlayCardMessage) => {
       console.log('[Mock] sendPlayCard', data);
 
-      const { cardId, position /*recoverResources*/ } = data;
+      const { cardId, position, recover } = data;
       const card = cards[cardId];
 
       // update player
@@ -60,7 +74,7 @@ export function useMockSendMessageService(): SendMessageService {
         updatedDistribution[position] = card;
       }
 
-      setGameState({
+      const newGameState = {
         ...gameState,
         players: gameState.players.map((player) => {
           if (player.id === gameState.currentPlayerId) {
@@ -96,10 +110,17 @@ export function useMockSendMessageService(): SendMessageService {
               }
             : gameState.technologySizes,
         turn: gameState.turn + 1,
-      });
-      dispatchGameAction({
-        type: 'FINISH_ACTION',
-      });
+      };
+      handlePlayCardResult(
+        {
+          playerId: gameState.currentPlayerId,
+          cardId: cardId,
+          position: position,
+          recover: recover,
+          newState: newGameState,
+        },
+        dispatchGameAction
+      );
     },
 
     sendEarnMoney: () => {
