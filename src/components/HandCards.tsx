@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Box, Paper, Typography, IconButton, Collapse, Button } from '@mui/material';
+import { Box, Paper, Typography, IconButton, Collapse, Button, useTheme } from '@mui/material';
 import ProgressCardSmall from './cards/ProgressCardSmall';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { usePlayer } from '../context/PlayerContext';
@@ -14,6 +14,8 @@ const HandCards = () => {
   const { actionState, dispatchGameAction } = useAction();
 
   const { registerCardRef, getCardRef, startCardAnimation: startAnimation } = useCardAnimation();
+
+  const theme = useTheme();
 
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
 
@@ -75,7 +77,11 @@ const HandCards = () => {
                   }, [card.title]);
 
                   const handleClick = () => {
-                    if (isPlayable && !isSelected) {
+                    if (!isPlayable) return;
+
+                    if (isSelected) {
+                      dispatchGameAction({ type: 'PLAY_CARD_DESELECT_CARD' });
+                    } else {
                       dispatchGameAction({ type: 'PLAY_CARD_SELECT_CARD', cardId: card.title });
                     }
                   };
@@ -90,9 +96,9 @@ const HandCards = () => {
                         border: isPlayable
                           ? isAnySelected
                             ? isSelected
-                              ? '2px solid #4caf50'
-                              : '2px solid gray'
-                            : '2px solid #4caf50'
+                              ? `3px solid ${theme.palette.success.main}`
+                              : `3px solid ${theme.palette.grey[400]}`
+                            : `3px solid ${theme.palette.primary.main}`
                           : undefined,
                         borderRadius: 4,
                         boxShadow: isSelected ? '4px 4px 6px gray' : undefined,

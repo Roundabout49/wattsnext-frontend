@@ -3,6 +3,7 @@ import { PlayCardActionState } from '../types/Actions';
 export type PlayCardAction =
   | { type: 'PLAY_CARD_INIT' }
   | { type: 'PLAY_CARD_SELECT_CARD'; cardId: string }
+  | { type: 'PLAY_CARD_DESELECT_CARD' }
   | { type: 'PLAY_CARD_SELECT_POSITION'; selectedPosition: number }
   | { type: 'PLAY_CARD_SET_CAN_RECOVER'; canRecover: boolean }
   | { type: 'PLAY_CARD_SELECT_RECOVER_RESOURCES'; recover: boolean }
@@ -43,6 +44,14 @@ export function playCardReducer(
         selectedPosition: null,
         recoverResources: null,
         step: 'selectPosition',
+      };
+    case 'PLAY_CARD_DESELECT_CARD':
+      return {
+        ...state,
+        cardId: null,
+        selectedPosition: null,
+        recoverResources: null,
+        step: 'selectCard',
       };
     case 'PLAY_CARD_SELECT_POSITION':
       return {
