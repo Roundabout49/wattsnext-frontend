@@ -10,7 +10,7 @@ import { EnergyTypes } from '../types/EnergyTypes';
 
 const PhaseObjective = () => {
   const { gameState } = useGame();
-  const { phase: currentPhase, phaseObjectives, progressPoints, technologySizes } = gameState;
+  const { phase: currentPhase, phaseObjectives, progressPoints } = gameState;
 
   const sortedPhases = Object.keys(phaseObjectives)
     .map(Number)
@@ -104,10 +104,7 @@ const PhaseObjective = () => {
               <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                 <EnergyIcon
                   technology={technologyType}
-                  size={Object.values(technologySizes[technologyType]).reduce(
-                    (sum, size) => sum + size,
-                    0
-                  )}
+                  size={objective.technologyTypesHave[technologyType]}
                 />
                 <Typography
                   variant="h3"
@@ -120,7 +117,7 @@ const PhaseObjective = () => {
             )}
             <EnergyIcon
               technology={technologyType}
-              size={objective.technologyTypes[technologyType]}
+              size={objective.technologyTypesAim[technologyType]}
             />
           </Box>
         </Box>
@@ -128,14 +125,11 @@ const PhaseObjective = () => {
 
       {/*TODO: Color should only depend on fulfillment in current (maybe also past) phases*/}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
-        {objective.energyTypes.map((energyType) => {
+        {Object.entries(objective.energyTypes).map(([energyType, isFulfilled]) => {
           const IconComponent = EnergyTypes[energyType].icon;
-          const fulfilledObjective = Object.values(technologySizes).some(
-            (energyMap) => energyMap[energyType] > 0
-          );
           return (
             <Box sx={{ transform: 'scale(1.5)' }} key={energyType}>
-              <IconComponent color={fulfilledObjective ? 'inherit' : 'disabled'} />
+              <IconComponent color={isFulfilled ? 'inherit' : 'disabled'} />
             </Box>
           );
         })}

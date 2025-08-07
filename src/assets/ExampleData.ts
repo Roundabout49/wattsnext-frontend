@@ -68,34 +68,58 @@ export const exampleGameState: GameState = {
     1: {
       objective: {
         progressPoints: 25,
-        technologyTypes: {
+        technologyTypesAim: {
           Generation: 3,
           Distribution: 3,
           Storage: 0,
         },
-        energyTypes: ['Electricity', 'Heat'],
+        technologyTypesHave: {
+          Generation: 2,
+          Distribution: 1,
+          Storage: 0,
+        },
+        energyTypes: {
+          Electricity: true,
+          Heat: false,
+        },
       },
     },
     2: {
       objective: {
         progressPoints: 50,
-        technologyTypes: {
+        technologyTypesAim: {
           Generation: 6,
           Distribution: 6,
           Storage: 3,
         },
-        energyTypes: ['Electricity', 'Heat'],
+        technologyTypesHave: {
+          Generation: 2,
+          Distribution: 1,
+          Storage: 0,
+        },
+        energyTypes: {
+          Electricity: true,
+          Heat: false,
+        },
       },
     },
     3: {
       objective: {
         progressPoints: 75,
-        technologyTypes: {
+        technologyTypesAim: {
           Generation: 9,
           Distribution: 9,
           Storage: 6,
         },
-        energyTypes: ['Electricity', 'Heat'],
+        technologyTypesHave: {
+          Generation: 2,
+          Distribution: 1,
+          Storage: 0,
+        },
+        energyTypes: {
+          Electricity: true,
+          Heat: false,
+        },
       },
     },
   },

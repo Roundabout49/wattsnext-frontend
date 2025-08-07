@@ -53,8 +53,11 @@ export interface PhaseObjectives {
 
 interface PhaseObjective {
   progressPoints: number;
-  technologyTypes: Record<TechnologyType, number>;
-  energyTypes: EnergyType[];
+  technologyTypesAim: Record<TechnologyType, number>;
+  // current status for current and following phases, status at end of phase for past phases
+  technologyTypesHave: Record<TechnologyType, number>;
+  // required energy types and if they are/were fulfilled
+  energyTypes: Record<EnergyType, boolean>;
 }
 
 type TechnologyEnergyMatrix = {
