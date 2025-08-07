@@ -26,6 +26,8 @@ export function handlePlayCardResult(result: PlayCardResult, dispatch: Dispatch<
     cardId: result.cardId,
     position: result.position,
     recover: result.recover,
+    moneyChange: result.money,
+    resourceChange: result.resources,
     newGameState: result.newState,
   });
 }

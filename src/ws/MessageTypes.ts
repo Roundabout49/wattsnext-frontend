@@ -32,6 +32,8 @@ export interface PlayCardResult {
   position: number;
   recover: boolean;
   newState: GameState;
+  money: number;
+  resources: number;
 }
 
 export type OutgoingMessage = PlayCardIntentMessage | PlayCardMessage | null;

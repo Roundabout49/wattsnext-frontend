@@ -4,7 +4,7 @@ import FlyingCard from '../components/cards/FlyingCard';
 const CardAnimationContext = createContext<CardAnimationContextType>({
   registerCardRef: () => {},
   getCardRef: () => null,
-  startCardAnimation: (_fromId, _toId, _content, onDone) => onDone(),
+  startCardAnimation: (_fromId, _toId, _content, onDone) => onDone?.(),
 });
 
 interface CardAnimationContextType {
@@ -17,7 +17,7 @@ interface CardAnimationContextType {
     fromId: string,
     toId: string,
     content: ReactNode,
-    onDone: () => void
+    onDone?: () => void
   ) => void;
 }
 
@@ -29,7 +29,7 @@ export const CardAnimationProvider: React.FC<{ children: ReactNode }> = ({ child
     fromRect: DOMRect;
     toRect: DOMRect;
     content: ReactNode;
-    onDone: () => void;
+    onDone?: () => void;
   } | null>(null);
 
   const registerCardRef = (
@@ -45,16 +45,18 @@ export const CardAnimationProvider: React.FC<{ children: ReactNode }> = ({ child
     fromId: string,
     toId: string,
     content: ReactNode,
-    onDone: () => void
+    onDone?: () => void
   ) => {
+    console.log('Starting card animation from', fromId, 'to', toId);
     const fromRef = getCardRef(fromId);
     const toRef = getCardRef(toId);
+    console.log('From ref:', fromRef, 'To ref:', toRef);
     if (fromRef?.current && toRef?.current) {
       const fromRect = fromRef.current.getBoundingClientRect();
       const toRect = toRef.current.getBoundingClientRect();
       setAnimation({ fromRect, toRect, content, onDone });
     } else {
-      onDone(); // Fallback
+      onDone?.(); // Fallback
     }
   };
 
@@ -70,7 +72,7 @@ export const CardAnimationProvider: React.FC<{ children: ReactNode }> = ({ child
           content={animation.content}
           onDone={() => {
             setAnimation(null);
-            animation.onDone();
+            animation.onDone?.();
           }}
         />
       )}

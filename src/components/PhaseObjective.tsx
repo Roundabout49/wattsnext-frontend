@@ -60,7 +60,7 @@ const PhaseObjective = () => {
 
         <Typography
           variant="h6"
-          fontSize="1.2rem"
+          fontSize="1.1rem"
           sx={{
             fontWeight: 'bold',
             color: visiblePhase === currentPhase ? 'black' : 'grey',

@@ -29,6 +29,8 @@ export interface PlayCardActionState extends BaseActionState {
   cardId: string | null;
   selectedPosition: number | null;
   recoverResources: boolean | null;
+  moneyChange: number | null;
+  resourceChange: number | null;
 }
 
 // TODO: Add properties

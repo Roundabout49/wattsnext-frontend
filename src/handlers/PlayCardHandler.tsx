@@ -2,11 +2,17 @@ import { useEffect, useRef } from 'react';
 import { useAction } from '../context/ActionContext';
 import { useSendMessage } from '../context/SendMessageContext';
 import { usePlayer } from '../context/PlayerContext';
+import { useGame } from '../context/GameContext';
+import { useCardAnimation } from '../context/CardAnimationContext';
+import { cards } from '../data/cards';
+import ProgressCardSmall from '../components/cards/ProgressCardSmall';
 
 export function PlayCardHandler() {
   const { actionState, dispatchGameAction, setSelectedAction } = useAction();
   const { sendPlayCardIntent, sendPlayCard } = useSendMessage();
   const { playerId } = usePlayer();
+  const { animateMoneyChange, animateResourcesChange, setGameState } = useGame();
+  const { startCardAnimation } = useCardAnimation();
 
   // Ref-Guards to make sure to only handle each step once
   const didHandleWaitIntentRef = useRef(false);
@@ -44,8 +50,32 @@ export function PlayCardHandler() {
 
     if (step === 'animatePlayCard' && !didHandleAnimateCardRef.current) {
       didHandleAnimateCardRef.current = true;
-      // TODO: Animate
-      dispatchGameAction({ type: 'FINISH_ACTION' });
+
+      const fromRef = actionState.cardId!;
+      const card = cards[actionState.cardId!];
+      const area =
+        card.type === 'climateAction'
+          ? 'climate-action'
+          : card.energyCharacteristics.technology.toLowerCase();
+      const index = actionState.selectedPosition!;
+      const toRef = `${area}-${index}`;
+
+      animateResourcesChange(actionState.resourceChange ?? 0);
+      animateMoneyChange(actionState.moneyChange ?? 0, () => {
+        setTimeout(() => {
+          setGameState((prev) => ({
+            ...prev,
+            players: prev.players.map((p) =>
+              p.id === playerId
+                ? { ...p, hand: p.hand.filter((c) => c.title !== actionState.cardId) }
+                : p
+            ),
+          }));
+          startCardAnimation(fromRef, toRef, <ProgressCardSmall card={card} />, () =>
+            dispatchGameAction({ type: 'FINISH_ACTION' })
+          );
+        }, 1000);
+      });
     }
     if (step !== 'animatePlayCard') {
       didHandleAnimateCardRef.current = false;

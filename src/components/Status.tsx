@@ -26,7 +26,7 @@ const Status = () => {
         gap: 2,
       }}
     >
-      <Typography variant="h6" fontSize="1.2rem">
+      <Typography variant="h6" fontSize="1.1rem">
         Phase {phase}, Zug {turn}/{turnsInPhase}
       </Typography>
 

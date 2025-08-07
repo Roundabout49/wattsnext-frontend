@@ -14,6 +14,8 @@ export type PlayCardAction =
       cardId: string;
       position: number;
       recover: boolean;
+      moneyChange: number;
+      resourceChange: number;
       newGameState: GameState;
     }
   | { type: 'PLAY_CARD_DONE' };
@@ -30,6 +32,8 @@ export function playCardReducer(
         cardId: null,
         selectedPosition: null,
         recoverResources: null,
+        moneyChange: null,
+        resourceChange: null,
         newGameState: null,
       };
     }
@@ -43,6 +47,8 @@ export function playCardReducer(
         cardId: null,
         selectedPosition: null,
         recoverResources: null,
+        moneyChange: null,
+        resourceChange: null,
         newGameState: null,
       };
     case 'PLAY_CARD_SELECT_CARD':
@@ -92,6 +98,8 @@ export function playCardReducer(
         cardId: action.cardId,
         selectedPosition: action.position,
         recoverResources: action.recover,
+        moneyChange: action.moneyChange,
+        resourceChange: action.resourceChange,
         newGameState: action.newGameState,
       };
     case 'PLAY_CARD_DONE':

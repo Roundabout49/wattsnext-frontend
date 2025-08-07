@@ -74,13 +74,17 @@ export function useMockSendMessageService(): SendMessageService {
         updatedDistribution[position] = card;
       }
 
+      const newCardKey = Object.keys(cards)[Math.floor(Math.random() * Object.keys(cards).length)];
+      const newCard = cards[newCardKey];
+      console.log('[Mock] New Card:', newCard);
+
       const newGameState = {
         ...gameState,
         players: gameState.players.map((player) => {
           if (player.id === gameState.currentPlayerId) {
             return {
               ...player,
-              hand: player.hand.filter((c) => c.title !== cardId),
+              hand: player.hand.filter((c) => c.title !== cardId).concat(newCard),
             };
           }
           return player;
@@ -118,6 +122,8 @@ export function useMockSendMessageService(): SendMessageService {
           position: position,
           recover: recover,
           newState: newGameState,
+          money: -1 * card.price,
+          resources: -1 * card.resources,
         },
         dispatchGameAction
       );
