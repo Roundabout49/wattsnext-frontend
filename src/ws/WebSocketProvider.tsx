@@ -1,43 +1,71 @@
-import React, { createContext, useContext, useRef } from 'react';
-import { Client } from '@stomp/stompjs';
+import React, { createContext, useContext, useRef, useEffect, useState } from 'react';
+import { Client, IMessage } from '@stomp/stompjs';
 import { OutgoingMessage } from './MessageTypes';
-// import { useGame } from '../context/GameContext';
-// import { useAction } from '../context/ActionContext';
+import { useGame } from '../context/GameContext';
+import { useAction } from '../context/ActionContext';
+import {
+  handleEarnMoneyResult,
+  handlePlayCardIntentResult,
+  handlePlayCardResult,
+} from './MessageHandler';
 
-const WebSocketContext = createContext<WebSocketContextType>({ sendMessage: () => {} });
+const WebSocketContext = createContext<WebSocketContextType>({
+  sendMessage: () => {},
+  connected: false,
+});
 
 type WebSocketContextType = {
-  sendMessage: (destination: string, body: OutgoingMessage) => void;
+  sendMessage: (destination: string, body: OutgoingMessage | null) => void;
+  connected: boolean;
 };
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const clientRef = useRef<Client>(null);
-  // const { setGameState } = useGame();
-  // const { dispatchGameAction } = useAction();
+  const [connected, setConnected] = useState(false);
+  const { setGameState } = useGame();
+  const { dispatchGameAction } = useAction();
 
-  /*useEffect(() => {
+  // TODO: Replace with actual game and player IDs
+  const gameId = 'gameId';
+  const playerId = 'playerId';
+
+  useEffect(() => {
     const client = new Client({
       // TODO: Replace with actual WebSocket URL
       brokerURL: 'ws://localhost:8080/ws',
       reconnectDelay: 5000,
       debug: (str) => console.log('[STOMP]', str),
+      connectHeaders: {
+        gameId: gameId,
+        playerId: playerId,
+      },
     });
 
     client.onConnect = () => {
       console.log('Connected to WebSocket');
-      // Beispiel: Backend sendet neuen GameState
-      client.subscribe('/topic/gameState', (message: IMessage) => {
+      setConnected(true);
+
+      client.subscribe(`/topic/game/${gameId}`, (message: IMessage) => {
         const gameState = JSON.parse(message.body);
-        // Weiterverarbeitung, z.B. Dispatch in GameContext (siehe unten)
         setGameState(gameState);
       });
 
-      client.subscribe('/topic/earnMoneyResult', (message: IMessage) => {
+      client.subscribe(`/topic/game/${gameId}/earnMoneyResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
         handleEarnMoneyResult(result, dispatchGameAction);
       });
+      client.subscribe(`/topic/game/${gameId}/playCardIntentResult`, (message: IMessage) => {
+        const result = JSON.parse(message.body);
+        handlePlayCardIntentResult(result, dispatchGameAction);
+      });
+      client.subscribe(`/topic/game/${gameId}/playCardResult`, (message: IMessage) => {
+        const result = JSON.parse(message.body);
+        handlePlayCardResult(result, dispatchGameAction);
+      });
+    };
 
-      // TODO: Weitere Subscriptions für andere Nachrichten
+    client.onStompError = (frame) => {
+      console.error('STOMP error:', frame);
     };
 
     client.activate();
@@ -45,17 +73,22 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       client.deactivate();
+      setConnected(false);
     };
-  }, []);*/
+  }, []);
 
-  const sendMessage = (destination: string, body: OutgoingMessage) => {
+  const sendMessage = (destination: string, body: OutgoingMessage | null) => {
     clientRef.current?.publish({
       destination,
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : undefined,
     });
   };
 
-  return <WebSocketContext.Provider value={{ sendMessage }}>{children}</WebSocketContext.Provider>;
+  return (
+    <WebSocketContext.Provider value={{ sendMessage, connected }}>
+      {children}
+    </WebSocketContext.Provider>
+  );
 }
 
 export const useWebSocket = () => useContext(WebSocketContext);
