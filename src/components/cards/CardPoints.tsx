@@ -1,10 +1,20 @@
 import { createElement, FC } from 'react';
-import { Icons, Icon, isIcon, ProgressPoints } from '../../types/ProgressCards';
+import {
+  Icons,
+  isEnergy,
+  isIcon,
+  ModifiableValue,
+  ProgressPoints,
+} from '../../types/ProgressCards';
 import { Box, Stack } from '@mui/material';
 import EnergyIcon from '../icons/EnergyIcon';
 import PointsIcon from '../icons/PointsIcon';
 
-const CardPoints: FC<{ points: ProgressPoints }> = ({ points }) => {
+const CardPoints: FC<{ modifiablePoints: ModifiableValue<ProgressPoints> }> = ({
+  modifiablePoints,
+}) => {
+  const points = modifiablePoints.originalValue;
+
   return (
     <Box
       sx={{
@@ -33,20 +43,20 @@ const CardPoints: FC<{ points: ProgressPoints }> = ({ points }) => {
             {points.conditions && points.conditions.every(isIcon)
               ? points.conditions.map((cond, index) => (
                   <Box key={index} sx={{ position: 'relative', top: 10, padding: 1 }}>
-                    {createElement(Icons[cond as Icon].icon, { sx: { fontSize: 28 } })}
+                    {createElement(Icons[cond.iconName].icon, { sx: { fontSize: 28 } })}
                   </Box>
                 ))
               : points.conditions &&
                 points.conditions.map((cond, index) =>
                   isIcon(cond) ? (
                     <Box key={index} sx={{ position: 'relative', top: 0, padding: 1 }}>
-                      {createElement(Icons[cond as Icon].icon, { sx: { fontSize: 28 } })}
+                      {createElement(Icons[cond.iconName].icon, { sx: { fontSize: 28 } })}
                     </Box>
-                  ) : (
+                  ) : isEnergy(cond) ? (
                     <Box key={index} sx={{ position: 'relative', top: 0, transform: 'scale(0.6)' }}>
                       <EnergyIcon {...cond} />
                     </Box>
-                  )
+                  ) : null
                 )}
           </Stack>
 

@@ -1,21 +1,20 @@
-import { EnergyCharacteristics } from '../../types/EnergyCharacteristics';
 import { Box, CardMedia } from '@mui/material';
 import EnergyIcon from '../icons/EnergyIcon';
-import { Icon, Icons } from '../../types/ProgressCards';
+import { Icon, Icons, ModifiableValue, Supply } from '../../types/ProgressCards';
 import PriceIcon from '../icons/PriceIcon';
 import ResourcesIcon from '../icons/ResourcesIcon';
 
 interface ProgressCardTopProps {
   title: string;
   image: string;
-  price: number;
-  resources: number;
+  price: ModifiableValue<number>;
+  resources: ModifiableValue<number>;
   type: 'technology' | 'climateAction';
 }
 
 interface TechnologyCardTopProps extends ProgressCardTopProps {
   type: 'technology';
-  energyCharacteristics: EnergyCharacteristics;
+  supply: ModifiableValue<Extract<Supply, { type: 'energy' }>>;
 }
 
 interface ClimateActionCardTopProps extends ProgressCardTopProps {
@@ -33,7 +32,7 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
     <div style={{ width: 225, height: 150, position: 'relative', padding: 0 }}>
       <Box sx={{ position: 'absolute', top: 2, left: 2 }}>
         {card.type === 'technology' ? (
-          <EnergyIcon {...card.energyCharacteristics} />
+          <EnergyIcon {...card.supply} />
         ) : (
           IconComponent && (
             <Box sx={{ position: 'absolute', top: 0, left: 8 }}>
@@ -49,7 +48,7 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
           left: 12.5,
         }}
       >
-        <PriceIcon price={card.price} />
+        <PriceIcon price={card.price.originalValue} />
       </Box>
       <Box
         sx={{
@@ -58,7 +57,7 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
           left: 12.5,
         }}
       >
-        <ResourcesIcon resources={card.resources} />
+        <ResourcesIcon resources={card.resources.originalValue} />
       </Box>
       <CardMedia
         component="img"

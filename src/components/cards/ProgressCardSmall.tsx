@@ -27,7 +27,9 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
   const open = Boolean(anchorEl);
 
   const color =
-    card.type === 'technology' ? TechnologyTypes[card.supply.technology].color : 'green';
+    card.type === 'technology'
+      ? TechnologyTypes[card.supply.originalValue.technology].color
+      : 'green';
   return (
     <div>
       <CardWrapperSmall
@@ -53,7 +55,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
                 price: card.moneyCosts,
                 resources: card.resourceCosts,
                 type: card.type,
-                energyCharacteristics: card.supply,
+                supply: card.supply,
               }}
             ></ProgressCardTop>
           ) : (
@@ -64,7 +66,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
                 price: card.moneyCosts,
                 resources: card.resourceCosts,
                 type: card.type,
-                icon: card.supply,
+                icon: card.supply?.originalValue.iconName,
               }}
             ></ProgressCardTop>
           )}
@@ -101,7 +103,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
               right: 0,
             }}
           >
-            {card.points && <CardPoints points={card.points} />}
+            {card.points && <CardPoints modifiablePoints={card.points} />}
           </Box>
         </CardContent>
       </CardWrapperSmall>

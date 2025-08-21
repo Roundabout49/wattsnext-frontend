@@ -17,13 +17,13 @@ export interface IProgressCard {
   type: 'technology' | 'climateAction';
 }
 
-interface ModifiableValue<T> {
+export interface ModifiableValue<T> {
   originalValue: T;
   modifiedValue?: T;
   modifications: Modification[];
 }
 
-type Modification = { type: 'Stack'; multiplier: number } | { type: 'Card'; name: string };
+export type Modification = { type: 'Stack'; multiplier: number } | { type: 'Card'; name: string };
 
 export interface TechnologyCard extends IProgressCard {
   supply: ModifiableValue<Extract<Supply, { type: 'energy' }>>;
@@ -79,4 +79,8 @@ export type Supply =
 
 export function isIcon(condition: Supply): condition is Extract<Supply, { type: 'icon' }> {
   return condition.type === 'icon';
+}
+
+export function isEnergy(condition: Supply): condition is Extract<Supply, { type: 'energy' }> {
+  return condition.type === 'energy';
 }
