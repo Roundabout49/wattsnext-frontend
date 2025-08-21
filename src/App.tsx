@@ -21,27 +21,27 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
   return (
     <GameProvider>
       <ActionProvider>
-        <WebSocketProvider>
-          <SendMessageProvider useMock={true}>
-            <DieAnimationProvider>
-              <CardAnimationProvider>
-                <PlayerIdProvider>
-                  <div>
-                    <NavBar toggleTheme={toggleTheme} />
-                    <Box sx={{ padding: 0 }}>
-                      <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/play" element={<Play />} />
-                        <Route path="/rules" element={<Rules />} />
-                      </Routes>
-                    </Box>
-                  </div>
-                </PlayerIdProvider>
-              </CardAnimationProvider>
-            </DieAnimationProvider>
-          </SendMessageProvider>
-        </WebSocketProvider>
+        {/* <WebSocketProvider> */}
+        <SendMessageProvider useMock={true}>
+          <DieAnimationProvider>
+            <CardAnimationProvider>
+              <PlayerIdProvider>
+                <div>
+                  <NavBar toggleTheme={toggleTheme} />
+                  <Box sx={{ padding: 0 }}>
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/play" element={<Play />} />
+                      <Route path="/rules" element={<Rules />} />
+                    </Routes>
+                  </Box>
+                </div>
+              </PlayerIdProvider>
+            </CardAnimationProvider>
+          </DieAnimationProvider>
+        </SendMessageProvider>
+        {/* </WebSocketProvider> */}
       </ActionProvider>
     </GameProvider>
   );
