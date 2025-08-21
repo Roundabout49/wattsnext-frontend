@@ -1,7 +1,7 @@
 import { Box, SvgIcon, Typography } from '@mui/material';
 import { EnergyCharacteristics } from '../../types/EnergyCharacteristics';
 import { TechnologyTypes } from '../../types/TechnologyTypes';
-import { EnergyType, EnergyTypes } from '../../types/EnergyTypes';
+import { EnergyForm, EnergyForms } from '../../types/EnergyTypes';
 
 const shapes = {
   circle: <circle cx="50" cy="50" r="42" fill="currentColor" stroke="black" strokeWidth="3" />,
@@ -24,14 +24,14 @@ const shapes = {
 };
 
 type EnergyIconProps = Omit<EnergyCharacteristics, 'energy'> & {
-  energy?: EnergyType;
+  energy?: EnergyForm;
 };
 
 export type Shape = keyof typeof shapes;
 
 const EnergyIcon: React.FC<EnergyIconProps> = ({ technology, energy, size }) => {
   const { color, shape } = TechnologyTypes[technology];
-  const IconComponent = energy ? EnergyTypes[energy].icon : null;
+  const IconComponent = energy ? EnergyForms[energy].icon : null;
 
   return (
     <Box position="relative" width={50} height={50} display="inline-block">

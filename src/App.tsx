@@ -9,7 +9,7 @@ import { GameProvider } from './context/GameContext';
 import { ActionProvider } from './context/ActionContext';
 import { CardAnimationProvider } from './context/CardAnimationContext';
 import { PlayerIdProvider } from './context/PlayerContext';
-import { WebSocketProvider } from './ws/WebSocketProvider';
+// import { WebSocketProvider } from './ws/WebSocketProvider';
 import { SendMessageProvider } from './context/SendMessageContext';
 import { DieAnimationProvider } from './context/DieAnimationContext';
 

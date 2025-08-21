@@ -6,12 +6,19 @@ import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
 import PhaseObjective from './PhaseObjective';
 import { orderedTechnologyTypes } from '../types/TechnologyTypes';
-import { orderedEnergyTypes } from '../types/EnergyTypes';
+import { orderedEnergyForms } from '../types/EnergyTypes';
 
 const Status = () => {
   const { gameState } = useGame();
-  const { phase, turn, turnsInPhase, progressPoints, money, resources, technologySizes } =
-    gameState;
+  const {
+    phaseIndex: phase,
+    turnInPhase: turn,
+    turnsPerPhase: turnsInPhase,
+    progressPoints,
+    money,
+    resources,
+    technologySizes,
+  } = gameState;
 
   return (
     <Box
@@ -58,7 +65,7 @@ const Status = () => {
               flexDirection: 'column',
             }}
           >
-            {orderedEnergyTypes.map((energyType) => (
+            {orderedEnergyForms.map((energyType) => (
               <Box
                 sx={{
                   transform: 'scale(0.8)',

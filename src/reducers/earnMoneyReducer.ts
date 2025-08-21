@@ -1,10 +1,10 @@
 import { EarnMoneyActionState } from '../types/Actions';
-import { GameState } from '../types/GameState';
+import { Game } from '../types/GameState';
 
 export type EarnMoneyAction =
   | { type: 'EARN_MONEY_INIT' }
   | { type: 'EARN_MONEY_CONFIRM' }
-  | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number; newGameState: GameState }
+  | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number; newGameState: Game }
   | { type: 'DIE_ANIMATION_FINISHED' };
 
 export function earnMoneyReducer(

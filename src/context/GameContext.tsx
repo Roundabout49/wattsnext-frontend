@@ -1,25 +1,25 @@
 import { createContext, ReactNode, useContext, useRef, useState } from 'react';
-import { GameState } from '../types/GameState';
+import { Game } from '../types/GameState';
 import { exampleGameState } from '../assets/ExampleData';
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 interface GameContextType {
-  gameState: GameState;
-  setGameState: React.Dispatch<React.SetStateAction<GameState>>;
+  gameState: Game;
+  setGameState: React.Dispatch<React.SetStateAction<Game>>;
   animateMoneyChange: (amount: number, onComplete?: () => void) => void;
   animateResourcesChange: (amount: number, onComplete?: () => void) => void;
 }
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [gameState, setGameState] = useState<GameState>(exampleGameState);
+  const [gameState, setGameState] = useState<Game>(exampleGameState);
   // useRef is necessary to only start interval after the first render
   const moneyIntervalRef = useRef<number>(undefined);
   const resourcesIntervalRef = useRef<number>(undefined);
 
   function animateValueChange(
-    getCurrent: (state: GameState) => number,
-    updateState: (state: GameState, value: number) => GameState,
+    getCurrent: (state: Game) => number,
+    updateState: (state: Game, value: number) => Game,
     amount: number,
     intervalRef: React.RefObject<number | undefined>,
     onComplete?: () => void

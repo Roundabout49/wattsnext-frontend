@@ -2,16 +2,16 @@ import { SvgIconComponent } from '@mui/icons-material';
 import BoltOutlinedIcon from '@mui/icons-material/BoltOutlined';
 import ThermostatOutlinedIcon from '@mui/icons-material/ThermostatOutlined';
 
-interface EnergyTypeInfo {
+interface EnergyFormInfo {
   label: string;
   icon: SvgIconComponent;
 }
 
-export const EnergyTypes: Record<string, EnergyTypeInfo> = {
+export const EnergyForms: Record<string, EnergyFormInfo> = {
   Electricity: { label: 'Strom', icon: BoltOutlinedIcon },
   Heat: { label: 'Wärme', icon: ThermostatOutlinedIcon },
 } as const;
 
-export type EnergyType = keyof typeof EnergyTypes;
+export type EnergyForm = keyof typeof EnergyForms;
 
-export const orderedEnergyTypes: EnergyType[] = ['Electricity', 'Heat'];
+export const orderedEnergyForms: EnergyForm[] = ['Electricity', 'Heat'];

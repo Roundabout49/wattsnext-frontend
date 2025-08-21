@@ -1,4 +1,4 @@
-import { GameState } from '../types/GameState';
+import { Game } from '../types/GameState';
 
 export interface PlayCardIntentMessage {
   playerId: string;
@@ -16,7 +16,7 @@ export interface PlayCardMessage {
 export interface EarnMoneyResult {
   playerId: string;
   amount: number;
-  newState: GameState;
+  newState: Game;
 }
 
 export interface PlayCardIntentResult {
@@ -31,7 +31,7 @@ export interface PlayCardResult {
   cardId: string;
   position: number;
   recover: boolean;
-  newState: GameState;
+  newState: Game;
   money: number;
   resources: number;
 }

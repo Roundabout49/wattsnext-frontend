@@ -1,5 +1,5 @@
 import { PlayCardActionState } from '../types/Actions';
-import { GameState } from '../types/GameState';
+import { Game } from '../types/GameState';
 
 export type PlayCardAction =
   | { type: 'PLAY_CARD_INIT' }
@@ -16,7 +16,7 @@ export type PlayCardAction =
       recover: boolean;
       moneyChange: number;
       resourceChange: number;
-      newGameState: GameState;
+      newGameState: Game;
     }
   | { type: 'PLAY_CARD_DONE' };
 

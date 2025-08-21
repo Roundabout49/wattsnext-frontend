@@ -3,12 +3,12 @@ import { CardContent, Typography, Box, Popover } from '@mui/material';
 import { TechnologyTypes } from '../../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
 import ProgressCardLarge from './ProgressCardLarge';
-import { ProgressCardProps } from '../../types/ProgressCards';
+import { ProgressCard } from '../../types/ProgressCards';
 import CardPoints from './CardPoints';
 import CardWrapperSmall, { Highlight } from './CardWrapperSmall';
 
 interface ProgressCardSmallProps {
-  card: ProgressCardProps;
+  card: ProgressCard;
   highlight?: Highlight;
   onClick?: () => void;
 }
@@ -27,9 +27,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
   const open = Boolean(anchorEl);
 
   const color =
-    card.type === 'technology'
-      ? TechnologyTypes[card.energyCharacteristics.technology].color
-      : 'green';
+    card.type === 'technology' ? TechnologyTypes[card.supply.technology].color : 'green';
   return (
     <div>
       <CardWrapperSmall
@@ -50,23 +48,23 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
           {card.type === 'technology' ? (
             <ProgressCardTop
               card={{
-                title: card.title,
+                title: card.name,
                 image: card.image,
-                price: card.price,
-                resources: card.resources,
+                price: card.moneyCosts,
+                resources: card.resourceCosts,
                 type: card.type,
-                energyCharacteristics: card.energyCharacteristics,
+                energyCharacteristics: card.supply,
               }}
             ></ProgressCardTop>
           ) : (
             <ProgressCardTop
               card={{
-                title: card.title,
+                title: card.name,
                 image: card.image,
-                price: card.price,
-                resources: card.resources,
+                price: card.moneyCosts,
+                resources: card.resourceCosts,
                 type: card.type,
-                icon: card.icon,
+                icon: card.supply,
               }}
             ></ProgressCardTop>
           )}
@@ -90,7 +88,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
             }}
           >
             <Typography variant="h6" sx={{ fontSize: '0.7rem', lineHeight: 1 }}>
-              {card.title}
+              {card.name}
             </Typography>
           </Box>
           <Box

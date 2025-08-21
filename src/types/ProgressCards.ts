@@ -1,33 +1,43 @@
 import { SvgIconComponent } from '@mui/icons-material';
-import { EnergyCharacteristics } from './EnergyCharacteristics';
 import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
+import { TechnologyType } from './TechnologyTypes';
+import { EnergyForm } from './EnergyTypes';
 
-export interface IProgressCardProps {
-  title: string;
+export interface IProgressCard {
+  name: string;
   image: string;
   text: string;
   explanation: string;
-  points?: Points;
-  price: number;
-  resources: number;
+  moneyCosts: ModifiableValue<number>;
+  resourceCosts: ModifiableValue<number>;
+  points?: ModifiableValue<ProgressPoints>;
+  supply?: ModifiableValue<Supply>;
   type: 'technology' | 'climateAction';
 }
 
-export interface TechnologyCardProps extends IProgressCardProps {
-  energyCharacteristics: EnergyCharacteristics;
+interface ModifiableValue<T> {
+  originalValue: T;
+  modifiedValue?: T;
+  modifications: Modification[];
+}
+
+type Modification = { type: 'Stack'; multiplier: number } | { type: 'Card'; name: string };
+
+export interface TechnologyCard extends IProgressCard {
+  supply: ModifiableValue<Extract<Supply, { type: 'energy' }>>;
   // TODO: Multiplier
   type: 'technology';
 }
 
-export interface ClimateActionCardProps extends IProgressCardProps {
-  icon?: string;
+export interface ClimateActionCard extends IProgressCard {
+  supply?: ModifiableValue<Extract<Supply, { type: 'icon' }>>;
   // TODO: effect
   type: 'climateAction';
 }
 
-export type ProgressCardProps = TechnologyCardProps | ClimateActionCardProps;
+export type ProgressCard = TechnologyCard | ClimateActionCard;
 
 interface IconInfo {
   label: string;
@@ -42,12 +52,31 @@ export const Icons: Record<string, IconInfo> = {
 
 export type Icon = keyof typeof Icons;
 
-export interface Points {
-  basePoints?: number;
-  systemPoints: number;
-  conditions?: (EnergyCharacteristics | Icon)[];
+export interface ProgressPoints {
+  baseProgressPoints?: number;
+  systemProgressPoints: number;
+  conditions: Supply[];
+  conditionsFulfilled: boolean;
 }
 
-export function isIcon(condition: EnergyCharacteristics | Icon): condition is Icon {
-  return typeof condition === 'string' && condition in Icons;
+export type Supply =
+  | {
+      type: 'energy';
+      technology: TechnologyType;
+      form: EnergyForm;
+      size: number;
+      fulfilled: boolean | null;
+    }
+  | {
+      type: 'icon';
+      iconName: Icon;
+      fulfilled: boolean | null;
+    }
+  | {
+      type: 'never';
+      fulfilled: false;
+    };
+
+export function isIcon(condition: Supply): condition is Extract<Supply, { type: 'icon' }> {
+  return condition.type === 'icon';
 }

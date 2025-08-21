@@ -1,4 +1,4 @@
-import { GameState } from './GameState';
+import { Game } from './GameState';
 
 export type ActionKind = 'playCard' | 'earnMoney' /*| 'discardCards' | 'searchDeck'*/ | null;
 
@@ -12,7 +12,7 @@ export const actionKinds: Exclude<ActionKind, null>[] = [
 interface BaseActionState {
   type: ActionKind;
   step: string;
-  newGameState: GameState | null;
+  newGameState: Game | null;
 }
 
 export interface PlayCardActionState extends BaseActionState {

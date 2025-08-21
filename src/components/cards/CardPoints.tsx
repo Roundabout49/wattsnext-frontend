@@ -1,10 +1,10 @@
 import { createElement, FC } from 'react';
-import { Icons, Icon, isIcon, Points } from '../../types/ProgressCards';
+import { Icons, Icon, isIcon, ProgressPoints } from '../../types/ProgressCards';
 import { Box, Stack } from '@mui/material';
 import EnergyIcon from '../icons/EnergyIcon';
 import PointsIcon from '../icons/PointsIcon';
 
-const CardPoints: FC<{ points: Points }> = ({ points }) => {
+const CardPoints: FC<{ points: ProgressPoints }> = ({ points }) => {
   return (
     <Box
       sx={{
@@ -16,8 +16,8 @@ const CardPoints: FC<{ points: Points }> = ({ points }) => {
       }}
     >
       <Stack direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
-        {points.basePoints != null ? (
-          <PointsIcon points={points.basePoints} color="grey" />
+        {points.baseProgressPoints != null ? (
+          <PointsIcon points={points.baseProgressPoints} color="grey" />
         ) : (
           <Box sx={{ width: 32 }} />
         )}
@@ -75,7 +75,7 @@ const CardPoints: FC<{ points: Points }> = ({ points }) => {
           </svg>
         </Box>
 
-        <PointsIcon points={points.systemPoints} color="green" />
+        <PointsIcon points={points.systemProgressPoints} color="green" />
       </Stack>
     </Box>
   );

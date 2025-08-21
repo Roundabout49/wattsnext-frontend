@@ -18,14 +18,14 @@ const HandCards = () => {
 
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
 
-  const allCards = players.flatMap((p) => p.hand);
+  const allCards = players.flatMap((p) => p.handCards);
   const cardRefs = useCardRefs(allCards);
 
   useEffect(() => {
     allCards.forEach((card) => {
-      const ref = cardRefs[card.title];
+      const ref = cardRefs[card.name];
       if (ref) {
-        registerCardRef(card.title, ref);
+        registerCardRef(card.name, ref);
       }
     });
   }, [allCards, cardRefs, registerCardRef]);
@@ -78,9 +78,9 @@ const HandCards = () => {
 
             <Collapse in={isOpen}>
               <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
-                {player.hand.map((card) => {
+                {player.handCards.map((card) => {
                   const isSelected =
-                    actionState?.type === 'playCard' && actionState.cardId === card.title;
+                    actionState?.type === 'playCard' && actionState.cardId === card.name;
                   const isAnySelected = actionState?.type == 'playCard' && !!actionState.cardId;
 
                   const handleClick = () => {
@@ -89,12 +89,12 @@ const HandCards = () => {
                     if (isSelected) {
                       dispatchGameAction({ type: 'PLAY_CARD_DESELECT_CARD' });
                     } else {
-                      dispatchGameAction({ type: 'PLAY_CARD_SELECT_CARD', cardId: card.title });
+                      dispatchGameAction({ type: 'PLAY_CARD_SELECT_CARD', cardId: card.name });
                     }
                   };
 
                   return (
-                    <div ref={cardRefs[card.title]} key={card.title}>
+                    <div ref={cardRefs[card.name]} key={card.name}>
                       <ProgressCardSmall
                         card={card}
                         highlight={
@@ -117,14 +117,14 @@ const HandCards = () => {
             <Button
               variant="contained"
               onClick={() => {
-                const fromRef = getCardRef(player.hand[0].title);
+                const fromRef = getCardRef(player.handCards[0].name);
                 const toRef = getCardRef('generation-2');
 
                 if (fromRef?.current && toRef?.current) {
                   startCardAnimation(
-                    player.hand[0].title,
+                    player.handCards[0].name,
                     'generation-2',
-                    <ProgressCardSmall card={player.hand[0]} />,
+                    <ProgressCardSmall card={player.handCards[0]} />,
                     () => {
                       console.log('Animation abgeschlossen');
                     }

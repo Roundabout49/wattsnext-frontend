@@ -49,28 +49,30 @@ export function useMockSendMessageService(): SendMessageService {
 
       // Update board
       const updatedClimateActions = [
-        ...gameState.board.climateActions,
-      ] as typeof gameState.board.climateActions;
+        ...gameState.board.climateActionCards,
+      ] as typeof gameState.board.climateActionCards;
       if (card.type === 'climateAction') {
         updatedClimateActions[position] = card;
       }
 
       const updatedGeneration = [
-        ...gameState.board.generation,
-      ] as typeof gameState.board.generation;
-      if (card.type === 'technology' && card.energyCharacteristics.technology === 'Generation') {
+        ...gameState.board.generationCards,
+      ] as typeof gameState.board.generationCards;
+      if (card.type === 'technology' && card.supply.technology === 'Generation') {
         updatedGeneration[position] = card;
       }
 
-      const updatedStorage = [...gameState.board.storage] as typeof gameState.board.storage;
-      if (card.type === 'technology' && card.energyCharacteristics.technology === 'Storage') {
+      const updatedStorage = [
+        ...gameState.board.storageCards,
+      ] as typeof gameState.board.storageCards;
+      if (card.type === 'technology' && card.supply.technology === 'Storage') {
         updatedStorage[position] = card;
       }
 
       const updatedDistribution = [
-        ...gameState.board.distribution,
-      ] as typeof gameState.board.distribution;
-      if (card.type === 'technology' && card.energyCharacteristics.technology === 'Distribution') {
+        ...gameState.board.distributionCards,
+      ] as typeof gameState.board.distributionCards;
+      if (card.type === 'technology' && card.supply.technology === 'Distribution') {
         updatedDistribution[position] = card;
       }
 
@@ -84,7 +86,7 @@ export function useMockSendMessageService(): SendMessageService {
           if (player.id === gameState.currentPlayerId) {
             return {
               ...player,
-              hand: player.hand.filter((c) => c.title !== cardId).concat(newCard),
+              handCards: player.handCards.filter((c) => c.name !== cardId).concat(newCard),
             };
           }
           return player;
@@ -97,23 +99,22 @@ export function useMockSendMessageService(): SendMessageService {
           storage: updatedStorage,
           distribution: updatedDistribution,
         },
-        money: gameState.money - card.price,
-        resources: gameState.resources - card.resources,
-        progressPoints: gameState.progressPoints + (card.points?.systemPoints || 0),
+        money: gameState.money - card.moneyCosts,
+        resources: gameState.resources - card.resourceCosts,
+        progressPoints: gameState.progressPoints + (card.points?.systemProgressPoints || 0),
         technologySizes:
           card.type === 'technology'
             ? {
                 ...gameState.technologySizes,
-                [card.energyCharacteristics.technology]: {
-                  ...gameState.technologySizes[card.energyCharacteristics.technology],
-                  [card.energyCharacteristics.energy]:
-                    (gameState.technologySizes[card.energyCharacteristics.technology][
-                      card.energyCharacteristics.energy
-                    ] || 0) + card.energyCharacteristics.size,
+                [card.supply.technology]: {
+                  ...gameState.technologySizes[card.supply.technology],
+                  [card.supply.energy]:
+                    (gameState.technologySizes[card.supply.technology][card.supply.energy] || 0) +
+                    card.supply.size,
                 },
               }
             : gameState.technologySizes,
-        turn: gameState.turn + 1,
+        turn: gameState.turnInPhase + 1,
       };
       handlePlayCardResult(
         {
@@ -122,8 +123,8 @@ export function useMockSendMessageService(): SendMessageService {
           position: position,
           recover: recover,
           newState: newGameState,
-          money: -1 * card.price,
-          resources: -1 * card.resources,
+          money: -1 * card.moneyCosts,
+          resources: -1 * card.resourceCosts,
         },
         dispatchGameAction
       );
@@ -144,7 +145,7 @@ export function useMockSendMessageService(): SendMessageService {
             ...gameState,
             money: gameState.money + amount,
             currentPlayerId: nextPlayer.id,
-            turn: gameState.turn + 1,
+            turnInPhase: gameState.turnInPhase + 1,
           },
         },
         dispatchGameAction

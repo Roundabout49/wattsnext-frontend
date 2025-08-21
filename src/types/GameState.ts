@@ -1,67 +1,71 @@
-import { EnergyType } from './EnergyTypes';
 import { EventCard } from './EventCards';
-import { ClimateActionCardProps, ProgressCardProps } from './ProgressCards';
-import { TechnologyType } from './TechnologyTypes';
+import { ClimateActionCard, ProgressCard } from './ProgressCards';
 
-export interface GameState {
-  players: Player[];
-  currentPlayerId: string;
-  // TODO: Add available actions (?)
-  board: BoardProps;
+export interface Game {
+  state: GameState;
   money: number;
   resources: number;
-  progressPoints: number;
-  technologySizes: TechnologyEnergyMatrix;
-  phase: number;
-  turn: number;
-  turnsInPhase: number;
-  phaseObjectives: PhaseObjectives;
-  canSearchPile: boolean;
+  currentPlayerId: string;
+  players: Player[];
+  board: Board;
+  phaseIndex: number;
+  turnInPhase: number;
+  turnsPerPhase: number;
+  phases: PhaseObjective[];
+  // technologySizes: TechnologyEnergyMatrix;
+}
+
+export enum GameState {
+  PREPARING = 'PREPARING',
+  RUNNING = 'RUNNING',
+  WON = 'WON',
+  LOST = 'LOST',
+  CANCELLED = 'CANCELLED',
 }
 
 export interface Player {
   id: string;
   name: string;
-  hand: ProgressCardProps[];
+  handCards: ProgressCard[];
 }
 
-export interface BoardProps {
-  climateActions: [
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
-    ClimateActionCardProps | null,
+export interface Board {
+  climateActionCards: [
+    ClimateActionCard | null,
+    ClimateActionCard | null,
+    ClimateActionCard | null,
+    ClimateActionCard | null,
+    ClimateActionCard | null,
+    ClimateActionCard | null,
+    ClimateActionCard | null,
+    ClimateActionCard | null,
+    ClimateActionCard | null,
+    ClimateActionCard | null,
   ];
-  generation: [ProgressCardProps | null, ProgressCardProps | null, ProgressCardProps | null];
-  storage: [ProgressCardProps | null, ProgressCardProps | null, ProgressCardProps | null];
-  distribution: [ProgressCardProps | null, ProgressCardProps | null, ProgressCardProps | null];
-  event?: EventCard | null;
-  badEvent?: EventCard | null;
-}
-
-export interface PhaseObjectives {
-  [phase: number]: {
-    objective: PhaseObjective;
-  };
+  generationCards: [ProgressCard | null, ProgressCard | null, ProgressCard | null];
+  storageCards: [ProgressCard | null, ProgressCard | null, ProgressCard | null];
+  distributionCards: [ProgressCard | null, ProgressCard | null, ProgressCard | null];
+  eventCards: [EventCard | null, EventCard | null];
+  catastropheCard: EventCard | null;
 }
 
 interface PhaseObjective {
-  progressPoints: number;
-  technologyTypesAim: Record<TechnologyType, number>;
-  // current status for current and following phases, status at end of phase for past phases
-  technologyTypesHave: Record<TechnologyType, number>;
-  // required energy types and if they are/were fulfilled
-  energyTypes: Record<EnergyType, boolean>;
+  generation: TargetableValue;
+  distribution: TargetableValue;
+  storage: TargetableValue;
+  progressPoints: TargetableValue;
+  // electricity and heat are actually booleans, so a target of 1 means required and is fulfilled when value > 0
+  electricity: TargetableValue;
+  heat: TargetableValue;
 }
 
-type TechnologyEnergyMatrix = {
+interface TargetableValue {
+  value: number;
+  target: number;
+}
+
+/* type TechnologyEnergyMatrix = {
   [tech in TechnologyType]: {
-    [energy in EnergyType]: number;
+    [energy in EnergyForm]: number;
   };
-};
+}; */

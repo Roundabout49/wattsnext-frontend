@@ -54,9 +54,7 @@ export function PlayCardHandler() {
       const fromRef = actionState.cardId!;
       const card = cards[actionState.cardId!];
       const area =
-        card.type === 'climateAction'
-          ? 'climate-action'
-          : card.energyCharacteristics.technology.toLowerCase();
+        card.type === 'climateAction' ? 'climate-action' : card.supply.technology.toLowerCase();
       const index = actionState.selectedPosition!;
       const toRef = `${area}-${index}`;
 
@@ -67,7 +65,7 @@ export function PlayCardHandler() {
             ...prev,
             players: prev.players.map((p) =>
               p.id === playerId
-                ? { ...p, hand: p.hand.filter((c) => c.title !== actionState.cardId) }
+                ? { ...p, handCards: p.handCards.filter((c) => c.name !== actionState.cardId) }
                 : p
             ),
           }));

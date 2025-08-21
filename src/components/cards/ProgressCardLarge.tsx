@@ -1,37 +1,35 @@
 import { Box, Card, CardContent, Divider, Typography } from '@mui/material';
 import { TechnologyTypes } from '../../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
-import { ProgressCardProps } from '../../types/ProgressCards';
+import { ProgressCard } from '../../types/ProgressCards';
 import CardPoints from './CardPoints';
 
-const ProgressCardLarge: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
+const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
   const color =
-    card.type === 'technology'
-      ? TechnologyTypes[card.energyCharacteristics.technology].color
-      : 'green';
+    card.type === 'technology' ? TechnologyTypes[card.supply.technology].color : 'green';
 
   return (
     <Card sx={{ width: 225, height: 400, position: 'relative', padding: 0 }}>
       {card.type === 'technology' ? (
         <ProgressCardTop
           card={{
-            title: card.title,
+            title: card.name,
             image: card.image,
-            price: card.price,
-            resources: card.resources,
+            price: card.moneyCosts,
+            resources: card.resourceCosts,
             type: card.type,
-            energyCharacteristics: card.energyCharacteristics,
+            energyCharacteristics: card.supply,
           }}
         ></ProgressCardTop>
       ) : (
         <ProgressCardTop
           card={{
-            title: card.title,
+            title: card.name,
             image: card.image,
-            price: card.price,
-            resources: card.resources,
+            price: card.moneyCosts,
+            resources: card.resourceCosts,
             type: card.type,
-            icon: card.icon,
+            icon: card.supply,
           }}
         ></ProgressCardTop>
       )}
@@ -47,7 +45,7 @@ const ProgressCardLarge: React.FC<{ card: ProgressCardProps }> = ({ card }) => {
           }}
         >
           <Typography variant="h6" sx={{ fontSize: '1rem' }}>
-            {card.title}
+            {card.name}
           </Typography>
         </Box>
         <Typography variant="body2" sx={{ marginLeft: 1, marginRight: 1, lineHeight: 1 }}>

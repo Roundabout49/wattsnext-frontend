@@ -8,7 +8,7 @@ import {
 import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
 import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
 import { useGame } from './GameContext';
-import { GameState } from '../types/GameState';
+import { Game } from '../types/GameState';
 
 export type GameAction =
   | PlayCardAction
@@ -30,7 +30,7 @@ const ActionContext = createContext<ActionContextType | undefined>(undefined);
 export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [selectedAction, _setSelectedAction] = useState<ActionKind>(null);
 
-  const [pendingNewGameState, setPendingNewGameState] = useState<GameState | null>(null);
+  const [pendingNewGameState, setPendingNewGameState] = useState<Game | null>(null);
 
   const { setGameState } = useGame();
 

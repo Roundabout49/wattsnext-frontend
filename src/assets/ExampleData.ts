@@ -1,41 +1,39 @@
 import { cards } from '../data/cards';
-import { GameState } from '../types/GameState';
-import { ClimateActionCardProps, TechnologyCardProps } from '../types/ProgressCards';
+import { Game } from '../types/GameState';
+import { ClimateActionCard, TechnologyCard } from '../types/ProgressCards';
 
-export const climateActionCards: ClimateActionCardProps[] = [
-  cards['CO2-Abscheidung und -Speicherung'] as ClimateActionCardProps,
-  cards['H2-betriebene Schiffe'] as ClimateActionCardProps,
-  cards['Power-to-X'] as ClimateActionCardProps,
+export const climateActionCards: ClimateActionCard[] = [
+  cards['CO2-Abscheidung und -Speicherung'] as ClimateActionCard,
+  cards['H2-betriebene Schiffe'] as ClimateActionCard,
+  cards['Power-to-X'] as ClimateActionCard,
 ];
 
-export const generationCards: TechnologyCardProps[] = [
-  cards['Photovoltaik auf dem Dach'] as TechnologyCardProps,
+export const generationCards: TechnologyCard[] = [
+  cards['Photovoltaik auf dem Dach'] as TechnologyCard,
 ];
 
-export const distributionCards: TechnologyCardProps[] = [
-  cards['Fernwärmenetz'] as TechnologyCardProps,
+export const distributionCards: TechnologyCard[] = [cards['Fernwärmenetz'] as TechnologyCard];
+
+export const storageCards: TechnologyCard[] = [
+  cards['Großer Wasserstoffspeicher'] as TechnologyCard,
 ];
 
-export const storageCards: TechnologyCardProps[] = [
-  cards['Großer Wasserstoffspeicher'] as TechnologyCardProps,
-];
-
-export const exampleGameState: GameState = {
+export const exampleGameState: Game = {
   players: [
     {
       id: 'player1',
       name: 'Bob',
-      hand: [generationCards[0], climateActionCards[0], climateActionCards[1]],
+      handCards: [generationCards[0], climateActionCards[0], climateActionCards[1]],
     },
     {
       id: 'player2',
       name: 'Alice',
-      hand: [climateActionCards[2], storageCards[0], distributionCards[0]],
+      handCards: [climateActionCards[2], storageCards[0], distributionCards[0]],
     },
   ],
   currentPlayerId: 'player1',
   board: {
-    climateActions: [
+    climateActionCards: [
       climateActionCards[0],
       climateActionCards[1],
       climateActionCards[2],
@@ -47,11 +45,11 @@ export const exampleGameState: GameState = {
       null,
       null,
     ],
-    generation: [generationCards[0], null, null],
-    storage: [storageCards[0], null, null],
-    distribution: [distributionCards[0], null, null],
-    event: null,
-    badEvent: null,
+    generationCards: [generationCards[0], null, null],
+    storageCards: [storageCards[0], null, null],
+    distributionCards: [distributionCards[0], null, null],
+    eventCards: null,
+    catastropheCard: null,
   },
   money: 5,
   resources: 13,
@@ -61,10 +59,10 @@ export const exampleGameState: GameState = {
     Generation: { Electricity: 4, Heat: 0 },
     Distribution: { Electricity: 3, Heat: 0 },
   },
-  phase: 1,
-  turn: 8,
-  turnsInPhase: 12,
-  phaseObjectives: {
+  phaseIndex: 1,
+  turnInPhase: 8,
+  turnsPerPhase: 12,
+  phases: {
     1: {
       objective: {
         progressPoints: 25,

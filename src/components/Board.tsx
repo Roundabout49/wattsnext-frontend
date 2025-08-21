@@ -13,7 +13,14 @@ import { TechnologyType } from '../types/TechnologyTypes';
 const Board: React.FC = () => {
   const { gameState } = useGame();
   const { currentPlayerId } = gameState;
-  const { climateActions, generation, storage, distribution, event, badEvent } = gameState.board;
+  const {
+    climateActionCards: climateActions,
+    generationCards: generation,
+    storageCards: storage,
+    distributionCards: distribution,
+    eventCards: event,
+    catastropheCard: badEvent,
+  } = gameState.board;
   const { registerCardRef } = useCardAnimation();
   const { actionState, dispatchGameAction } = useAction();
   const { playerId } = usePlayer();
@@ -48,7 +55,7 @@ const Board: React.FC = () => {
   const isSelectableTechnologySlot = (technology: TechnologyType) => {
     if (!isCurrentPlayer) return false;
     if (selectedCard?.type !== 'technology') return false;
-    if (selectedCard.energyCharacteristics.technology !== technology) return false;
+    if (selectedCard.supply.technology !== technology) return false;
 
     return true;
   };

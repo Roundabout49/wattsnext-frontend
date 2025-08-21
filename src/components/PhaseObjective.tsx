@@ -6,11 +6,11 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { orderedTechnologyTypes } from '../types/TechnologyTypes';
 import EnergyIcon from './icons/EnergyIcon';
-import { EnergyTypes } from '../types/EnergyTypes';
+import { EnergyForms } from '../types/EnergyTypes';
 
 const PhaseObjective = () => {
   const { gameState } = useGame();
-  const { phase: currentPhase, phaseObjectives, progressPoints } = gameState;
+  const { phaseIndex: currentPhase, phases: phaseObjectives, progressPoints } = gameState;
 
   const sortedPhases = Object.keys(phaseObjectives)
     .map(Number)
@@ -126,7 +126,7 @@ const PhaseObjective = () => {
       {/*TODO: Color should only depend on fulfillment in current (maybe also past) phases*/}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
         {Object.entries(objective.energyTypes).map(([energyType, isFulfilled]) => {
-          const IconComponent = EnergyTypes[energyType].icon;
+          const IconComponent = EnergyForms[energyType].icon;
           return (
             <Box sx={{ transform: 'scale(1.5)' }} key={energyType}>
               <IconComponent color={isFulfilled ? 'inherit' : 'disabled'} />
