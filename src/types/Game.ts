@@ -8,10 +8,12 @@ export interface Game {
   currentPlayerId: string;
   players: Player[];
   board: Board;
+  // phase and turn are 0-indexed
   phaseIndex: number;
   turnInPhase: number;
   turnsPerPhase: number;
   phases: PhaseObjective[];
+  progressCardPileSize: number;
   // technologySizes: TechnologyEnergyMatrix;
 }
 
@@ -30,22 +32,12 @@ export interface Player {
 }
 
 export interface Board {
-  climateActionCards: [
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-    ClimateActionCard | null,
-  ];
   generationCards: [ProgressCard | null, ProgressCard | null, ProgressCard | null];
-  storageCards: [ProgressCard | null, ProgressCard | null, ProgressCard | null];
   distributionCards: [ProgressCard | null, ProgressCard | null, ProgressCard | null];
-  eventCards: [EventCard | null, EventCard | null];
+  storageCards: [ProgressCard | null, ProgressCard | null, ProgressCard | null];
+  // It's just a list of maximum length 10, not always length 10
+  climateActionCards: ClimateActionCard[];
+  eventCards: EventCard[];
   catastropheCard: EventCard | null;
 }
 

@@ -1,13 +1,16 @@
 import { useAction } from '../context/ActionContext';
 import { useGame } from '../context/GameContext';
 import { cards } from '../data/cards';
-import { Player } from '../types/GameState';
+import { Player } from '../types/Game';
 import {
   handleEarnMoneyResult,
-  handlePlayCardIntentResult,
-  handlePlayCardResult,
+  handlePlayTechnologyCardIntentResult,
+  handlePlayTechnologyCardResult,
 } from '../ws/MessageHandler';
-import { PlayCardMessage, PlayCardIntentMessage } from '../ws/MessageTypes';
+import {
+  PlayTechnologyCardActionRequest,
+  PlayTechnologyCardActionIntentRequest,
+} from '../ws/MessageTypes';
 import { SendMessageService } from './SendMessageService';
 
 const getNextPlayer = (players: Player[], currentPlayerId: string): Player => {
@@ -20,10 +23,10 @@ export function useMockSendMessageService(): SendMessageService {
   const { gameState } = useGame();
 
   return {
-    sendPlayCardIntent: (data: PlayCardIntentMessage) => {
+    sendPlayCardIntent: (data: PlayTechnologyCardActionIntentRequest) => {
       console.log('[Mock] sendPlayCardIntent', data);
 
-      handlePlayCardIntentResult(
+      handlePlayTechnologyCardIntentResult(
         {
           playerId: data.playerId,
           playPossible: true,
@@ -38,10 +41,10 @@ export function useMockSendMessageService(): SendMessageService {
       });
     },
 
-    sendPlayCard: (data: PlayCardMessage) => {
+    sendPlayCard: (data: PlayTechnologyCardActionRequest) => {
       console.log('[Mock] sendPlayCard', data);
 
-      const { cardId, position, recover } = data;
+      const { cardId, position, shallRecycle: recover } = data;
       const card = cards[cardId];
 
       // update player
@@ -116,7 +119,7 @@ export function useMockSendMessageService(): SendMessageService {
             : gameState.technologySizes,
         turn: gameState.turnInPhase + 1,
       };
-      handlePlayCardResult(
+      handlePlayTechnologyCardResult(
         {
           playerId: gameState.currentPlayerId,
           cardId: cardId,
@@ -140,7 +143,7 @@ export function useMockSendMessageService(): SendMessageService {
       handleEarnMoneyResult(
         {
           playerId: gameState.currentPlayerId,
-          amount,
+          diceValue: amount,
           newState: {
             ...gameState,
             money: gameState.money + amount,

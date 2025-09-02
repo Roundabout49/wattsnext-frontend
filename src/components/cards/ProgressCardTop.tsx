@@ -1,6 +1,6 @@
 import { Box, CardMedia } from '@mui/material';
 import EnergyIcon from '../icons/EnergyIcon';
-import { Icon, Icons, ModifiableValue, Supply } from '../../types/ProgressCards';
+import { Achievement, Achievements, ModifiableValue, Supply } from '../../types/ProgressCards';
 import PriceIcon from '../icons/PriceIcon';
 import ResourcesIcon from '../icons/ResourcesIcon';
 
@@ -14,19 +14,19 @@ interface ProgressCardTopProps {
 
 interface TechnologyCardTopProps extends ProgressCardTopProps {
   type: 'technology';
-  supply: ModifiableValue<Extract<Supply, { type: 'energy' }>>;
+  supply: Extract<Supply, { type: 'energy' }>;
 }
 
 interface ClimateActionCardTopProps extends ProgressCardTopProps {
   type: 'climateAction';
-  icon?: Icon;
+  icon?: Achievement;
 }
 
 const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCardTopProps }> = ({
   card,
 }) => {
   const IconComponent =
-    card.type === 'climateAction' ? (card.icon ? Icons[card.icon].icon : null) : null;
+    card.type === 'climateAction' ? (card.icon ? Achievements[card.icon].icon : null) : null;
 
   return (
     <div style={{ width: 225, height: 150, position: 'relative', padding: 0 }}>

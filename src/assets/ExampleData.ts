@@ -1,5 +1,5 @@
 import { cards } from '../data/cards';
-import { Game } from '../types/GameState';
+import { Game } from '../types/Game';
 import { ClimateActionCard, TechnologyCard } from '../types/ProgressCards';
 
 export const climateActionCards: ClimateActionCard[] = [

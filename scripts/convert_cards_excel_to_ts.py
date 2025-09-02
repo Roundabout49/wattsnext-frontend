@@ -3,131 +3,120 @@ import json
 from pathlib import Path
 
 script_dir = Path(__file__).parent
-excel_path = script_dir / "../src/assets/cards.xlsx"
-excel_path = excel_path.resolve()
-
-output_path = script_dir / "../src/data/cards.ts"
-output_path = output_path.resolve()
+excel_path = (script_dir / "../src/assets/cards.xlsx").resolve()
+output_path = (script_dir / "../src/data/cards.ts").resolve()
 
 df = pd.read_excel(excel_path, sheet_name="Übersicht_neu")
 
 def get_card_type(kategorie: str) -> str:
-    return "climateAction" if kategorie.lower().startswith("klima") else "technology"
+    return "climateAction" if isinstance(kategorie, str) and kategorie.lower().startswith("klima") else "technology"
 
 def get_technology(kategorie: str) -> str:
-    if kategorie.lower().startswith("erzeugung"):
-        return "Generation"
-    elif kategorie.lower().startswith("verteilung"):
-        return "Distribution"
-    elif kategorie.lower().startswith("speicher"):
-        return "Storage"
-    else:
-        return "other"
-    
+    if isinstance(kategorie, str):
+        if kategorie.lower().startswith("erzeugung"):
+            return "Generation"
+        elif kategorie.lower().startswith("verteilung"):
+            return "Distribution"
+        elif kategorie.lower().startswith("speicher"):
+            return "Storage"
+    return "Other"
+
 def get_energy(energieform: str) -> str:
-    if energieform.lower().startswith("strom"):
-        return "Electricity"
-    elif energieform.lower().startswith("wärme"):
-        return "Heat"
-    else:
-        return "other"
-    
-def get_icon(condition: str) -> str:
-    if condition == "CCS":
+    if isinstance(energieform, str):
+        if energieform.lower().startswith("strom"):
+            return "Electricity"
+        elif energieform.lower().startswith("wärme"):
+            return "Heat"
+    return "Other"
+
+def get_achievement(name: str) -> str:
+    if name == "CCS":
         return "CarbonCapture"
-    elif condition == "Chemie":
+    elif name == "Chemie":
         return "ChemicalEnergy"
-    elif condition == "Endlager":
+    elif name == "Endlager":
         return "NuclearWasteRepository"
     else:
         return "Unknown"
+
+def build_supply_from_parts(parts, size):
+    if len(parts) == 2:
+        tech_de, energy_de = parts
+        return {
+            "type": "energy",
+            "technology": get_technology(tech_de),
+            "form": get_energy(energy_de),
+            "size": int(size),
+            "fulfilled": None
+        }
+    elif len(parts) == 1:
+        return {
+            "type": "achievement",
+            "name": get_achievement(parts[0]),
+            "fulfilled": None
+        }
+    else:
+        return {"type": "never", "fulfilled": False}
+
+# Hilfsfunktion für ModifiableValue
+def mv(val):
+    return {"originalValue": val, "modifiedValue": val, "modifications": []}
 
 cards = {}
 
 for _, row in df.iterrows():
     card_id = row['Name Text Placeholder 3']
-    if not isinstance(card_id, str) or card_id.strip() == "":
+    if not isinstance(card_id, str) or not card_id.strip():
         continue
 
     card_type = get_card_type(row['Kategorie'])
 
+    # Bedingungen (conditions)
+    conditions = []
+    for i in range(1, 4):
+        cond_val = row.get(f"Bildpfad Vorraussetzung {i} Picture Placeholder {18+2*i-1}")
+        if isinstance(cond_val, str) and cond_val.strip():
+            parts = cond_val.split()
+            size = row.get(f"Vorraussetzung {i} Energieeinheit", 0)
+            conditions.append(build_supply_from_parts(parts, size))
+
+    # ProgressPoints als ModifiableValue
+    pp = {
+        "baseProgressPoints": int(row.get("Basispunkte Text Placeholder 7", 0)),
+        "systemProgressPoints": int(row.get("Systempunkte Text Placeholder 8", 0)),
+        "conditions": conditions,
+        "conditionsFulfilled": False
+    }
+
     card_data = {
-        "title": card_id,
-        # TODO
-        "image": '',
-        "text": '' if (isinstance(val := row.get('Voraussetzung Text Text Placeholder 9', ''), float) and pd.isna(val)) else val,
-        "explanation": row.get('Infotext', ''),
-        "price": int(row.get('Kosten Text Placeholder 4', 0)),
-        "resources": int(row.get('Ressourcen Text Placeholder 5', 0)),
+        "id": card_id,
+        "name": card_id,
+        "image": "",
+        "text": "" if pd.isna(row.get("Voraussetzung Text Text Placeholder 9", "")) else row.get("Voraussetzung Text Text Placeholder 9", ""),
+        "explanation": row.get("Infotext", ""),
+        "moneyCosts": mv(int(row.get("Kosten Text Placeholder 4", 0))),
+        "resourceCosts": mv(int(row.get("Ressourcen Text Placeholder 5", 0))),
+        "points": mv(pp),   # <-- jetzt ModifiableValue
+        "isPlayable": True,
         "type": card_type,
     }
 
     if card_type == "technology":
-        card_data["energyCharacteristics"] = {
+        card_data["supply"] = {
+            "type": "energy",
             "technology": get_technology(row['Kategorie']),
-            "energy": get_energy(row['Energieform']),
-            "size": int(row.get('Energieeinheiten Text Placeholder 6', 0))
+            "form": get_energy(row['Energieform']),
+            "size": int(row.get("Energieeinheiten Text Placeholder 6", 0)),
+            "fulfilled": None
         }
-
-    # conditions for system points
-    conditions = []
-
-    fst_condition = row.get("Bildpfad Vorraussetzung 1 Picture Placeholder 19")
-    if fst_condition and isinstance(fst_condition, str) and fst_condition != "":
-        parts = row["Bildpfad Vorraussetzung 1 Picture Placeholder 19"].split()
-        if len(parts) == 2:
-            tech_de, energy_de = parts
-            technology = get_technology(tech_de)
-            energy = get_energy(energy_de)
-            conditions.append({
-                "technology": technology,
-                "energy": energy,
-                "size": int(row.get("Vorraussetzung 1 Energieeinheit", 0)),
-            })
-        elif len(parts) == 1:
-            conditions.append(get_icon(parts[0]))
-
-    snd_condition = row.get("Bildpfad Vorraussetzung 2 Picture Placeholder 21")
-    if snd_condition and isinstance(snd_condition, str) and snd_condition != "":
-        parts = row["Bildpfad Vorraussetzung 2 Picture Placeholder 21"].split()
-        if len(parts) == 2:
-            tech_de, energy_de = parts
-            technology = get_technology(tech_de)
-            energy = get_energy(energy_de)
-            conditions.append({
-                "technology": technology,
-                "energy": energy,
-                "size": int(row.get("Vorraussetzung 2 Energieeinheit", 0)),
-            })
-        elif len(parts) == 1:
-            conditions.append(get_icon(parts[0]))
-
-    trd_condition = row.get("Bildpfad Vorraussetzung 3 Picture Placeholder 23")
-    if trd_condition and isinstance(trd_condition, str) and trd_condition != "":
-        parts = row["Bildpfad Vorraussetzung 3 Picture Placeholder 23"].split()
-        if len(parts) == 2:
-            tech_de, energy_de = parts
-            technology = get_technology(tech_de)
-            energy = get_energy(energy_de)
-            conditions.append({
-                "technology": technology,
-                "energy": energy,
-                "size": int(row.get("Vorraussetzung 3 Energieeinheit", 0)),
-            })
-        elif len(parts) == 1:
-            conditions.append(get_icon(parts[0]))
-    
-    card_data["points"] = {
-        "basePoints": int(row.get("Basispunkte Text Placeholder 7", 0)),
-        "systemPoints": int(row.get("Systempunkte Text Placeholder 8", 0)),
-        "conditions": conditions
-    }
+    elif card_type == "climateAction":
+        # TODO: falls supply auch aus Excel kommt
+        pass
 
     cards[card_id] = card_data
 
-# Ausgabe in eine TypeScript-Datei
 with open(output_path, "w", encoding="utf-8") as f:
-    f.write("import { ProgressCardProps } from '../types/ProgressCards';\n\n")
-    f.write("export const cards: Record<string, ProgressCardProps> = ")
+    f.write("import { ProgressCard } from '../types/ProgressCards';\n\n")
+    f.write("export const cards: Record<string, ProgressCard> = ")
     json.dump(cards, f, indent=2, ensure_ascii=False)
     f.write(";")

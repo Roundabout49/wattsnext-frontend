@@ -27,8 +27,8 @@ export function PlayCardHandler() {
       didHandleWaitIntentRef.current = true;
       sendPlayCardIntent({
         playerId: playerId!,
-        cardId: actionState.cardId!,
-        position: actionState.selectedPosition!,
+        progressCardId: actionState.cardId!,
+        targetPosition: actionState.selectedPosition!,
       });
     }
     if (step !== 'waitIfRecoverPossible') {
@@ -41,7 +41,7 @@ export function PlayCardHandler() {
         playerId: playerId!,
         cardId: actionState.cardId!,
         position: actionState.selectedPosition!,
-        recover: actionState.recoverResources!,
+        shallRecycle: actionState.recoverResources!,
       });
     }
     if (step !== 'waitForGameState') {

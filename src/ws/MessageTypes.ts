@@ -1,39 +1,65 @@
-import { Game } from '../types/GameState';
+import { Game } from '../types/Game';
+import { ClimateActionCard, ProgressCard, TechnologyCard } from '../types/ProgressCards';
 
-export interface PlayCardIntentMessage {
-  playerId: string;
-  cardId: string;
-  position: number;
+export interface PlayTechnologyCardActionIntentRequest {
+  progressCardId: string;
+  targetPosition: number;
 }
 
-export interface PlayCardMessage {
-  playerId: string;
-  cardId: string;
-  position: number;
-  recover: boolean;
+export interface PlayTechnologyCardActionRequest {
+  shallRecycle: boolean;
 }
 
-export interface EarnMoneyResult {
-  playerId: string;
-  amount: number;
-  newState: Game;
+export interface PlayClimateCardActionRequest {
+  progressCardId: string;
 }
 
-export interface PlayCardIntentResult {
-  playerId: string;
-  playPossible: boolean;
-  recoverPossible: boolean;
-  // TODO: More information about additional cost and recoverable resources?
+export interface ActionResponse<T> {
+  game: Game;
+  status: ResponseStatus;
+  information?: T;
 }
 
-export interface PlayCardResult {
-  playerId: string;
-  cardId: string;
-  position: number;
-  recover: boolean;
-  newState: Game;
-  money: number;
-  resources: number;
+export enum ResponseStatus {
+  OK = 'OK',
+  ILLEGAL_ACTION_ARGUMENTS = 'ILLEGAL_ACTION_ARGUMENTS',
+  ILLEGAL_ACTION = 'ILLEGAL_ACTION',
 }
 
-export type OutgoingMessage = PlayCardIntentMessage | PlayCardMessage | null;
+export interface EarnMoneyActionInformation {
+  diceValue: number;
+}
+
+export interface PlayTechnologyCardActionIntentInformation {
+  canRecycle: boolean;
+  moneyForRecycling?: number;
+  gainingResourcesForRecycling?: number;
+  moneyForPlayingCard: number;
+  resourcesForPlayingCard: number;
+}
+
+export interface PlayTechnologyCardActionInformation {
+  playedCard: TechnologyCard;
+  targetPosition: number;
+  drawnCard: ProgressCard;
+  payedMoneyForCard: number;
+  payedResourcesForCard: number;
+  didRecycle: boolean;
+  payedMoneyForRecycling?: number;
+  gainedResourcesForRecycling?: number;
+}
+
+export interface PlayClimateCardActionInformation {
+  playedCard: ClimateActionCard;
+  drawnCard: ProgressCard;
+  cardEffectInformations: CardEffectInformation[];
+}
+
+export type CardEffectInformation =
+  | { type: 'Money'; amount: number }
+  | { type: 'Resource'; amount: number };
+
+export type OutgoingMessage =
+  | PlayTechnologyCardActionIntentRequest
+  | PlayTechnologyCardActionRequest
+  | null;

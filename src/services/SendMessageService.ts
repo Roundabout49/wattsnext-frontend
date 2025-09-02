@@ -1,7 +1,10 @@
-import { PlayCardMessage, PlayCardIntentMessage } from '../ws/MessageTypes';
+import {
+  PlayTechnologyCardActionRequest,
+  PlayTechnologyCardActionIntentRequest,
+} from '../ws/MessageTypes';
 
 export interface SendMessageService {
-  sendPlayCardIntent: (data: PlayCardIntentMessage) => void;
-  sendPlayCard: (data: PlayCardMessage) => void;
+  sendPlayCardIntent: (data: PlayTechnologyCardActionIntentRequest) => void;
+  sendPlayCard: (data: PlayTechnologyCardActionRequest) => void;
   sendEarnMoney: () => void; // Todo: playerId required?
 }

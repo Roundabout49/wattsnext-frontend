@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useRef, useState } from 'react';
-import { Game } from '../types/GameState';
+import { Game } from '../types/Game';
 import { exampleGameState } from '../assets/ExampleData';
 
 const GameContext = createContext<GameContextType | undefined>(undefined);

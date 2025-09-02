@@ -1,7 +1,7 @@
 import { Box, SvgIcon, Typography } from '@mui/material';
 import { TechnologyTypes } from '../../types/TechnologyTypes';
 import { EnergyForm, EnergyForms } from '../../types/EnergyTypes';
-import { ModifiableValue, Supply } from '../../types/ProgressCards';
+import { Supply } from '../../types/ProgressCards';
 
 const shapes = {
   circle: <circle cx="50" cy="50" r="42" fill="currentColor" stroke="black" strokeWidth="3" />,
@@ -23,17 +23,13 @@ const shapes = {
   ),
 };
 
-type EnergyIconProps = ModifiableValue<Omit<Extract<Supply, { type: 'energy' }>, 'form'>> & {
+type EnergyIconProps = Omit<Extract<Supply, { type: 'energy' }>, 'form'> & {
   form?: EnergyForm;
 };
 
 export type Shape = keyof typeof shapes;
 
-const EnergyIcon: React.FC<EnergyIconProps> = ({
-  originalValue,
-  /* modifiedValue, modifications, */ form,
-}) => {
-  const { technology, size } = originalValue;
+const EnergyIcon: React.FC<EnergyIconProps> = ({ technology, size, form }) => {
   const { color, shape } = TechnologyTypes[technology];
   const IconComponent = form ? EnergyForms[form].icon : null;
 

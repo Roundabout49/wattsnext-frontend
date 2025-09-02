@@ -1,4 +1,4 @@
-import { Game } from './GameState';
+import { Game } from './Game';
 
 export type ActionKind = 'playCard' | 'earnMoney' /*| 'discardCards' | 'searchDeck'*/ | null;
 
@@ -32,8 +32,6 @@ export interface PlayCardActionState extends BaseActionState {
   moneyChange: number | null;
   resourceChange: number | null;
 }
-
-// TODO: Add properties
 
 export interface EarnMoneyActionState extends BaseActionState {
   type: 'earnMoney';

@@ -5,8 +5,8 @@ import { useGame } from '../context/GameContext';
 import { useAction } from '../context/ActionContext';
 import {
   handleEarnMoneyResult,
-  handlePlayCardIntentResult,
-  handlePlayCardResult,
+  handlePlayTechnologyCardIntentResult,
+  handlePlayTechnologyCardResult,
 } from './MessageHandler';
 
 const WebSocketContext = createContext<WebSocketContextType>({
@@ -56,11 +56,11 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       });
       client.subscribe(`/topic/game/${gameId}/playCardIntentResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
-        handlePlayCardIntentResult(result, dispatchGameAction);
+        handlePlayTechnologyCardIntentResult(result, dispatchGameAction);
       });
       client.subscribe(`/topic/game/${gameId}/playCardResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
-        handlePlayCardResult(result, dispatchGameAction);
+        handlePlayTechnologyCardResult(result, dispatchGameAction);
       });
     };
 

@@ -1,5 +1,5 @@
 import { PlayCardActionState } from '../types/Actions';
-import { Game } from '../types/GameState';
+import { Game } from '../types/Game';
 
 export type PlayCardAction =
   | { type: 'PLAY_CARD_INIT' }

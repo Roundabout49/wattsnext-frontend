@@ -1,8 +1,8 @@
 import { createElement, FC } from 'react';
 import {
-  Icons,
+  Achievements,
   isEnergy,
-  isIcon,
+  isAchievement,
   ModifiableValue,
   ProgressPoints,
 } from '../../types/ProgressCards';
@@ -40,17 +40,17 @@ const CardPoints: FC<{ modifiablePoints: ModifiableValue<ProgressPoints> }> = ({
             alignItems="center"
             sx={{ position: 'absolute', top: -15, width: '100%' }}
           >
-            {points.conditions && points.conditions.every(isIcon)
+            {points.conditions && points.conditions.every(isAchievement)
               ? points.conditions.map((cond, index) => (
                   <Box key={index} sx={{ position: 'relative', top: 10, padding: 1 }}>
-                    {createElement(Icons[cond.iconName].icon, { sx: { fontSize: 28 } })}
+                    {createElement(Achievements[cond.iconName].icon, { sx: { fontSize: 28 } })}
                   </Box>
                 ))
               : points.conditions &&
                 points.conditions.map((cond, index) =>
-                  isIcon(cond) ? (
+                  isAchievement(cond) ? (
                     <Box key={index} sx={{ position: 'relative', top: 0, padding: 1 }}>
-                      {createElement(Icons[cond.iconName].icon, { sx: { fontSize: 28 } })}
+                      {createElement(Achievements[cond.iconName].icon, { sx: { fontSize: 28 } })}
                     </Box>
                   ) : isEnergy(cond) ? (
                     <Box key={index} sx={{ position: 'relative', top: 0, transform: 'scale(0.6)' }}>

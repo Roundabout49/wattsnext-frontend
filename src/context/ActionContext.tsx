@@ -8,7 +8,7 @@ import {
 import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
 import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
 import { useGame } from './GameContext';
-import { Game } from '../types/GameState';
+import { Game } from '../types/Game';
 
 export type GameAction =
   | PlayCardAction

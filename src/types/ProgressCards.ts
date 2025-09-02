@@ -4,8 +4,10 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
 import { TechnologyType } from './TechnologyTypes';
 import { EnergyForm } from './EnergyTypes';
+import { GameState } from './Game';
 
 export interface IProgressCard {
+  id: string;
   name: string;
   image: string;
   text: string;
@@ -13,44 +15,44 @@ export interface IProgressCard {
   moneyCosts: ModifiableValue<number>;
   resourceCosts: ModifiableValue<number>;
   points?: ModifiableValue<ProgressPoints>;
-  supply?: ModifiableValue<Supply>;
+  supply?: Supply;
+  isPlayable: boolean;
+  gameBeforeEffect?: GameState;
   type: 'technology' | 'climateAction';
 }
 
 export interface ModifiableValue<T> {
   originalValue: T;
-  modifiedValue?: T;
+  modifiedValue: T;
   modifications: Modification[];
 }
 
 export type Modification = { type: 'Stack'; multiplier: number } | { type: 'Card'; name: string };
 
 export interface TechnologyCard extends IProgressCard {
-  supply: ModifiableValue<Extract<Supply, { type: 'energy' }>>;
-  // TODO: Multiplier
+  supply: Extract<Supply, { type: 'energy' }>;
   type: 'technology';
 }
 
 export interface ClimateActionCard extends IProgressCard {
-  supply?: ModifiableValue<Extract<Supply, { type: 'icon' }>>;
-  // TODO: effect
+  supply?: Extract<Supply, { type: 'icon' }>;
   type: 'climateAction';
 }
 
 export type ProgressCard = TechnologyCard | ClimateActionCard;
 
-interface IconInfo {
+interface AchievementInfo {
   label: string;
   icon: SvgIconComponent;
 }
 
-export const Icons: Record<string, IconInfo> = {
-  CarbonCapture: { label: 'Carbon Capture', icon: SystemUpdateAltIcon },
-  NuclearWasteRepository: { label: 'Nuclear Waste Repository', icon: DeleteForeverIcon },
-  ChemicalEnergy: { label: 'Chemical Energy', icon: HubOutlinedIcon },
+export const Achievements: Record<string, AchievementInfo> = {
+  CarbonCapture: { label: 'CarbonCapture', icon: SystemUpdateAltIcon },
+  NuclearWasteRepository: { label: 'NuclearWasteRepository', icon: DeleteForeverIcon },
+  ChemicalEnergy: { label: 'ChemicalEnergy', icon: HubOutlinedIcon },
 } as const;
 
-export type Icon = keyof typeof Icons;
+export type Achievement = keyof typeof Achievements;
 
 export interface ProgressPoints {
   baseProgressPoints?: number;
@@ -68,8 +70,8 @@ export type Supply =
       fulfilled: boolean | null;
     }
   | {
-      type: 'icon';
-      iconName: Icon;
+      type: 'achievement';
+      name: Achievement;
       fulfilled: boolean | null;
     }
   | {
@@ -77,8 +79,10 @@ export type Supply =
       fulfilled: false;
     };
 
-export function isIcon(condition: Supply): condition is Extract<Supply, { type: 'icon' }> {
-  return condition.type === 'icon';
+export function isAchievement(
+  condition: Supply
+): condition is Extract<Supply, { type: 'achievement' }> {
+  return condition.type === 'achievement';
 }
 
 export function isEnergy(condition: Supply): condition is Extract<Supply, { type: 'energy' }> {

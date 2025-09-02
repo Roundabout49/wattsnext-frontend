@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Box, Paper, Typography, IconButton, Collapse, Button } from '@mui/material';
+import { Box, Paper, Typography, IconButton, Collapse } from '@mui/material';
 import ProgressCardSmall from './cards/ProgressCardSmall';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { usePlayer } from '../context/PlayerContext';
@@ -14,7 +14,7 @@ const HandCards = () => {
   const { playerId } = usePlayer();
   const { actionState, dispatchGameAction } = useAction();
 
-  const { registerCardRef, getCardRef, startCardAnimation } = useCardAnimation();
+  const { registerCardRef } = useCardAnimation();
 
   const [openStates, setOpenStates] = useState<Record<string, boolean>>({});
 
@@ -113,29 +113,6 @@ const HandCards = () => {
                 })}
               </Box>
             </Collapse>
-
-            <Button
-              variant="contained"
-              onClick={() => {
-                const fromRef = getCardRef(player.handCards[0].name);
-                const toRef = getCardRef('generation-2');
-
-                if (fromRef?.current && toRef?.current) {
-                  startCardAnimation(
-                    player.handCards[0].name,
-                    'generation-2',
-                    <ProgressCardSmall card={player.handCards[0]} />,
-                    () => {
-                      console.log('Animation abgeschlossen');
-                    }
-                  );
-                } else {
-                  console.log('Karte oder Ziel nicht gefunden.');
-                }
-              }}
-            >
-              Animation Hand → Platz
-            </Button>
           </Paper>
         );
       })}

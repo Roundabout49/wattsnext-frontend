@@ -1,5 +1,5 @@
 import { EarnMoneyActionState } from '../types/Actions';
-import { Game } from '../types/GameState';
+import { Game } from '../types/Game';
 
 export type EarnMoneyAction =
   | { type: 'EARN_MONEY_INIT' }
