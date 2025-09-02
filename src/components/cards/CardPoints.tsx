@@ -13,7 +13,7 @@ import PointsIcon from '../icons/PointsIcon';
 const CardPoints: FC<{ modifiablePoints: ModifiableValue<ProgressPoints> }> = ({
   modifiablePoints,
 }) => {
-  const points = modifiablePoints.originalValue;
+  const points = modifiablePoints.modifiedValue;
 
   return (
     <Box
@@ -43,14 +43,14 @@ const CardPoints: FC<{ modifiablePoints: ModifiableValue<ProgressPoints> }> = ({
             {points.conditions && points.conditions.every(isAchievement)
               ? points.conditions.map((cond, index) => (
                   <Box key={index} sx={{ position: 'relative', top: 10, padding: 1 }}>
-                    {createElement(Achievements[cond.iconName].icon, { sx: { fontSize: 28 } })}
+                    {createElement(Achievements[cond.name].icon, { sx: { fontSize: 28 } })}
                   </Box>
                 ))
               : points.conditions &&
                 points.conditions.map((cond, index) =>
                   isAchievement(cond) ? (
                     <Box key={index} sx={{ position: 'relative', top: 0, padding: 1 }}>
-                      {createElement(Achievements[cond.iconName].icon, { sx: { fontSize: 28 } })}
+                      {createElement(Achievements[cond.name].icon, { sx: { fontSize: 28 } })}
                     </Box>
                   ) : isEnergy(cond) ? (
                     <Box key={index} sx={{ position: 'relative', top: 0, transform: 'scale(0.6)' }}>

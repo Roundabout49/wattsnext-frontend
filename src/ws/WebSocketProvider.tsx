@@ -22,7 +22,7 @@ type WebSocketContextType = {
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const clientRef = useRef<Client>(null);
   const [connected, setConnected] = useState(false);
-  const { setGameState } = useGame();
+  const { setGame: setGameState } = useGame();
   const { dispatchGameAction } = useAction();
 
   // TODO: Replace with actual game and player IDs

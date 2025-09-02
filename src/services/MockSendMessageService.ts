@@ -10,6 +10,7 @@ import {
 import {
   PlayTechnologyCardActionRequest,
   PlayTechnologyCardActionIntentRequest,
+  ResponseStatus,
 } from '../ws/MessageTypes';
 import { SendMessageService } from './SendMessageService';
 
@@ -20,17 +21,23 @@ const getNextPlayer = (players: Player[], currentPlayerId: string): Player => {
 
 export function useMockSendMessageService(): SendMessageService {
   const { dispatchGameAction } = useAction();
-  const { gameState } = useGame();
+  const { game: gameState } = useGame();
 
   return {
     sendPlayCardIntent: (data: PlayTechnologyCardActionIntentRequest) => {
       console.log('[Mock] sendPlayCardIntent', data);
+      const { progressCardId } = data;
+      const card = cards[progressCardId];
 
       handlePlayTechnologyCardIntentResult(
         {
-          playerId: data.playerId,
-          playPossible: true,
-          recoverPossible: false, // TODO: also test true
+          game: gameState,
+          status: ResponseStatus.OK,
+          information: {
+            canRecycle: false,
+            moneyForPlayingCard: card.moneyCosts.modifiedValue,
+            resourcesForPlayingCard: card.resourceCosts.modifiedValue,
+          },
         },
         dispatchGameAction
       );

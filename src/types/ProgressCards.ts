@@ -3,7 +3,7 @@ import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
 import { TechnologyType } from './TechnologyTypes';
-import { EnergyForm } from './EnergyTypes';
+import { EnergyForm } from './EnergyForms';
 import { GameState } from './Game';
 
 export interface IProgressCard {
@@ -35,7 +35,7 @@ export interface TechnologyCard extends IProgressCard {
 }
 
 export interface ClimateActionCard extends IProgressCard {
-  supply?: Extract<Supply, { type: 'icon' }>;
+  supply?: Extract<Supply, { type: 'achievement' }>;
   type: 'climateAction';
 }
 
@@ -67,12 +67,12 @@ export type Supply =
       technology: TechnologyType;
       form: EnergyForm;
       size: number;
-      fulfilled: boolean | null;
+      fulfilled?: boolean | null;
     }
   | {
       type: 'achievement';
       name: Achievement;
-      fulfilled: boolean | null;
+      fulfilled?: boolean | null;
     }
   | {
       type: 'never';

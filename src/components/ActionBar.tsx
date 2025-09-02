@@ -6,7 +6,7 @@ import { usePlayer } from '../context/PlayerContext';
 import { ActionHandlers, actionUIConfig } from '../ui/actionConfig';
 
 const ActionBar = () => {
-  const { gameState } = useGame();
+  const { game: gameState } = useGame();
   const { currentPlayerId, players } = gameState;
   const { playerId } = usePlayer();
 

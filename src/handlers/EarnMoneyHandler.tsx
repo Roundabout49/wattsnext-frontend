@@ -8,7 +8,7 @@ export function EarnMoneyHandler() {
   const { actionState, dispatchGameAction, setSelectedAction } = useAction();
   const { sendEarnMoney } = useSendMessage();
   const { setShowDieAnimation, setDieAnimationData, setDieAnimationStep } = useDieAnimation();
-  const { gameState, animateMoneyChange } = useGame();
+  const { game: gameState, animateMoneyChange } = useGame();
 
   // Ref-Guards to make sure to only handle each step once
   const didHandleWaitRef = useRef(false);

@@ -11,7 +11,7 @@ import { cards } from '../data/cards';
 import { TechnologyType } from '../types/TechnologyTypes';
 
 const Board: React.FC = () => {
-  const { gameState } = useGame();
+  const { game: gameState } = useGame();
   const { currentPlayerId } = gameState;
   const {
     climateActionCards: climateActions,
@@ -98,7 +98,8 @@ const Board: React.FC = () => {
           </Stack>
         </Grid>
         {showClimateActions &&
-          climateActions.map((card, index) => {
+          [...Array(10)].map((_, index) => {
+            const card = climateActions[index] ?? null;
             const isSelectable = index === selectableClimateIndex;
             const selected = isSelected(isSelectable, index);
             const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;

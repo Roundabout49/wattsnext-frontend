@@ -32,7 +32,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
 
   const [pendingNewGameState, setPendingNewGameState] = useState<Game | null>(null);
 
-  const { setGameState } = useGame();
+  const { setGame: setGameState } = useGame();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fallbackReducer = (state: ActionState | null, _action: GameAction): ActionState | null =>

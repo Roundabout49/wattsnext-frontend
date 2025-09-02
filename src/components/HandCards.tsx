@@ -9,7 +9,7 @@ import { useAction } from '../context/ActionContext';
 import { useCardRefs } from '../hooks/useCardRefs';
 
 const HandCards = () => {
-  const { gameState } = useGame();
+  const { game: gameState } = useGame();
   const { players, currentPlayerId } = gameState;
   const { playerId } = usePlayer();
   const { actionState, dispatchGameAction } = useAction();

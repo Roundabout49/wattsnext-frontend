@@ -64,7 +64,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
                 price: card.moneyCosts,
                 resources: card.resourceCosts,
                 type: card.type,
-                icon: card.supply?.iconName,
+                achievement: card.supply?.name,
               }}
             ></ProgressCardTop>
           )}

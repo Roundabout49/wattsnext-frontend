@@ -4,35 +4,38 @@ import PointsIcon from './icons/PointsIcon';
 import { useState } from 'react';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { orderedTechnologyTypes } from '../types/TechnologyTypes';
+import { orderedTechnologyTypes, TechnologyType } from '../types/TechnologyTypes';
 import EnergyIcon from './icons/EnergyIcon';
-import { EnergyForms } from '../types/EnergyTypes';
+import { EnergyForm, EnergyForms } from '../types/EnergyForms';
+import { PhaseObjective } from '../types/Game';
 
-const PhaseObjective = () => {
-  const { gameState } = useGame();
-  const { phaseIndex: currentPhase, phases: phaseObjectives, progressPoints } = gameState;
+const PhaseObjectives = () => {
+  const { game: gameState } = useGame();
+  const { phaseIndex: currentPhaseIndex, phases } = gameState;
 
-  const sortedPhases = Object.keys(phaseObjectives)
-    .map(Number)
-    .sort((a, b) => a - b);
-
-  const [visiblePhase, setVisiblePhase] = useState(currentPhase);
+  const [visiblePhaseIndex, setVisiblePhaseIndex] = useState(currentPhaseIndex);
 
   const handlePrev = () => {
-    const currentIndex = sortedPhases.indexOf(visiblePhase);
-    if (currentIndex > 0) {
-      setVisiblePhase(sortedPhases[currentIndex - 1]);
+    if (visiblePhaseIndex > 0) {
+      setVisiblePhaseIndex(visiblePhaseIndex - 1);
     }
   };
 
   const handleNext = () => {
-    const currentIndex = sortedPhases.indexOf(visiblePhase);
-    if (currentIndex < sortedPhases.length - 1) {
-      setVisiblePhase(sortedPhases[currentIndex + 1]);
+    if (visiblePhaseIndex < phases.length - 1) {
+      setVisiblePhaseIndex(visiblePhaseIndex + 1);
     }
   };
 
-  const objective = phaseObjectives[visiblePhase]?.objective;
+  const objective = phases[visiblePhaseIndex];
+
+  const phaseObjectiveKeyMap: Record<TechnologyType | EnergyForm, keyof PhaseObjective> = {
+    Generation: 'generation',
+    Distribution: 'distribution',
+    Storage: 'storage',
+    Electricity: 'electricity',
+    Heat: 'heat',
+  };
 
   return (
     <Box
@@ -54,7 +57,7 @@ const PhaseObjective = () => {
           justifyContent: 'space-between',
         }}
       >
-        <IconButton onClick={handlePrev} disabled={visiblePhase === sortedPhases[0]}>
+        <IconButton onClick={handlePrev} disabled={visiblePhaseIndex === 0}>
           <ArrowBackIosNewIcon />
         </IconButton>
 
@@ -63,16 +66,13 @@ const PhaseObjective = () => {
           fontSize="1.1rem"
           sx={{
             fontWeight: 'bold',
-            color: visiblePhase === currentPhase ? 'black' : 'grey',
+            color: visiblePhaseIndex === currentPhaseIndex ? 'black' : 'grey',
           }}
         >
-          Phase {visiblePhase}
+          Phase {visiblePhaseIndex + 1}
         </Typography>
 
-        <IconButton
-          onClick={handleNext}
-          disabled={visiblePhase === sortedPhases[sortedPhases.length - 1]}
-        >
+        <IconButton onClick={handleNext} disabled={visiblePhaseIndex === phases.length - 1}>
           <ArrowForwardIosIcon />
         </IconButton>
       </Box>
@@ -87,46 +87,47 @@ const PhaseObjective = () => {
           mb: 1,
         }}
       >
-        {visiblePhase === currentPhase && (
+        {visiblePhaseIndex === currentPhaseIndex && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <PointsIcon points={progressPoints} color="green" />
+            <PointsIcon points={objective.progressPoints.value} color="green" />
             <Typography variant="h3" fontSize="1.8rem" sx={{ userSelect: 'none' }}>
               /
             </Typography>
           </Box>
         )}
-        <PointsIcon points={objective.progressPoints} color="green" />
+        <PointsIcon points={objective.progressPoints.target} color="green" />
       </Box>
-      {orderedTechnologyTypes.map((technologyType) => (
-        <Box sx={{ transform: 'scale(0.7)' }} key={technologyType}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 0 }}>
-            {visiblePhase === currentPhase && (
-              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                <EnergyIcon
-                  technology={technologyType}
-                  size={objective.technologyTypesHave[technologyType]}
-                />
-                <Typography
-                  variant="h3"
-                  fontSize="2.5rem"
-                  sx={{ userSelect: 'none', position: 'relative', top: '0.25rem' }}
-                >
-                  /
-                </Typography>
-              </Box>
-            )}
-            <EnergyIcon
-              technology={technologyType}
-              size={objective.technologyTypesAim[technologyType]}
-            />
+      {orderedTechnologyTypes.map((technologyType) => {
+        const key = phaseObjectiveKeyMap[technologyType];
+        return (
+          <Box sx={{ transform: 'scale(0.7)' }} key={technologyType}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 0 }}>
+              {visiblePhaseIndex === currentPhaseIndex && (
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                  <EnergyIcon technology={technologyType} size={objective[key].value} />
+                  <Typography
+                    variant="h3"
+                    fontSize="2.5rem"
+                    sx={{ userSelect: 'none', position: 'relative', top: '0.25rem' }}
+                  >
+                    /
+                  </Typography>
+                </Box>
+              )}
+              <EnergyIcon technology={technologyType} size={objective[key].target} />
+            </Box>
           </Box>
-        </Box>
-      ))}
+        );
+      })}
 
-      {/*TODO: Color should only depend on fulfillment in current (maybe also past) phases*/}
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 2 }}>
-        {Object.entries(objective.energyTypes).map(([energyType, isFulfilled]) => {
+        {(Object.keys(EnergyForms) as EnergyForm[]).map((energyType) => {
           const IconComponent = EnergyForms[energyType].icon;
+          const key = phaseObjectiveKeyMap[energyType];
+          const { value, target } = objective[key];
+
+          const isFulfilled = value >= target;
+
           return (
             <Box sx={{ transform: 'scale(1.5)' }} key={energyType}>
               <IconComponent color={isFulfilled ? 'inherit' : 'disabled'} />
@@ -138,4 +139,4 @@ const PhaseObjective = () => {
   );
 };
 
-export default PhaseObjective;
+export default PhaseObjectives;

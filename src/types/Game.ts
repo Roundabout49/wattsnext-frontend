@@ -1,5 +1,7 @@
+import { EnergyForm } from './EnergyForms';
 import { EventCard } from './EventCards';
 import { ClimateActionCard, ProgressCard } from './ProgressCards';
+import { TechnologyType } from './TechnologyTypes';
 
 export interface Game {
   state: GameState;
@@ -41,7 +43,7 @@ export interface Board {
   catastropheCard: EventCard | null;
 }
 
-interface PhaseObjective {
+export interface PhaseObjective {
   generation: TargetableValue;
   distribution: TargetableValue;
   storage: TargetableValue;
@@ -56,8 +58,8 @@ interface TargetableValue {
   target: number;
 }
 
-/* type TechnologyEnergyMatrix = {
+export type TechnologyEnergyMatrix = {
   [tech in TechnologyType]: {
     [energy in EnergyForm]: number;
   };
-}; */
+};

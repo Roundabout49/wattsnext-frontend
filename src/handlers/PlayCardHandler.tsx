@@ -11,7 +11,7 @@ export function PlayCardHandler() {
   const { actionState, dispatchGameAction, setSelectedAction } = useAction();
   const { sendPlayCardIntent, sendPlayCard } = useSendMessage();
   const { playerId } = usePlayer();
-  const { animateMoneyChange, animateResourcesChange, setGameState } = useGame();
+  const { animateMoneyChange, animateResourcesChange, setGame: setGameState } = useGame();
   const { startCardAnimation } = useCardAnimation();
 
   // Ref-Guards to make sure to only handle each step once

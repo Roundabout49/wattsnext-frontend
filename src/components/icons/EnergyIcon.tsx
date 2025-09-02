@@ -1,6 +1,6 @@
 import { Box, SvgIcon, Typography } from '@mui/material';
 import { TechnologyTypes } from '../../types/TechnologyTypes';
-import { EnergyForm, EnergyForms } from '../../types/EnergyTypes';
+import { EnergyForm, EnergyForms } from '../../types/EnergyForms';
 import { Supply } from '../../types/ProgressCards';
 
 const shapes = {
@@ -23,7 +23,7 @@ const shapes = {
   ),
 };
 
-type EnergyIconProps = Omit<Extract<Supply, { type: 'energy' }>, 'form'> & {
+type EnergyIconProps = Omit<Extract<Supply, { type: 'energy' }>, 'form' | 'type'> & {
   form?: EnergyForm;
 };
 

@@ -19,14 +19,18 @@ interface TechnologyCardTopProps extends ProgressCardTopProps {
 
 interface ClimateActionCardTopProps extends ProgressCardTopProps {
   type: 'climateAction';
-  icon?: Achievement;
+  achievement?: Achievement;
 }
 
 const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCardTopProps }> = ({
   card,
 }) => {
   const IconComponent =
-    card.type === 'climateAction' ? (card.icon ? Achievements[card.icon].icon : null) : null;
+    card.type === 'climateAction'
+      ? card.achievement
+        ? Achievements[card.achievement].icon
+        : null
+      : null;
 
   return (
     <div style={{ width: 225, height: 150, position: 'relative', padding: 0 }}>

@@ -1,5 +1,5 @@
 import { cards } from '../data/cards';
-import { Game } from '../types/Game';
+import { Game, GameState } from '../types/Game';
 import { ClimateActionCard, TechnologyCard } from '../types/ProgressCards';
 
 export const climateActionCards: ClimateActionCard[] = [
@@ -33,93 +33,44 @@ export const exampleGameState: Game = {
   ],
   currentPlayerId: 'player1',
   board: {
-    climateActionCards: [
-      climateActionCards[0],
-      climateActionCards[1],
-      climateActionCards[2],
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    ],
     generationCards: [generationCards[0], null, null],
-    storageCards: [storageCards[0], null, null],
     distributionCards: [distributionCards[0], null, null],
-    eventCards: null,
+    storageCards: [storageCards[0], null, null],
+    climateActionCards: [climateActionCards[0], climateActionCards[1], climateActionCards[2]],
+    eventCards: [],
     catastropheCard: null,
   },
   money: 5,
   resources: 13,
-  progressPoints: 17,
-  technologySizes: {
-    Storage: { Electricity: 2, Heat: 0 },
-    Generation: { Electricity: 4, Heat: 0 },
-    Distribution: { Electricity: 3, Heat: 0 },
-  },
+  progressCardPileSize: 0,
   phaseIndex: 1,
   turnInPhase: 8,
   turnsPerPhase: 12,
-  phases: {
-    1: {
-      objective: {
-        progressPoints: 25,
-        technologyTypesAim: {
-          Generation: 3,
-          Distribution: 3,
-          Storage: 0,
-        },
-        technologyTypesHave: {
-          Generation: 2,
-          Distribution: 1,
-          Storage: 0,
-        },
-        energyTypes: {
-          Electricity: true,
-          Heat: false,
-        },
-      },
+  phases: [
+    {
+      generation: { value: 2, target: 3 },
+      distribution: { value: 1, target: 3 },
+      storage: { value: 0, target: 0 },
+      progressPoints: { value: 17, target: 25 },
+      electricity: { value: 1, target: 1 },
+      heat: { value: 0, target: 1 },
     },
-    2: {
-      objective: {
-        progressPoints: 50,
-        technologyTypesAim: {
-          Generation: 6,
-          Distribution: 6,
-          Storage: 3,
-        },
-        technologyTypesHave: {
-          Generation: 2,
-          Distribution: 1,
-          Storage: 0,
-        },
-        energyTypes: {
-          Electricity: true,
-          Heat: false,
-        },
-      },
+    {
+      generation: { value: 2, target: 6 },
+      distribution: { value: 1, target: 6 },
+      storage: { value: 0, target: 3 },
+      progressPoints: { value: 25, target: 50 },
+      electricity: { value: 1, target: 1 },
+      heat: { value: 0, target: 1 },
     },
-    3: {
-      objective: {
-        progressPoints: 75,
-        technologyTypesAim: {
-          Generation: 9,
-          Distribution: 9,
-          Storage: 6,
-        },
-        technologyTypesHave: {
-          Generation: 2,
-          Distribution: 1,
-          Storage: 0,
-        },
-        energyTypes: {
-          Electricity: true,
-          Heat: false,
-        },
-      },
+    {
+      generation: { value: 2, target: 9 },
+      distribution: { value: 1, target: 9 },
+      storage: { value: 0, target: 6 },
+      progressPoints: { value: 50, target: 75 },
+      electricity: { value: 1, target: 1 },
+      heat: { value: 0, target: 1 },
     },
-  },
-  canSearchPile: false,
+  ],
+  state: GameState.PREPARING,
 };

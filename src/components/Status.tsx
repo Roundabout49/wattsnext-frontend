@@ -4,21 +4,31 @@ import PriceIcon from './icons/PriceIcon';
 import ResourcesIcon from './icons/ResourcesIcon';
 import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
-import PhaseObjective from './PhaseObjective';
+import PhaseObjectives from './PhaseObjective';
 import { orderedTechnologyTypes } from '../types/TechnologyTypes';
-import { orderedEnergyForms } from '../types/EnergyTypes';
+import { orderedEnergyForms } from '../types/EnergyForms';
+import { TechnologyEnergyMatrix } from '../types/Game';
 
 const Status = () => {
-  const { gameState } = useGame();
+  const { game } = useGame();
   const {
     phaseIndex: phase,
     turnInPhase: turn,
     turnsPerPhase: turnsInPhase,
-    progressPoints,
+    phases,
     money,
     resources,
-    technologySizes,
-  } = gameState;
+    /*technologySizes,*/
+  } = game;
+
+  // TODO: Remove when technologySizes is implemented again
+  const technologySizes: TechnologyEnergyMatrix = {
+    Generation: { Electricity: 4, Heat: 2 },
+    Distribution: { Electricity: 2, Heat: 0 },
+    Storage: { Electricity: 1, Heat: 3 },
+  };
+
+  const progressPoints = phases[phase].progressPoints.value;
 
   return (
     <Box
@@ -34,7 +44,7 @@ const Status = () => {
       }}
     >
       <Typography variant="h6" fontSize="1.1rem">
-        Phase {phase}, Zug {turn}/{turnsInPhase}
+        Phase {phase + 1}, Zug {turn + 1}/{turnsInPhase}
       </Typography>
 
       <Box
@@ -74,7 +84,7 @@ const Status = () => {
               >
                 <EnergyIcon
                   technology={technologyType}
-                  energy={energyType}
+                  form={energyType}
                   size={technologySizes[technologyType][energyType]}
                 />
               </Box>
@@ -83,7 +93,7 @@ const Status = () => {
         ))}
       </Box>
 
-      <PhaseObjective />
+      <PhaseObjectives />
     </Box>
   );
 };

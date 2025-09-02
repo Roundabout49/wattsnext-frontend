@@ -2631,6 +2631,7 @@ export const cards: Record<string, ProgressCard> = {
       },
       modifications: [],
     },
+    supply: { type: 'achievement', name: 'CarbonCapture' },
     isPlayable: true,
     type: 'climateAction',
   },
