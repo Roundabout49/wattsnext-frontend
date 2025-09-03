@@ -9,7 +9,7 @@ import ProgressCardSmall from '../components/cards/ProgressCardSmall';
 
 export function PlayCardHandler() {
   const { actionState, dispatchGameAction, setSelectedAction } = useAction();
-  const { sendPlayCardIntent, sendPlayCard } = useSendMessage();
+  const { sendPlayTechnologyCardActionIntent, sendPlayTechnologyCardAction } = useSendMessage();
   const { playerId } = usePlayer();
   const { animateMoneyChange, animateResourcesChange, setGame: setGameState } = useGame();
   const { startCardAnimation } = useCardAnimation();
@@ -25,8 +25,7 @@ export function PlayCardHandler() {
 
     if (step === 'waitIfRecoverPossible' && !didHandleWaitIntentRef.current) {
       didHandleWaitIntentRef.current = true;
-      sendPlayCardIntent({
-        playerId: playerId!,
+      sendPlayTechnologyCardActionIntent({
         progressCardId: actionState.cardId!,
         targetPosition: actionState.selectedPosition!,
       });
@@ -37,10 +36,7 @@ export function PlayCardHandler() {
 
     if (actionState.step === 'waitForGameState' && !didHandleWaitDoneRef.current) {
       didHandleWaitDoneRef.current = true;
-      sendPlayCard({
-        playerId: playerId!,
-        cardId: actionState.cardId!,
-        position: actionState.selectedPosition!,
+      sendPlayTechnologyCardAction({
         shallRecycle: actionState.recoverResources!,
       });
     }
@@ -80,8 +76,8 @@ export function PlayCardHandler() {
     }
   }, [
     actionState,
-    sendPlayCardIntent,
-    sendPlayCard,
+    sendPlayTechnologyCardActionIntent,
+    sendPlayTechnologyCardAction,
     dispatchGameAction,
     playerId,
     setSelectedAction,

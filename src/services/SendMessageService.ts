@@ -1,10 +1,12 @@
 import {
   PlayTechnologyCardActionRequest,
   PlayTechnologyCardActionIntentRequest,
+  PlayClimateCardActionRequest,
 } from '../ws/MessageTypes';
 
 export interface SendMessageService {
-  sendPlayCardIntent: (data: PlayTechnologyCardActionIntentRequest) => void;
-  sendPlayCard: (data: PlayTechnologyCardActionRequest) => void;
-  sendEarnMoney: () => void; // Todo: playerId required?
+  sendPlayTechnologyCardActionIntent: (data: PlayTechnologyCardActionIntentRequest) => void;
+  sendPlayTechnologyCardAction: (data: PlayTechnologyCardActionRequest) => void;
+  sendPlayClimateCardAction: (data: PlayClimateCardActionRequest) => void;
+  sendEarnMoneyAction: () => void;
 }

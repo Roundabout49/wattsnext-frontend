@@ -48,9 +48,7 @@ const Board: React.FC = () => {
   const isCurrentPlayer = playerId === currentPlayerId;
 
   const selectableClimateIndex =
-    isCurrentPlayer && selectedCard?.type === 'climateAction'
-      ? climateActions.findIndex((c) => c === null)
-      : -1;
+    isCurrentPlayer && selectedCard?.type === 'climateAction' ? climateActions.length : -1;
 
   const isSelectableTechnologySlot = (technology: TechnologyType) => {
     if (!isCurrentPlayer) return false;

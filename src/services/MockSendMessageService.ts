@@ -1,9 +1,10 @@
 import { useAction } from '../context/ActionContext';
 import { useGame } from '../context/GameContext';
 import { cards } from '../data/cards';
-import { Player } from '../types/Game';
+import { Game, Player } from '../types/Game';
 import {
   handleEarnMoneyResult,
+  handlePlayClimateCardResult,
   handlePlayTechnologyCardIntentResult,
   handlePlayTechnologyCardResult,
 } from '../ws/MessageHandler';
@@ -11,8 +12,10 @@ import {
   PlayTechnologyCardActionRequest,
   PlayTechnologyCardActionIntentRequest,
   ResponseStatus,
+  PlayClimateCardActionRequest,
 } from '../ws/MessageTypes';
 import { SendMessageService } from './SendMessageService';
+import { ClimateActionCard, TechnologyCard } from '../types/ProgressCards';
 
 const getNextPlayer = (players: Player[], currentPlayerId: string): Player => {
   const currentPlayerIndex = players.findIndex((player) => player.id === currentPlayerId);
@@ -20,18 +23,18 @@ const getNextPlayer = (players: Player[], currentPlayerId: string): Player => {
 };
 
 export function useMockSendMessageService(): SendMessageService {
-  const { dispatchGameAction } = useAction();
-  const { game: gameState } = useGame();
+  const { dispatchGameAction, actionState } = useAction();
+  const { game } = useGame();
 
   return {
-    sendPlayCardIntent: (data: PlayTechnologyCardActionIntentRequest) => {
+    sendPlayTechnologyCardActionIntent: (data: PlayTechnologyCardActionIntentRequest) => {
       console.log('[Mock] sendPlayCardIntent', data);
       const { progressCardId } = data;
       const card = cards[progressCardId];
 
       handlePlayTechnologyCardIntentResult(
         {
-          game: gameState,
+          game: game,
           status: ResponseStatus.OK,
           information: {
             canRecycle: false,
@@ -48,40 +51,41 @@ export function useMockSendMessageService(): SendMessageService {
       });
     },
 
-    sendPlayCard: (data: PlayTechnologyCardActionRequest) => {
+    sendPlayTechnologyCardAction: (data: PlayTechnologyCardActionRequest) => {
       console.log('[Mock] sendPlayCard', data);
 
-      const { cardId, position, shallRecycle: recover } = data;
-      const card = cards[cardId];
-
-      // update player
-      const nextPlayer = getNextPlayer(gameState.players, gameState.currentPlayerId);
-
-      // Update board
-      const updatedClimateActions = [
-        ...gameState.board.climateActionCards,
-      ] as typeof gameState.board.climateActionCards;
-      if (card.type === 'climateAction') {
-        updatedClimateActions[position] = card;
+      if (
+        actionState?.type !== 'playCard' ||
+        !actionState.cardId ||
+        !actionState.selectedPosition
+      ) {
+        console.error('No card selected');
+        return;
       }
 
+      const cardId = actionState.cardId;
+      const card: TechnologyCard = cards[cardId] as TechnologyCard;
+      const position = actionState.selectedPosition;
+
+      // update player
+      const nextPlayer = getNextPlayer(game.players, game.currentPlayerId);
+
+      // Update board
       const updatedGeneration = [
-        ...gameState.board.generationCards,
-      ] as typeof gameState.board.generationCards;
+        ...game.board.generationCards,
+      ] as typeof game.board.generationCards;
       if (card.type === 'technology' && card.supply.technology === 'Generation') {
         updatedGeneration[position] = card;
       }
 
-      const updatedStorage = [
-        ...gameState.board.storageCards,
-      ] as typeof gameState.board.storageCards;
+      const updatedStorage = [...game.board.storageCards] as typeof game.board.storageCards;
       if (card.type === 'technology' && card.supply.technology === 'Storage') {
         updatedStorage[position] = card;
       }
 
       const updatedDistribution = [
-        ...gameState.board.distributionCards,
-      ] as typeof gameState.board.distributionCards;
+        ...game.board.distributionCards,
+      ] as typeof game.board.distributionCards;
       if (card.type === 'technology' && card.supply.technology === 'Distribution') {
         updatedDistribution[position] = card;
       }
@@ -90,10 +94,10 @@ export function useMockSendMessageService(): SendMessageService {
       const newCard = cards[newCardKey];
       console.log('[Mock] New Card:', newCard);
 
-      const newGameState = {
-        ...gameState,
-        players: gameState.players.map((player) => {
-          if (player.id === gameState.currentPlayerId) {
+      const newGameState: Game = {
+        ...game,
+        players: game.players.map((player) => {
+          if (player.id === game.currentPlayerId) {
             return {
               ...player,
               handCards: player.handCards.filter((c) => c.name !== cardId).concat(newCard),
@@ -103,16 +107,27 @@ export function useMockSendMessageService(): SendMessageService {
         }),
         currentPlayerId: nextPlayer.id,
         board: {
-          ...gameState.board,
-          climateActions: updatedClimateActions,
-          generation: updatedGeneration,
-          storage: updatedStorage,
-          distribution: updatedDistribution,
+          ...game.board,
+          generationCards: updatedGeneration,
+          storageCards: updatedStorage,
+          distributionCards: updatedDistribution,
         },
-        money: gameState.money - card.moneyCosts,
-        resources: gameState.resources - card.resourceCosts,
-        progressPoints: gameState.progressPoints + (card.points?.systemProgressPoints || 0),
-        technologySizes:
+        money: game.money - card.moneyCosts.modifiedValue,
+        resources: game.resources - card.resourceCosts.modifiedValue,
+        phases: game.phases.map((phase, index) =>
+          index === game.phaseIndex
+            ? {
+                ...phase,
+                progressPoints: {
+                  ...phase.progressPoints,
+                  value:
+                    phase.progressPoints.value +
+                    (card.points?.modifiedValue.systemProgressPoints || 0),
+                },
+              }
+            : phase
+        ),
+        /* technologySizes:
           card.type === 'technology'
             ? {
                 ...gameState.technologySizes,
@@ -123,39 +138,116 @@ export function useMockSendMessageService(): SendMessageService {
                     card.supply.size,
                 },
               }
-            : gameState.technologySizes,
-        turn: gameState.turnInPhase + 1,
+            : gameState.technologySizes,*/
+        turnInPhase: game.turnInPhase + 1,
       };
       handlePlayTechnologyCardResult(
         {
-          playerId: gameState.currentPlayerId,
-          cardId: cardId,
-          position: position,
-          recover: recover,
-          newState: newGameState,
-          money: -1 * card.moneyCosts,
-          resources: -1 * card.resourceCosts,
+          game: newGameState,
+          status: ResponseStatus.OK,
+          information: {
+            playedCard: card,
+            targetPosition: position,
+            drawnCard: newCard,
+            payedMoneyForCard: card.moneyCosts.modifiedValue,
+            payedResourcesForCard: card.resourceCosts.modifiedValue,
+            didRecycle: false,
+          },
         },
         dispatchGameAction
       );
     },
 
-    sendEarnMoney: () => {
+    // TODO: implement
+    sendPlayClimateCardAction: (data: PlayClimateCardActionRequest) => {
+      console.log('[Mock] sendPlayClimateCard', data);
+      const { progressCardId } = data;
+      const card = cards[progressCardId] as ClimateActionCard;
+
+      // update player
+      const nextPlayer = getNextPlayer(game.players, game.currentPlayerId);
+
+      const newCardKey = Object.keys(cards)[Math.floor(Math.random() * Object.keys(cards).length)];
+      const newCard = cards[newCardKey];
+      console.log('[Mock] New Card:', newCard);
+
+      const newGameState: Game = {
+        ...game,
+        players: game.players.map((player) => {
+          if (player.id === game.currentPlayerId) {
+            return {
+              ...player,
+              handCards: player.handCards.filter((c) => c.name !== progressCardId).concat(newCard),
+            };
+          }
+          return player;
+        }),
+        currentPlayerId: nextPlayer.id,
+        board: {
+          ...game.board,
+          climateActionCards: [...game.board.climateActionCards, card],
+        },
+        money: game.money - card.moneyCosts.modifiedValue,
+        resources: game.resources - card.resourceCosts.modifiedValue,
+        phases: game.phases.map((phase, index) =>
+          index === game.phaseIndex
+            ? {
+                ...phase,
+                progressPoints: {
+                  ...phase.progressPoints,
+                  value:
+                    phase.progressPoints.value +
+                    (card.points?.modifiedValue.systemProgressPoints || 0),
+                },
+              }
+            : phase
+        ),
+        /* technologySizes:
+          card.type === 'technology'
+            ? {
+                ...gameState.technologySizes,
+                [card.supply.technology]: {
+                  ...gameState.technologySizes[card.supply.technology],
+                  [card.supply.energy]:
+                    (gameState.technologySizes[card.supply.technology][card.supply.energy] || 0) +
+                    card.supply.size,
+                },
+              }
+            : gameState.technologySizes,*/
+        turnInPhase: game.turnInPhase + 1,
+      };
+      handlePlayClimateCardResult(
+        {
+          game: newGameState,
+          status: ResponseStatus.OK,
+          information: {
+            playedCard: card,
+            drawnCard: newCard,
+            cardEffectInformations: [],
+          },
+        },
+        dispatchGameAction
+      );
+    },
+
+    sendEarnMoneyAction: () => {
       console.log('[Mock] sendEarnMoney');
 
       // update player
-      const nextPlayer = getNextPlayer(gameState.players, gameState.currentPlayerId);
+      const nextPlayer = getNextPlayer(game.players, game.currentPlayerId);
 
       const amount = Math.floor(Math.random() * 6) + 1;
       handleEarnMoneyResult(
         {
-          playerId: gameState.currentPlayerId,
-          diceValue: amount,
-          newState: {
-            ...gameState,
-            money: gameState.money + amount,
+          game: {
+            ...game,
+            money: game.money + amount,
             currentPlayerId: nextPlayer.id,
-            turnInPhase: gameState.turnInPhase + 1,
+            turnInPhase: game.turnInPhase + 1,
+          },
+          status: ResponseStatus.OK,
+          information: {
+            diceValue: amount,
           },
         },
         dispatchGameAction

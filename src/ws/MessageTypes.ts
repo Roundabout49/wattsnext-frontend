@@ -62,4 +62,5 @@ export type CardEffectInformation =
 export type OutgoingMessage =
   | PlayTechnologyCardActionIntentRequest
   | PlayTechnologyCardActionRequest
+  | PlayClimateCardActionRequest
   | null;

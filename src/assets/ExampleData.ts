@@ -19,6 +19,7 @@ export const storageCards: TechnologyCard[] = [
 ];
 
 export const exampleGameState: Game = {
+  id: 'example-game',
   players: [
     {
       id: 'player1',

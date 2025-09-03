@@ -6,7 +6,7 @@ import { useGame } from '../context/GameContext';
 
 export function EarnMoneyHandler() {
   const { actionState, dispatchGameAction, setSelectedAction } = useAction();
-  const { sendEarnMoney } = useSendMessage();
+  const { sendEarnMoneyAction: sendEarnMoney } = useSendMessage();
   const { setShowDieAnimation, setDieAnimationData, setDieAnimationStep } = useDieAnimation();
   const { game: gameState, animateMoneyChange } = useGame();
 
