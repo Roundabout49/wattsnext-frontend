@@ -4,6 +4,7 @@ import { ClimateActionCard, ProgressCard } from './ProgressCards';
 import { TechnologyType } from './TechnologyTypes';
 
 export interface Game {
+  id: string;
   state: GameState;
   money: number;
   resources: number;
