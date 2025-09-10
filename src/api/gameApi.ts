@@ -1,12 +1,14 @@
-// TODO: Refactor (extract types)
+import { Player } from '../types/Game';
+import {
+  CreateGameRequest,
+  CreateGameResponse,
+  JoinGameRequest,
+  StartGameRequest,
+} from './MessageTypes';
 
 const BASE_URL = 'http://localhost:8080/game-management';
 
-export type CreateGameRequest = { playerName: string };
-export type JoinGameRequest = { gameId: string; playerName: string };
-export type PlayerDto = { id: string; name: string };
-
-export async function createGame(req: CreateGameRequest): Promise<PlayerDto & { gameId: string }> {
+export async function createGame(req: CreateGameRequest): Promise<CreateGameResponse> {
   const res = await fetch(BASE_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -16,7 +18,7 @@ export async function createGame(req: CreateGameRequest): Promise<PlayerDto & { 
   return res.json();
 }
 
-export async function joinGame(req: JoinGameRequest): Promise<PlayerDto> {
+export async function joinGame(req: JoinGameRequest): Promise<Player> {
   const res = await fetch(`${BASE_URL}/join`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -26,11 +28,11 @@ export async function joinGame(req: JoinGameRequest): Promise<PlayerDto> {
   return res.json();
 }
 
-export async function startGame(gameId: string): Promise<void> {
+export async function startGame(req: StartGameRequest): Promise<void> {
   const res = await fetch(`${BASE_URL}/start`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ gameId }),
+    body: JSON.stringify({ req }),
   });
   if (!res.ok) throw new Error('Failed to start game');
 }

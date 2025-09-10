@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { useAction } from '../context/ActionContext';
-import { usePlayer } from '../context/PlayerContext';
+import { useSession } from '../context/SessionContext';
 import { cards } from '../data/cards';
 import { TechnologyType } from '../types/TechnologyTypes';
 
@@ -23,7 +23,7 @@ const Board: React.FC = () => {
   } = gameState.board;
   const { registerCardRef } = useCardAnimation();
   const { actionState, dispatchGameAction } = useAction();
-  const { playerId } = usePlayer();
+  const { playerId } = useSession();
 
   const [showClimateActions, setShowClimateActions] = useState(true);
   const climateRefs = useRef<(HTMLDivElement | null)[]>([]);

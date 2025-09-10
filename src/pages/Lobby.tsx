@@ -10,11 +10,11 @@ import {
   Box,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { usePlayer } from '../context/PlayerContext';
+import { useSession } from '../context/SessionContext';
 
 export default function Lobby() {
   const { game } = useGame();
-  const { playerId } = usePlayer();
+  const { playerId } = useSession();
 
   if (!game) {
     return <Typography>Kein Spiel gefunden.</Typography>;

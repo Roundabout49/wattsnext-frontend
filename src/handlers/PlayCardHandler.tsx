@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAction } from '../context/ActionContext';
 import { useSendMessage } from '../context/SendMessageContext';
-import { usePlayer } from '../context/PlayerContext';
+import { useSession } from '../context/SessionContext';
 import { useGame } from '../context/GameContext';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { cards } from '../data/cards';
@@ -10,7 +10,7 @@ import ProgressCardSmall from '../components/cards/ProgressCardSmall';
 export function PlayCardHandler() {
   const { actionState, dispatchGameAction, setSelectedAction } = useAction();
   const { sendPlayTechnologyCardActionIntent, sendPlayTechnologyCardAction } = useSendMessage();
-  const { playerId } = usePlayer();
+  const { playerId } = useSession();
   const { animateMoneyChange, animateResourcesChange, setGame: setGameState } = useGame();
   const { startCardAnimation } = useCardAnimation();
 

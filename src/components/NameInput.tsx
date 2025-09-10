@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box } from '@mui/material';
-import { usePlayer } from '../context/PlayerContext';
+import { useSession } from '../context/SessionContext';
 
 const NameInput = ({ onNameSubmit }: { onNameSubmit: (name: string) => void }) => {
   const [name, setName] = useState('');
   const [id, setId] = useState('');
-  const { setPlayerName, setPlayerId } = usePlayer();
+  const { setPlayerName, setPlayerId } = useSession();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);

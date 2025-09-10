@@ -8,7 +8,7 @@ import { Box } from '@mui/material';
 import { GameProvider } from './context/GameContext';
 import { ActionProvider } from './context/ActionContext';
 import { CardAnimationProvider } from './context/CardAnimationContext';
-import { PlayerIdProvider } from './context/PlayerContext';
+import { SessionProvider } from './context/SessionContext';
 // import { WebSocketProvider } from './ws/WebSocketProvider';
 import { SendMessageProvider } from './context/SendMessageContext';
 import { DieAnimationProvider } from './context/DieAnimationContext';
@@ -19,13 +19,13 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({ toggleTheme }) => {
   return (
-    <GameProvider>
-      <ActionProvider>
-        {/* <WebSocketProvider> */}
-        <SendMessageProvider useMock={true}>
-          <DieAnimationProvider>
-            <CardAnimationProvider>
-              <PlayerIdProvider>
+    <SessionProvider>
+      <GameProvider>
+        <ActionProvider>
+          {/* <WebSocketProvider> */}
+          <SendMessageProvider useMock={true}>
+            <DieAnimationProvider>
+              <CardAnimationProvider>
                 <div>
                   <NavBar toggleTheme={toggleTheme} />
                   <Box sx={{ padding: 0 }}>
@@ -37,13 +37,13 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
                     </Routes>
                   </Box>
                 </div>
-              </PlayerIdProvider>
-            </CardAnimationProvider>
-          </DieAnimationProvider>
-        </SendMessageProvider>
-        {/* </WebSocketProvider> */}
-      </ActionProvider>
-    </GameProvider>
+              </CardAnimationProvider>
+            </DieAnimationProvider>
+          </SendMessageProvider>
+          {/* </WebSocketProvider> */}
+        </ActionProvider>
+      </GameProvider>
+    </SessionProvider>
   );
 };
 

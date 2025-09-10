@@ -1,21 +1,39 @@
 // src/pages/JoinOrCreateGamePage.tsx
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Paper, Stack } from '@mui/material';
+import { useSession } from '../context/SessionContext';
+import { CreateGameResponse, GameMode } from '../api/MessageTypes';
+import { createGame, joinGame } from '../api/gameApi';
+import { Player } from '../types/Game';
 
 const JoinOrCreateGamePage: React.FC = () => {
   const [nickname, setNickname] = useState('');
   const [gameIdInput, setGameIdInput] = useState('');
+  const { setSession } = useSession();
 
-  const handleCreateGame = () => {
+  // TODO: Let user choose GameMode
+  const handleCreateGame = async () => {
     if (!nickname.trim()) return;
-    // TODO: Backend-Call zum Erstellen eines Spiels → gameId zurückbekommen
-    // (`/lobby/${newGameId}`, { state: { nickname } });
+    try {
+      const response: CreateGameResponse = await createGame({
+        playerName: nickname,
+        gameMode: GameMode.START_WITH_COAL,
+      });
+      setSession(response.gameId, response.player.id, response.player.name);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const handleJoinGame = () => {
+  // TODO: What happens if game with gameId does not exist?
+  const handleJoinGame = async () => {
     if (!nickname.trim() || !gameIdInput.trim()) return;
-    // TODO: Backend-Call zum Beitreten
-    // navigate(`/lobby/${gameIdInput}`, { state: { nickname } });
+    try {
+      const response: Player = await joinGame({ playerName: nickname, gameId: gameIdInput });
+      setSession(gameIdInput, response.id, response.name);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (

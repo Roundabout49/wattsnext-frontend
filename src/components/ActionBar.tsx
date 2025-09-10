@@ -2,13 +2,13 @@ import { Box, Button, Typography, Stack } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import { useAction } from '../context/ActionContext';
 import { ActionKind, actionKinds } from '../types/Actions';
-import { usePlayer } from '../context/PlayerContext';
+import { useSession } from '../context/SessionContext';
 import { ActionHandlers, actionUIConfig } from '../ui/actionConfig';
 
 const ActionBar = () => {
   const { game: gameState } = useGame();
   const { currentPlayerId, players } = gameState;
-  const { playerId } = usePlayer();
+  const { playerId } = useSession();
 
   const { selectedAction, setSelectedAction, actionState, dispatchGameAction } = useAction();
 

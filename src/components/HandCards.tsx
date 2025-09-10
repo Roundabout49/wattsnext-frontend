@@ -4,14 +4,14 @@ import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Box, Paper, Typography, IconButton, Collapse } from '@mui/material';
 import ProgressCardSmall from './cards/ProgressCardSmall';
 import { useCardAnimation } from '../context/CardAnimationContext';
-import { usePlayer } from '../context/PlayerContext';
+import { useSession } from '../context/SessionContext';
 import { useAction } from '../context/ActionContext';
 import { useCardRefs } from '../hooks/useCardRefs';
 
 const HandCards = () => {
   const { game: gameState } = useGame();
   const { players, currentPlayerId } = gameState;
-  const { playerId } = usePlayer();
+  const { playerId } = useSession();
   const { actionState, dispatchGameAction } = useAction();
 
   const { registerCardRef } = useCardAnimation();

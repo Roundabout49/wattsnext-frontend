@@ -8,6 +8,7 @@ import {
   handlePlayTechnologyCardIntentResult,
   handlePlayTechnologyCardResult,
 } from './MessageHandler';
+import { useSession } from '../context/SessionContext';
 
 const WebSocketContext = createContext<WebSocketContextType>({
   sendMessage: () => {},
@@ -22,14 +23,13 @@ type WebSocketContextType = {
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const clientRef = useRef<Client>(null);
   const [connected, setConnected] = useState(false);
-  const { setGame: setGameState } = useGame();
+  const { setGame } = useGame();
   const { dispatchGameAction } = useAction();
-
-  // TODO: Replace with actual game and player IDs
-  const gameId = 'gameId';
-  const playerId = 'playerId';
+  const { gameId, playerId } = useSession();
 
   useEffect(() => {
+    if (!gameId || !playerId) return;
+
     const client = new Client({
       // TODO: Replace with actual WebSocket URL
       brokerURL: 'ws://localhost:8080/ws',
@@ -47,7 +47,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
 
       client.subscribe(`/topic/game/${gameId}`, (message: IMessage) => {
         const gameState = JSON.parse(message.body);
-        setGameState(gameState);
+        setGame(gameState);
       });
 
       client.subscribe(`/topic/game/${gameId}/earnMoneyResult`, (message: IMessage) => {
@@ -75,7 +75,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       client.deactivate();
       setConnected(false);
     };
-  }, []);
+  }, [gameId, playerId]);
 
   const sendMessage = (destination: string, body: OutgoingMessage | null) => {
     clientRef.current?.publish({
