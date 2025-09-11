@@ -12,6 +12,7 @@ import { SessionProvider } from './context/SessionContext';
 // import { WebSocketProvider } from './ws/WebSocketProvider';
 import { SendMessageProvider } from './context/SendMessageContext';
 import { DieAnimationProvider } from './context/DieAnimationContext';
+import { GameApiProvider } from './context/GameApiContext';
 
 interface AppProps {
   toggleTheme: () => void;
@@ -22,25 +23,27 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
     <SessionProvider>
       <GameProvider>
         <ActionProvider>
-          {/* <WebSocketProvider> */}
-          <SendMessageProvider useMock={true}>
-            <DieAnimationProvider>
-              <CardAnimationProvider>
-                <div>
-                  <NavBar toggleTheme={toggleTheme} />
-                  <Box sx={{ padding: 0 }}>
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/play" element={<Play />} />
-                      <Route path="/rules" element={<Rules />} />
-                    </Routes>
-                  </Box>
-                </div>
-              </CardAnimationProvider>
-            </DieAnimationProvider>
-          </SendMessageProvider>
-          {/* </WebSocketProvider> */}
+          <GameApiProvider useMock={true}>
+            {/* <WebSocketProvider> */}
+            <SendMessageProvider useMock={true}>
+              <DieAnimationProvider>
+                <CardAnimationProvider>
+                  <div>
+                    <NavBar toggleTheme={toggleTheme} />
+                    <Box sx={{ padding: 0 }}>
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/play" element={<Play />} />
+                        <Route path="/rules" element={<Rules />} />
+                      </Routes>
+                    </Box>
+                  </div>
+                </CardAnimationProvider>
+              </DieAnimationProvider>
+            </SendMessageProvider>
+            {/* </WebSocketProvider> */}
+          </GameApiProvider>
         </ActionProvider>
       </GameProvider>
     </SessionProvider>

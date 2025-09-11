@@ -11,10 +11,13 @@ import {
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useSession } from '../context/SessionContext';
+import { useGameApi } from '../context/GameApiContext';
 
 export default function Lobby() {
   const { game } = useGame();
-  const { playerId } = useSession();
+  const { gameId, playerId } = useSession();
+
+  const gameApi = useGameApi();
 
   if (!game) {
     return <Typography>Kein Spiel gefunden.</Typography>;
@@ -25,7 +28,12 @@ export default function Lobby() {
   };
 
   const handleStartGame = () => {
-    // TODO: Backend call to start game
+    if (!gameId) return;
+    try {
+      gameApi.startGame({ gameId: gameId });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleLeaveGame = () => {
@@ -61,7 +69,7 @@ export default function Lobby() {
               borderRadius: 1,
             }}
           >
-            {game.id}
+            {gameId}
           </Typography>
           <IconButton onClick={handleCopyId} size="small" sx={{ ml: 1 }}>
             <ContentCopyIcon fontSize="small" />

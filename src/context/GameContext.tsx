@@ -1,18 +1,17 @@
 import { createContext, ReactNode, useContext, useRef, useState } from 'react';
 import { Game } from '../types/Game';
-import { exampleGameState } from '../assets/ExampleData';
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 interface GameContextType {
-  game: Game;
-  setGame: React.Dispatch<React.SetStateAction<Game>>;
+  game: Game | null;
+  setGame: React.Dispatch<React.SetStateAction<Game | null>>;
   animateMoneyChange: (amount: number, onComplete?: () => void) => void;
   animateResourcesChange: (amount: number, onComplete?: () => void) => void;
 }
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [game, setGame] = useState<Game>(exampleGameState);
+  const [game, setGame] = useState<Game | null>(null);
   // useRef is necessary to only start interval after the first render
   const moneyIntervalRef = useRef<number>(undefined);
   const resourcesIntervalRef = useRef<number>(undefined);
@@ -24,6 +23,8 @@ export function GameProvider({ children }: { children: ReactNode }) {
     intervalRef: React.RefObject<number | undefined>,
     onComplete?: () => void
   ) {
+    if (!game) return;
+
     if (amount === 0) {
       onComplete?.();
       return;
@@ -34,6 +35,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
     intervalRef.current = window.setInterval(() => {
       setGame((prev) => {
+        if (!prev) return prev;
         const current = getCurrent(prev);
         const done =
           (amount > 0 && current >= targetValue) || (amount < 0 && current <= targetValue);
