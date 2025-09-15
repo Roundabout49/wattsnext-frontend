@@ -30,7 +30,7 @@ export default function Lobby() {
   const handleStartGame = () => {
     if (!gameId) return;
     try {
-      gameApi.startGame({ gameId: gameId });
+      gameApi.startGame({ gameId });
     } catch (err) {
       console.error(err);
     }
