@@ -1,4 +1,4 @@
-import { Player } from '../types/Game';
+import { Game } from '../types/Game';
 
 export interface CreateGameRequest {
   gameMode: GameMode;
@@ -19,8 +19,7 @@ export interface StartGameRequest {
   gameId: string;
 }
 
-export interface CreateGameResponse {
-  gameId: string;
-  // player without handcards
-  player: Player;
+export interface CreateOrJoinGameResponse {
+  game: Game; // actually GameInit
+  playerId: string;
 }

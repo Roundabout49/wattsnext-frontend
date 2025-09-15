@@ -1,13 +1,12 @@
 import {
   CreateGameRequest,
-  CreateGameResponse,
+  CreateOrJoinGameResponse,
   JoinGameRequest,
   StartGameRequest,
 } from '../api/MessageTypes';
-import { Player } from '../types/Game';
 
 export interface GameApiService {
-  createGame(req: CreateGameRequest): Promise<CreateGameResponse>;
-  joinGame(req: JoinGameRequest): Promise<Player>;
+  createGame(req: CreateGameRequest): Promise<CreateOrJoinGameResponse>;
+  joinGame(req: JoinGameRequest): Promise<CreateOrJoinGameResponse>;
   startGame(req: StartGameRequest): Promise<void>;
 }

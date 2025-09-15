@@ -1,14 +1,13 @@
-import { Player } from '../types/Game';
 import {
   CreateGameRequest,
-  CreateGameResponse,
+  CreateOrJoinGameResponse,
   JoinGameRequest,
   StartGameRequest,
 } from './MessageTypes';
 
 const BASE_URL = 'http://localhost:8080/game-init';
 
-export async function createGame(req: CreateGameRequest): Promise<CreateGameResponse> {
+export async function createGame(req: CreateGameRequest): Promise<CreateOrJoinGameResponse> {
   const res = await fetch(`${BASE_URL}/create`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -19,7 +18,7 @@ export async function createGame(req: CreateGameRequest): Promise<CreateGameResp
 }
 
 // Player without handcards
-export async function joinGame(req: JoinGameRequest): Promise<Player> {
+export async function joinGame(req: JoinGameRequest): Promise<CreateOrJoinGameResponse> {
   const res = await fetch(`${BASE_URL}/join`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

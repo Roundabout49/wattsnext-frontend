@@ -15,6 +15,7 @@ interface SessionContextType {
 }
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
+  // TODO: useLocalStorage statt State für Reload
   const [gameId, setGameId] = useState<string | null>(null);
   const [playerId, setPlayerId] = useState<string | null>('player1'); // TODO: Set to null
   const [playerName, setPlayerName] = useState<string | null>(null);

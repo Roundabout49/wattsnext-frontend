@@ -1,6 +1,6 @@
 import {
   CreateGameRequest,
-  CreateGameResponse,
+  CreateOrJoinGameResponse,
   JoinGameRequest,
   StartGameRequest,
 } from '../api/MessageTypes';
@@ -15,7 +15,7 @@ export function useMockGameApiService(
   setGame: React.Dispatch<React.SetStateAction<Game | null>>
 ): GameApiService {
   return {
-    async createGame(request: CreateGameRequest): Promise<CreateGameResponse> {
+    async createGame(request: CreateGameRequest): Promise<CreateOrJoinGameResponse> {
       const playerId = `mock-player-${mockPlayerCounter++}`;
       const newGame = {
         ...exampleGameState,

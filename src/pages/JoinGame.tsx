@@ -2,14 +2,15 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Paper, Stack } from '@mui/material';
 import { useSession } from '../context/SessionContext';
-import { CreateGameResponse, GameMode } from '../api/MessageTypes';
-import { Player } from '../types/Game';
+import { CreateOrJoinGameResponse, GameMode } from '../api/MessageTypes';
 import { useGameApi } from '../context/GameApiContext';
+import { useGame } from '../context/GameContext';
 
 const JoinOrCreateGamePage: React.FC = () => {
   const [nickname, setNickname] = useState('');
   const [gameIdInput, setGameIdInput] = useState('');
   const { setSession } = useSession();
+  const { setGame } = useGame();
 
   const gameApi = useGameApi();
 
@@ -17,11 +18,12 @@ const JoinOrCreateGamePage: React.FC = () => {
   const handleCreateGame = async () => {
     if (!nickname.trim()) return;
     try {
-      const response: CreateGameResponse = await gameApi.createGame({
+      const { game, playerId }: CreateOrJoinGameResponse = await gameApi.createGame({
         playerName: nickname,
         gameMode: GameMode.StartWithCoal,
       });
-      setSession(response.gameId, response.player.id, response.player.name);
+      setSession(game.id, playerId, game.players.find((p) => p.id === playerId)?.name || '?');
+      setGame(game);
     } catch (err) {
       console.error(err);
     }
@@ -31,11 +33,12 @@ const JoinOrCreateGamePage: React.FC = () => {
   const handleJoinGame = async () => {
     if (!nickname.trim() || !gameIdInput.trim()) return;
     try {
-      const response: Player = await gameApi.joinGame({
+      const { game, playerId }: CreateOrJoinGameResponse = await gameApi.joinGame({
         playerName: nickname,
         gameId: gameIdInput,
       });
-      setSession(gameIdInput, response.id, response.name);
+      setSession(game.id, playerId, game.players.find((p) => p.id === playerId)?.name || '?');
+      setGame(game);
     } catch (err) {
       console.error(err);
     }
