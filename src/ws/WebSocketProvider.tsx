@@ -5,6 +5,7 @@ import { useGame } from '../context/GameContext';
 import { useAction } from '../context/ActionContext';
 import {
   handleEarnMoneyResult,
+  handlePlayClimateCardResult,
   handlePlayTechnologyCardIntentResult,
   handlePlayTechnologyCardResult,
 } from './MessageHandler';
@@ -54,13 +55,20 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
         const result = JSON.parse(message.body);
         handleEarnMoneyResult(result, dispatchGameAction);
       });
-      client.subscribe(`/topic/game/${gameId}/playCardIntentResult`, (message: IMessage) => {
-        const result = JSON.parse(message.body);
-        handlePlayTechnologyCardIntentResult(result, dispatchGameAction);
-      });
-      client.subscribe(`/topic/game/${gameId}/playCardResult`, (message: IMessage) => {
+      client.subscribe(
+        `/topic/game/${gameId}/playTechnologyCardIntentResult`,
+        (message: IMessage) => {
+          const result = JSON.parse(message.body);
+          handlePlayTechnologyCardIntentResult(result, dispatchGameAction);
+        }
+      );
+      client.subscribe(`/topic/game/${gameId}/playTechnologyCardResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
         handlePlayTechnologyCardResult(result, dispatchGameAction);
+      });
+      client.subscribe(`/topic/game/${gameId}/playClimateCardResult`, (message: IMessage) => {
+        const result = JSON.parse(message.body);
+        handlePlayClimateCardResult(result, dispatchGameAction);
       });
     };
 
