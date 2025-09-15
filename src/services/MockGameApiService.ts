@@ -25,7 +25,7 @@ export function useMockGameApiService(
           ...exampleGameState.players.slice(1),
         ],
         currentPlayerId: playerId,
-        state: GameState.PREPARING,
+        state: GameState.Preparing,
       };
       setGame(newGame);
       return new Promise((resolve) =>
@@ -56,7 +56,7 @@ export function useMockGameApiService(
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async startGame(_request: StartGameRequest): Promise<void> {
-      setGame((prev) => (prev ? { ...prev, state: GameState.RUNNING } : null));
+      setGame((prev) => (prev ? { ...prev, state: GameState.Running } : null));
       return new Promise((resolve) => setTimeout(() => resolve(), 300));
     },
   };

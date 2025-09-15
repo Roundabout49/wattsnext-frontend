@@ -22,11 +22,11 @@ export interface Game {
 
 // TODO: Small letters
 export enum GameState {
-  PREPARING = 'PREPARING',
-  RUNNING = 'RUNNING',
-  WON = 'WON',
-  LOST = 'LOST',
-  CANCELLED = 'CANCELLED',
+  Preparing = 'Preparing',
+  Running = 'Running',
+  Won = 'Won',
+  Lost = 'Lost',
+  Cancelled = 'Cancelled',
 }
 
 export interface Player {

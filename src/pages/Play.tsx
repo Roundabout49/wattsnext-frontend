@@ -9,7 +9,7 @@ export default function Play() {
   if (!game) {
     return <JoinGame />;
   }
-  if (game.state === GameState.PREPARING) {
+  if (game.state === GameState.Preparing) {
     return <Lobby />;
   }
 

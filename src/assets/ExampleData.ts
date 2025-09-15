@@ -73,5 +73,5 @@ export const exampleGameState: Game = {
       heat: { value: 0, target: 1 },
     },
   ],
-  state: GameState.PREPARING,
+  state: GameState.Preparing,
 };
