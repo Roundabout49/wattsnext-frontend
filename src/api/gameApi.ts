@@ -6,10 +6,10 @@ import {
   StartGameRequest,
 } from './MessageTypes';
 
-const BASE_URL = 'http://localhost:8080/game-management';
+const BASE_URL = 'http://localhost:8080/game-init';
 
 export async function createGame(req: CreateGameRequest): Promise<CreateGameResponse> {
-  const res = await fetch(BASE_URL, {
+  const res = await fetch(`${BASE_URL}/create`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),
