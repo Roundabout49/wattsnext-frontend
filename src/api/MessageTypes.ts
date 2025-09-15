@@ -6,8 +6,8 @@ export interface CreateGameRequest {
 }
 
 export enum GameMode {
-  START_WITH_NUCLEAR,
-  START_WITH_COAL,
+  StartWithNuclear = 'StartWithNuclear',
+  StartWithCoal = 'StartWithCoal',
 }
 
 export interface JoinGameRequest {
@@ -21,5 +21,6 @@ export interface StartGameRequest {
 
 export interface CreateGameResponse {
   gameId: string;
+  // player without handcards
   player: Player;
 }

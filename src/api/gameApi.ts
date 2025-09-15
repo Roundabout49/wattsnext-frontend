@@ -18,6 +18,7 @@ export async function createGame(req: CreateGameRequest): Promise<CreateGameResp
   return res.json();
 }
 
+// Player without handcards
 export async function joinGame(req: JoinGameRequest): Promise<Player> {
   const res = await fetch(`${BASE_URL}/join`, {
     method: 'POST',

@@ -11,19 +11,19 @@ export function useWebsocketSendMessageService(): SendMessageService {
 
   return {
     sendPlayTechnologyCardActionIntent: (data: PlayTechnologyCardActionIntentRequest) => {
-      sendMessage('/app/playCardIntent', data);
+      sendMessage('/game/playTechnologyCardIntent', data);
     },
 
     sendPlayTechnologyCardAction: (data: PlayTechnologyCardActionRequest) => {
-      sendMessage('/app/playCard', data);
+      sendMessage('/game/playTechnologyCard', data);
     },
 
     sendEarnMoneyAction: () => {
-      sendMessage('/app/earnMoney', null);
+      sendMessage('/game/earnMoney', null);
     },
 
     sendPlayClimateCardAction: (data: PlayClimateCardActionRequest) => {
-      sendMessage('/app/playClimateCard', data);
+      sendMessage('/game/playClimateCard', data);
     },
   };
 }

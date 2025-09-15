@@ -19,7 +19,7 @@ const JoinOrCreateGamePage: React.FC = () => {
     try {
       const response: CreateGameResponse = await gameApi.createGame({
         playerName: nickname,
-        gameMode: GameMode.START_WITH_COAL,
+        gameMode: GameMode.StartWithCoal,
       });
       setSession(response.gameId, response.player.id, response.player.name);
     } catch (err) {

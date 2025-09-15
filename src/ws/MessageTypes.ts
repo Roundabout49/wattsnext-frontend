@@ -20,6 +20,7 @@ export interface ActionResponse<T> {
   information?: T;
 }
 
+// TODO: small letters
 export enum ResponseStatus {
   OK = 'OK',
   ILLEGAL_ACTION_ARGUMENTS = 'ILLEGAL_ACTION_ARGUMENTS',
