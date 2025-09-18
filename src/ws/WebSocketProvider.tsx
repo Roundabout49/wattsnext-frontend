@@ -32,7 +32,6 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     if (!gameId || !playerId) return;
 
     const client = new Client({
-      // TODO: Replace with actual WebSocket URL
       brokerURL: 'ws://localhost:8080/ws',
       reconnectDelay: 5000,
       debug: (str) => console.log('[STOMP]', str),

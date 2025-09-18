@@ -7,7 +7,7 @@ import { ActionHandlers, actionUIConfig } from '../ui/actionConfig';
 
 const ActionBar = () => {
   const { game: gameState } = useGame();
-  const { currentPlayerId, players } = gameState;
+  const { currentPlayerId, players } = gameState!;
   const { playerId } = useSession();
 
   const { selectedAction, setSelectedAction, actionState, dispatchGameAction } = useAction();

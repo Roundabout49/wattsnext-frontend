@@ -17,7 +17,8 @@ export interface PlayClimateCardActionRequest {
 export interface ActionResponse<T> {
   game: Game;
   status: ResponseStatus;
-  information?: T;
+  actionInformation?: T;
+  // TODO: Also baseInformation and cardEffectInformations
 }
 
 // TODO: small letters

@@ -57,14 +57,17 @@ export function PlayCardHandler() {
       animateResourcesChange(actionState.resourceChange ?? 0);
       animateMoneyChange(actionState.moneyChange ?? 0, () => {
         setTimeout(() => {
-          setGameState((prev) => ({
-            ...prev,
-            players: prev.players.map((p) =>
-              p.id === playerId
-                ? { ...p, handCards: p.handCards.filter((c) => c.name !== actionState.cardId) }
-                : p
-            ),
-          }));
+          setGameState((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              players: prev.players.map((p) =>
+                p.id === playerId
+                  ? { ...p, handCards: p.handCards.filter((c) => c.name !== actionState.cardId) }
+                  : p
+              ),
+            };
+          });
           startCardAnimation(fromRef, toRef, <ProgressCardSmall card={card} />, () =>
             dispatchGameAction({ type: 'FINISH_ACTION' })
           );

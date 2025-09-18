@@ -34,9 +34,9 @@ export function useMockSendMessageService(): SendMessageService {
 
       handlePlayTechnologyCardIntentResult(
         {
-          game: game,
+          game: game!,
           status: ResponseStatus.OK,
-          information: {
+          actionInformation: {
             canRecycle: false,
             moneyForPlayingCard: card.moneyCosts.modifiedValue,
             resourcesForPlayingCard: card.resourceCosts.modifiedValue,
@@ -52,6 +52,7 @@ export function useMockSendMessageService(): SendMessageService {
     },
 
     sendPlayTechnologyCardAction: (data: PlayTechnologyCardActionRequest) => {
+      if (!game) return;
       console.log('[Mock] sendPlayCard', data);
 
       if (
@@ -145,7 +146,7 @@ export function useMockSendMessageService(): SendMessageService {
         {
           game: newGameState,
           status: ResponseStatus.OK,
-          information: {
+          actionInformation: {
             playedCard: card,
             targetPosition: position,
             drawnCard: newCard,
@@ -160,6 +161,7 @@ export function useMockSendMessageService(): SendMessageService {
 
     // TODO: implement
     sendPlayClimateCardAction: (data: PlayClimateCardActionRequest) => {
+      if (!game) return;
       console.log('[Mock] sendPlayClimateCard', data);
       const { progressCardId } = data;
       const card = cards[progressCardId] as ClimateActionCard;
@@ -220,7 +222,7 @@ export function useMockSendMessageService(): SendMessageService {
         {
           game: newGameState,
           status: ResponseStatus.OK,
-          information: {
+          actionInformation: {
             playedCard: card,
             drawnCard: newCard,
             cardEffectInformations: [],
@@ -231,6 +233,7 @@ export function useMockSendMessageService(): SendMessageService {
     },
 
     sendEarnMoneyAction: () => {
+      if (!game) return;
       console.log('[Mock] sendEarnMoney');
 
       // update player
@@ -246,7 +249,7 @@ export function useMockSendMessageService(): SendMessageService {
             turnInPhase: game.turnInPhase + 1,
           },
           status: ResponseStatus.OK,
-          information: {
+          actionInformation: {
             diceValue: amount,
           },
         },

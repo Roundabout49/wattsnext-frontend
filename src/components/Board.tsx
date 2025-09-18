@@ -7,11 +7,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { useAction } from '../context/ActionContext';
 import { useSession } from '../context/SessionContext';
-import { cards } from '../data/cards';
 import { TechnologyType } from '../types/TechnologyTypes';
 
 const Board: React.FC = () => {
   const { game: gameState } = useGame();
+  if (!gameState) return null;
   const { currentPlayerId } = gameState;
   const {
     climateActionCards: climateActions,
@@ -39,7 +39,10 @@ const Board: React.FC = () => {
 
   const selectedCard = (() => {
     if (actionState?.type === 'playCard' && actionState.cardId) {
-      const card = cards[actionState.cardId];
+      const card = gameState.players
+        .find((p) => p.id === playerId)
+        ?.handCards.find((c) => c.id === actionState.cardId);
+
       if (card) return card;
     }
     return null;

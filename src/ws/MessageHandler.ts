@@ -16,7 +16,7 @@ export function handleEarnMoneyResult(
 ) {
   dispatch({
     type: 'EARN_MONEY_SET_AMOUNT',
-    amount: result.information!.diceValue,
+    amount: result.actionInformation!.diceValue,
     newGameState: result.game,
   });
 }
@@ -29,7 +29,7 @@ export function handlePlayTechnologyCardIntentResult(
   if (result.status === 'OK') {
     dispatch({
       type: 'PLAY_CARD_SET_CAN_RECOVER',
-      canRecover: result.information!.canRecycle && false,
+      canRecover: result.actionInformation!.canRecycle && false,
     });
   } else {
     dispatch({ type: 'RESET' });
@@ -42,14 +42,15 @@ export function handlePlayTechnologyCardResult(
 ) {
   dispatch({
     type: 'PLAY_CARD_RESULT',
-    cardId: result.information!.playedCard.id,
-    position: result.information!.targetPosition,
-    recover: result.information!.didRecycle,
+    cardId: result.actionInformation!.playedCard.id,
+    position: result.actionInformation!.targetPosition,
+    recover: result.actionInformation!.didRecycle,
     moneyChange:
-      result.information!.payedMoneyForCard + (result.information!.payedMoneyForRecycling ?? 0),
+      result.actionInformation!.payedMoneyForCard +
+      (result.actionInformation!.payedMoneyForRecycling ?? 0),
     resourceChange:
-      result.information!.payedResourcesForCard -
-      (result.information!.gainedResourcesForRecycling ?? 0),
+      result.actionInformation!.payedResourcesForCard -
+      (result.actionInformation!.gainedResourcesForRecycling ?? 0),
     newGameState: result.game,
   });
 }
@@ -60,11 +61,11 @@ export function handlePlayClimateCardResult(
 ) {
   dispatch({
     type: 'PLAY_CARD_RESULT',
-    cardId: result.information!.playedCard.id,
+    cardId: result.actionInformation!.playedCard.id,
     position: result.game.board.climateActionCards.length - 1, // Always played at the end of the list
     recover: false,
-    moneyChange: result.information!.playedCard.moneyCosts.modifiedValue!,
-    resourceChange: result.information!.playedCard.resourceCosts.modifiedValue!,
+    moneyChange: result.actionInformation!.playedCard.moneyCosts.modifiedValue!,
+    resourceChange: result.actionInformation!.playedCard.resourceCosts.modifiedValue!,
     newGameState: result.game,
   });
 }

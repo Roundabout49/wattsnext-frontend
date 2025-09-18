@@ -10,7 +10,7 @@ import { useCardRefs } from '../hooks/useCardRefs';
 
 const HandCards = () => {
   const { game: gameState } = useGame();
-  const { players, currentPlayerId } = gameState;
+  const { players, currentPlayerId } = gameState!;
   const { playerId } = useSession();
   const { actionState, dispatchGameAction } = useAction();
 
@@ -23,9 +23,9 @@ const HandCards = () => {
 
   useEffect(() => {
     allCards.forEach((card) => {
-      const ref = cardRefs[card.name];
+      const ref = cardRefs[card.id];
       if (ref) {
-        registerCardRef(card.name, ref);
+        registerCardRef(card.id, ref);
       }
     });
   }, [allCards, cardRefs, registerCardRef]);
@@ -80,7 +80,7 @@ const HandCards = () => {
               <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
                 {player.handCards.map((card) => {
                   const isSelected =
-                    actionState?.type === 'playCard' && actionState.cardId === card.name;
+                    actionState?.type === 'playCard' && actionState.cardId === card.id;
                   const isAnySelected = actionState?.type == 'playCard' && !!actionState.cardId;
 
                   const handleClick = () => {
@@ -89,12 +89,12 @@ const HandCards = () => {
                     if (isSelected) {
                       dispatchGameAction({ type: 'PLAY_CARD_DESELECT_CARD' });
                     } else {
-                      dispatchGameAction({ type: 'PLAY_CARD_SELECT_CARD', cardId: card.name });
+                      dispatchGameAction({ type: 'PLAY_CARD_SELECT_CARD', cardId: card.id });
                     }
                   };
 
                   return (
-                    <div ref={cardRefs[card.name]} key={card.name}>
+                    <div ref={cardRefs[card.id]} key={card.id}>
                       <ProgressCardSmall
                         card={card}
                         highlight={
