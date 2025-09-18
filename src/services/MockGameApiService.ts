@@ -5,7 +5,7 @@ import {
   StartGameRequest,
 } from '../api/MessageTypes';
 import { exampleGameState } from '../assets/ExampleData';
-import { Game, GameState, Player } from '../types/Game';
+import { Game, GameState } from '../types/Game';
 import { GameApiService } from './GameApiService';
 
 const mockGameId = '123e4567-e89b-12d3-a456-426614174000';
@@ -30,25 +30,44 @@ export function useMockGameApiService(
       setGame(newGame);
       return new Promise((resolve) =>
         setTimeout(() => {
-          resolve({
-            gameId: mockGameId,
-            player: {
-              id: playerId,
-              name: request.playerName,
-              handCards: [],
-            },
-          });
+          resolve({ game: newGame, playerId });
         }, 300)
       );
     },
 
-    async joinGame(request: JoinGameRequest): Promise<Player> {
+    async joinGame(request: JoinGameRequest): Promise<CreateOrJoinGameResponse> {
+      const playerId = `mock-player-${mockPlayerCounter++}`;
       return new Promise((resolve) =>
         setTimeout(() => {
           resolve({
-            id: `mock-player-${mockPlayerCounter++}`,
-            name: request.playerName,
-            handCards: [],
+            game: {
+              id: mockGameId,
+              players: [
+                {
+                  id: playerId,
+                  name: request.playerName,
+                  handCards: [],
+                },
+              ],
+              state: GameState.Preparing,
+              money: 0,
+              resources: 0,
+              currentPlayerId: '',
+              board: {
+                generationCards: [null, null, null],
+                distributionCards: [null, null, null],
+                storageCards: [null, null, null],
+                climateActionCards: [],
+                eventCards: [],
+                catastropheCard: null,
+              },
+              phaseIndex: 0,
+              turnInPhase: 0,
+              turnsPerPhase: 0,
+              phases: [],
+              progressCardPileSize: 0,
+            },
+            playerId: playerId,
           });
         }, 300)
       );
