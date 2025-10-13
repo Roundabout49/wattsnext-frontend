@@ -1,5 +1,7 @@
-import { createContext, ReactNode, useContext, useRef, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useRef, useState } from 'react';
 import { Game } from '../types/Game';
+import { useSession } from './SessionContext';
+import { fetchGameState } from '../api/gameApi';
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
@@ -8,10 +10,36 @@ interface GameContextType {
   setGame: React.Dispatch<React.SetStateAction<Game | null>>;
   animateMoneyChange: (amount: number, onComplete?: () => void) => void;
   animateResourcesChange: (amount: number, onComplete?: () => void) => void;
+  loading: boolean;
 }
 
 export function GameProvider({ children }: { children: ReactNode }) {
   const [game, setGame] = useState<Game | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const { gameId, playerId, clearSession } = useSession();
+
+  // Rejoin game if page is refreshed
+  useEffect(() => {
+    const tryRejoin = async () => {
+      if (!gameId || !playerId) return;
+
+      setLoading(true);
+      try {
+        const gameState = await fetchGameState(gameId);
+        setGame(gameState);
+        // TODO: ReconnectWebSocket
+      } catch (err) {
+        console.error('Failed to rejoin game:', err);
+        clearSession();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    tryRejoin();
+  }, [gameId, playerId]);
+
   // useRef is necessary to only start interval after the first render
   const moneyIntervalRef = useRef<number>(undefined);
   const resourcesIntervalRef = useRef<number>(undefined);
@@ -76,7 +104,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   return (
     <GameContext.Provider
-      value={{ game: game, setGame: setGame, animateMoneyChange, animateResourcesChange }}
+      value={{ game: game, setGame: setGame, animateMoneyChange, animateResourcesChange, loading }}
     >
       {children}
     </GameContext.Provider>

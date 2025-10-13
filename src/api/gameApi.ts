@@ -17,7 +17,6 @@ export async function createGame(req: CreateGameRequest): Promise<CreateOrJoinGa
   return res.json();
 }
 
-// Player without handcards
 export async function joinGame(req: JoinGameRequest): Promise<CreateOrJoinGameResponse> {
   const res = await fetch(`${BASE_URL}/join`, {
     method: 'POST',
@@ -35,4 +34,10 @@ export async function startGame(req: StartGameRequest): Promise<void> {
     body: JSON.stringify(req),
   });
   if (!res.ok) throw new Error('Failed to start game');
+}
+
+export async function fetchGameState(gameId: string) {
+  const res = await fetch(`${BASE_URL}/${gameId}`);
+  if (!res.ok) throw new Error('Failed to fetch game state');
+  return res.json();
 }

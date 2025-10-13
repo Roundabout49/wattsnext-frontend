@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext } from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
@@ -16,9 +17,9 @@ interface SessionContextType {
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   // TODO: useLocalStorage statt State für Reload
-  const [gameId, setGameId] = useState<string | null>(null);
-  const [playerId, setPlayerId] = useState<string | null>('player1'); // TODO: Set to null
-  const [playerName, setPlayerName] = useState<string | null>(null);
+  const [gameId, setGameId] = useLocalStorage<string | null>('gameId', null);
+  const [playerId, setPlayerId] = useLocalStorage<string | null>('playerId', null);
+  const [playerName, setPlayerName] = useLocalStorage<string | null>('playerName', null);
 
   const setSession = (gameId: string, playerId: string, playerName: string) => {
     setGameId(gameId);
