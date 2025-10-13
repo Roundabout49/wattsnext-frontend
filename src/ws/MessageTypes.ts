@@ -23,9 +23,9 @@ export interface ActionResponse<T> {
 
 // TODO: small letters
 export enum ResponseStatus {
-  OK = 'OK',
-  ILLEGAL_ACTION_ARGUMENTS = 'ILLEGAL_ACTION_ARGUMENTS',
-  ILLEGAL_ACTION = 'ILLEGAL_ACTION',
+  Ok = 'Ok',
+  IllegalActionArguments = 'IllegalActionArguments',
+  IllegalAction = 'IllegalAction',
 }
 
 export interface EarnMoneyActionInformation {

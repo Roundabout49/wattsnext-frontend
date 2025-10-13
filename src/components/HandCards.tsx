@@ -89,7 +89,11 @@ const HandCards = () => {
                     if (isSelected) {
                       dispatchGameAction({ type: 'PLAY_CARD_DESELECT_CARD' });
                     } else {
-                      dispatchGameAction({ type: 'PLAY_CARD_SELECT_CARD', cardId: card.id });
+                      dispatchGameAction({
+                        type: 'PLAY_CARD_SELECT_CARD',
+                        cardId: card.id,
+                        cardType: card.type,
+                      });
                     }
                   };
 

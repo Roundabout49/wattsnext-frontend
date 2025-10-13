@@ -35,7 +35,7 @@ export function useMockSendMessageService(): SendMessageService {
       handlePlayTechnologyCardIntentResult(
         {
           game: game!,
-          status: ResponseStatus.OK,
+          status: ResponseStatus.Ok,
           actionInformation: {
             canRecycle: false,
             moneyForPlayingCard: card.moneyCosts.modifiedValue,
@@ -145,7 +145,7 @@ export function useMockSendMessageService(): SendMessageService {
       handlePlayTechnologyCardResult(
         {
           game: newGameState,
-          status: ResponseStatus.OK,
+          status: ResponseStatus.Ok,
           actionInformation: {
             playedCard: card,
             targetPosition: position,
@@ -221,7 +221,7 @@ export function useMockSendMessageService(): SendMessageService {
       handlePlayClimateCardResult(
         {
           game: newGameState,
-          status: ResponseStatus.OK,
+          status: ResponseStatus.Ok,
           actionInformation: {
             playedCard: card,
             drawnCard: newCard,
@@ -248,7 +248,7 @@ export function useMockSendMessageService(): SendMessageService {
             currentPlayerId: nextPlayer.id,
             turnInPhase: game.turnInPhase + 1,
           },
-          status: ResponseStatus.OK,
+          status: ResponseStatus.Ok,
           actionInformation: {
             diceValue: amount,
           },

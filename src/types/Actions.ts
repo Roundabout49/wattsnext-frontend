@@ -27,6 +27,7 @@ export interface PlayCardActionState extends BaseActionState {
     | 'animatePlayCard'
     | 'done';
   cardId: string | null;
+  cardType: 'technology' | 'climateAction' | null;
   selectedPosition: number | null;
   recoverResources: boolean | null;
   moneyChange: number | null;

@@ -13,7 +13,7 @@ import { WebSocketProvider } from './ws/WebSocketProvider';
 import { SendMessageProvider } from './context/SendMessageContext';
 import { DieAnimationProvider } from './context/DieAnimationContext';
 import { GameApiProvider } from './context/GameApiContext';
-import { USE_MOCK } from './base.ts';
+// import { USE_MOCK } from './base.ts';
 
 interface AppProps {
   toggleTheme: () => void;
@@ -24,9 +24,9 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
     <SessionProvider>
       <GameProvider>
         <ActionProvider>
-          <GameApiProvider useMock={USE_MOCK}>
+          <GameApiProvider useMock={false}>
             <WebSocketProvider>
-              <SendMessageProvider useMock={USE_MOCK}>
+              <SendMessageProvider useMock={false}>
                 <DieAnimationProvider>
                   <CardAnimationProvider>
                     <div>

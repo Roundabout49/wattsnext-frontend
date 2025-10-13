@@ -5,6 +5,7 @@ import {
   PlayTechnologyCardActionIntentInformation,
   PlayTechnologyCardActionInformation,
   PlayClimateCardActionInformation,
+  ResponseStatus,
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
 
@@ -26,7 +27,7 @@ export function handlePlayTechnologyCardIntentResult(
   result: ActionResponse<PlayTechnologyCardActionIntentInformation>,
   dispatch: Dispatch<GameAction>
 ) {
-  if (result.status === 'OK') {
+  if (result.status === ResponseStatus.Ok) {
     dispatch({
       type: 'PLAY_CARD_SET_CAN_RECOVER',
       canRecover: result.actionInformation!.canRecycle && false,
@@ -43,6 +44,7 @@ export function handlePlayTechnologyCardResult(
   dispatch({
     type: 'PLAY_CARD_RESULT',
     cardId: result.actionInformation!.playedCard.id,
+    cardType: 'technology',
     position: result.actionInformation!.targetPosition,
     recover: result.actionInformation!.didRecycle,
     moneyChange:
@@ -62,6 +64,7 @@ export function handlePlayClimateCardResult(
   dispatch({
     type: 'PLAY_CARD_RESULT',
     cardId: result.actionInformation!.playedCard.id,
+    cardType: 'climateAction',
     position: result.game.board.climateActionCards.length - 1, // Always played at the end of the list
     recover: false,
     moneyChange: result.actionInformation!.playedCard.moneyCosts.modifiedValue!,

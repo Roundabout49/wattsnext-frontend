@@ -3,7 +3,7 @@ import { Game } from '../types/Game';
 
 export type PlayCardAction =
   | { type: 'PLAY_CARD_INIT' }
-  | { type: 'PLAY_CARD_SELECT_CARD'; cardId: string }
+  | { type: 'PLAY_CARD_SELECT_CARD'; cardId: string; cardType: 'technology' | 'climateAction' }
   | { type: 'PLAY_CARD_DESELECT_CARD' }
   | { type: 'PLAY_CARD_SELECT_POSITION'; selectedPosition: number }
   | { type: 'PLAY_CARD_SET_CAN_RECOVER'; canRecover: boolean }
@@ -17,6 +17,7 @@ export type PlayCardAction =
       moneyChange: number;
       resourceChange: number;
       newGameState: Game;
+      cardType: 'technology' | 'climateAction';
     }
   | { type: 'PLAY_CARD_DONE' };
 
@@ -30,6 +31,7 @@ export function playCardReducer(
         type: 'playCard',
         step: 'selectCard',
         cardId: null,
+        cardType: null,
         selectedPosition: null,
         recoverResources: null,
         moneyChange: null,
@@ -45,6 +47,7 @@ export function playCardReducer(
         type: 'playCard',
         step: 'selectCard',
         cardId: null,
+        cardType: null,
         selectedPosition: null,
         recoverResources: null,
         moneyChange: null,
@@ -55,6 +58,7 @@ export function playCardReducer(
       return {
         ...state,
         cardId: action.cardId,
+        cardType: action.cardType,
         selectedPosition: null,
         recoverResources: null,
         step: 'selectPosition',
@@ -63,6 +67,7 @@ export function playCardReducer(
       return {
         ...state,
         cardId: null,
+        cardType: null,
         selectedPosition: null,
         recoverResources: null,
         step: 'selectCard',
@@ -96,6 +101,7 @@ export function playCardReducer(
         ...state,
         step: 'animatePlayCard',
         cardId: action.cardId,
+        cardType: action.cardType,
         selectedPosition: action.position,
         recoverResources: action.recover,
         moneyChange: action.moneyChange,

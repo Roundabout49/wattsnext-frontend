@@ -1,18 +1,24 @@
 import { useEffect, useRef } from 'react';
 import { useAction } from '../context/ActionContext';
 import { useSendMessage } from '../context/SendMessageContext';
-import { useSession } from '../context/SessionContext';
 import { useGame } from '../context/GameContext';
 import { useCardAnimation } from '../context/CardAnimationContext';
-import { cards } from '../data/cards';
 import ProgressCardSmall from '../components/cards/ProgressCardSmall';
+import { Player } from '../types/Game';
+import { ProgressCard } from '../types/ProgressCards';
 
 export function PlayCardHandler() {
   const { actionState, dispatchGameAction, setSelectedAction } = useAction();
-  const { sendPlayTechnologyCardActionIntent, sendPlayTechnologyCardAction } = useSendMessage();
-  const { playerId } = useSession();
-  const { animateMoneyChange, animateResourcesChange, setGame: setGameState } = useGame();
+  const {
+    sendPlayTechnologyCardActionIntent,
+    sendPlayTechnologyCardAction,
+    sendPlayClimateCardAction,
+  } = useSendMessage();
+  const { animateMoneyChange, animateResourcesChange, setGame: setGameState, game } = useGame();
   const { startCardAnimation } = useCardAnimation();
+
+  const players: Player[] = game ? game.players : [];
+  const currentPlayerId: string | null = game ? game.currentPlayerId : null;
 
   // Ref-Guards to make sure to only handle each step once
   const didHandleWaitIntentRef = useRef(false);
@@ -25,10 +31,16 @@ export function PlayCardHandler() {
 
     if (step === 'waitIfRecoverPossible' && !didHandleWaitIntentRef.current) {
       didHandleWaitIntentRef.current = true;
-      sendPlayTechnologyCardActionIntent({
-        progressCardId: actionState.cardId!,
-        targetPosition: actionState.selectedPosition!,
-      });
+      if (actionState.cardType === 'technology') {
+        sendPlayTechnologyCardActionIntent({
+          progressCardId: actionState.cardId!,
+          targetPosition: actionState.selectedPosition!,
+        });
+      } else {
+        sendPlayClimateCardAction({
+          progressCardId: actionState.cardId!,
+        });
+      }
     }
     if (step !== 'waitIfRecoverPossible') {
       didHandleWaitIntentRef.current = false;
@@ -48,9 +60,17 @@ export function PlayCardHandler() {
       didHandleAnimateCardRef.current = true;
 
       const fromRef = actionState.cardId!;
-      const card = cards[actionState.cardId!];
+      const card: ProgressCard = players
+        .find((p) => p.id === currentPlayerId)!
+        .handCards.find((c) => c.id === actionState.cardId)!;
+      console.log('player', players.find((p) => p.id === currentPlayerId)?.name);
+      console.log('cardId', actionState.cardId);
       const area =
-        card.type === 'climateAction' ? 'climate-action' : card.supply.technology.toLowerCase();
+        actionState.cardType === 'climateAction'
+          ? 'climate-action'
+          : card.type === 'technology'
+            ? card.supply.technology.toLowerCase()
+            : '';
       const index = actionState.selectedPosition!;
       const toRef = `${area}-${index}`;
 
@@ -62,8 +82,8 @@ export function PlayCardHandler() {
             return {
               ...prev,
               players: prev.players.map((p) =>
-                p.id === playerId
-                  ? { ...p, handCards: p.handCards.filter((c) => c.name !== actionState.cardId) }
+                p.id === currentPlayerId
+                  ? { ...p, handCards: p.handCards.filter((c) => c.id !== actionState.cardId) }
                   : p
               ),
             };
@@ -82,7 +102,7 @@ export function PlayCardHandler() {
     sendPlayTechnologyCardActionIntent,
     sendPlayTechnologyCardAction,
     dispatchGameAction,
-    playerId,
+    currentPlayerId,
     setSelectedAction,
   ]);
 
