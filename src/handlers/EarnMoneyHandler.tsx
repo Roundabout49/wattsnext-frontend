@@ -14,7 +14,7 @@ export function EarnMoneyHandler() {
   const didHandleWaitRef = useRef(false);
   const didHandleAnimateDieRef = useRef(false);
 
-  const currentPlayer = gameState.players.find((p) => p.id === gameState.currentPlayerId);
+  const currentPlayer = gameState!.players.find((p) => p.id === gameState!.currentPlayerId);
 
   useEffect(() => {
     if (!actionState || actionState.type !== 'earnMoney') return;

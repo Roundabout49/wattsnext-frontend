@@ -54,7 +54,11 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
           return playCardReducer(null, action);
         case 'EARN_MONEY_INIT':
           return earnMoneyReducer(null, action);
-        // TODO: Add other action initial states
+        case 'PLAY_CARD_RESULT':
+          return playCardReducer(null, action);
+        case 'EARN_MONEY_SET_AMOUNT':
+          return earnMoneyReducer(null, action);
+        // TODO: Add other action initial states and result states
         default:
           return null;
       }

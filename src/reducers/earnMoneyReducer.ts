@@ -20,6 +20,15 @@ export function earnMoneyReducer(
         newGameState: null,
       };
     }
+    if (action.type === 'EARN_MONEY_SET_AMOUNT') {
+      console.log('Informed about money result');
+      return {
+        type: 'earnMoney',
+        step: 'animateDie',
+        amount: action.amount,
+        newGameState: action.newGameState,
+      };
+    }
     return null;
   }
 

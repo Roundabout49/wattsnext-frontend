@@ -39,6 +39,19 @@ export function playCardReducer(
         newGameState: null,
       };
     }
+    if (action.type === 'PLAY_CARD_RESULT') {
+      return {
+        type: 'playCard',
+        step: 'animatePlayCard',
+        cardId: action.cardId,
+        cardType: action.cardType,
+        selectedPosition: action.position,
+        recoverResources: action.recover,
+        moneyChange: action.moneyChange,
+        resourceChange: action.resourceChange,
+        newGameState: action.newGameState,
+      };
+    }
     return null; // No valid state to handle the action
   }
   switch (action.type) {
