@@ -20,7 +20,6 @@ export interface Game {
   // technologySizes: TechnologyEnergyMatrix;
 }
 
-// TODO: Small letters
 export enum GameState {
   Preparing = 'Preparing',
   Running = 'Running',

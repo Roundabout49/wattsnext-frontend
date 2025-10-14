@@ -8,6 +8,7 @@ import { useCardAnimation } from '../context/CardAnimationContext';
 import { useAction } from '../context/ActionContext';
 import { useSession } from '../context/SessionContext';
 import { TechnologyType } from '../types/TechnologyTypes';
+import EventCardSmall from './cards/EventCardSmall';
 
 const Board: React.FC = () => {
   const { game: gameState } = useGame();
@@ -18,9 +19,39 @@ const Board: React.FC = () => {
     generationCards: generation,
     storageCards: storage,
     distributionCards: distribution,
-    eventCards: event,
-    catastropheCard: badEvent,
+    /*eventCards: events,
+    catastropheCard: catastrophe,*/
   } = gameState.board;
+  // TODO: Replace with real events from game state
+  const events = [
+    {
+      id: '1',
+      name: 'Sonniges Wetter',
+      phaseIndex: 0,
+      isCatastrophe: false,
+      eventDescription:
+        'Produzierter Solarstrom, der den aktuellen Bedarf in Deutschland übersteigt, wird ins Ausland verkauft.',
+      effectDescriptions: [
+        { text: 'Geld wird um 3 Einheiten erhöht.', type: 'MoneyAndResources' },
+        {
+          text: 'Speicher zählen mit ihrer Systempunktzahl in die Fortschrittspunkte, da sie vollständig geladen wurden.',
+          type: 'Points',
+        },
+      ],
+      effectConditionDescription:
+        'Falls Solarthermie- oder Photovoltaiktechnologien im Energiesystem vorhanden:',
+    },
+  ];
+  const catastrophe = {
+    id: '2',
+    name: 'Test Katastrophe',
+    phaseIndex: 0,
+    isCatastrophe: true,
+    eventDescription: 'Dies ist eine Testkatastrophe.',
+    effectDescriptions: [
+      { text: 'Du verlierst 3 Geld und 2 Ressourcen.', type: 'MoneyAndResources' },
+    ],
+  };
   const { registerCardRef } = useCardAnimation();
   const { actionState, dispatchGameAction } = useAction();
   const { playerId } = useSession();
@@ -226,11 +257,27 @@ const Board: React.FC = () => {
 
         {/* Event Cards */}
         <Grid size={4}>
-          <Stack spacing={2}>
-            <Typography variant="h6">Ereignis</Typography>
-            {event ? <EmptyCardSmall /> : <EmptyCardSmall />}
-            <Typography variant="h6">Schlechtes Ereignis</Typography>
-            {badEvent ? <EmptyCardSmall /> : <EmptyCardSmall />}
+          <Stack spacing={1}>
+            <Typography variant="h6">Ereignisse</Typography>
+            {events ? (
+              events[0] ? (
+                <EventCardSmall card={events[0]} />
+              ) : (
+                <EmptyCardSmall />
+              )
+            ) : (
+              <EmptyCardSmall />
+            )}
+            {events ? (
+              events[1] ? (
+                <EventCardSmall card={events[1]} />
+              ) : (
+                <EmptyCardSmall />
+              )
+            ) : (
+              <EmptyCardSmall />
+            )}
+            {catastrophe ? <EventCardSmall card={catastrophe} /> : <EmptyCardSmall />}
           </Stack>
         </Grid>
       </Grid>
