@@ -11,7 +11,7 @@ export interface PlayTechnologyCardActionRequest {
 }
 
 export interface PlayClimateCardActionRequest {
-  progressCardId: string;
+  climateCardId: string;
 }
 
 export interface ActionResponse<T> {

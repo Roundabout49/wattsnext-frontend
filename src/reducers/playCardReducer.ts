@@ -86,12 +86,23 @@ export function playCardReducer(
         step: 'selectCard',
       };
     case 'PLAY_CARD_SELECT_POSITION':
-      return {
-        ...state,
-        selectedPosition: action.selectedPosition,
-        recoverResources: null,
-        step: 'waitIfRecoverPossible',
-      };
+      if (state.cardType === 'technology') {
+        return {
+          ...state,
+          selectedPosition: action.selectedPosition,
+          recoverResources: null,
+          step: 'waitIfRecoverPossible',
+        };
+      }
+      if (state.cardType === 'climateAction') {
+        return {
+          ...state,
+          selectedPosition: action.selectedPosition,
+          recoverResources: false,
+          step: 'confirm',
+        };
+      }
+      return state; // Invalid state, should not happen
     case 'PLAY_CARD_SET_CAN_RECOVER':
       return {
         ...state,

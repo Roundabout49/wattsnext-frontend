@@ -48,6 +48,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       return null;
     }
 
+    // TODO: This is probably unnecessary here as the invalid cases are already handled in the individual reducers
     if (!state) {
       switch (action.type) {
         case 'PLAY_CARD_INIT':

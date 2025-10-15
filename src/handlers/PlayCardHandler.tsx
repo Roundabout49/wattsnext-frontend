@@ -36,10 +36,6 @@ export function PlayCardHandler() {
           progressCardId: actionState.cardId!,
           targetPosition: actionState.selectedPosition!,
         });
-      } else {
-        sendPlayClimateCardAction({
-          progressCardId: actionState.cardId!,
-        });
       }
     }
     if (step !== 'waitIfRecoverPossible') {
@@ -48,9 +44,15 @@ export function PlayCardHandler() {
 
     if (actionState.step === 'waitForGameState' && !didHandleWaitDoneRef.current) {
       didHandleWaitDoneRef.current = true;
-      sendPlayTechnologyCardAction({
-        shallRecycle: actionState.recoverResources!,
-      });
+      if (actionState.cardType === 'technology') {
+        sendPlayTechnologyCardAction({
+          shallRecycle: actionState.recoverResources!,
+        });
+      } else if (actionState.cardType === 'climateAction') {
+        sendPlayClimateCardAction({
+          climateCardId: actionState.cardId!,
+        });
+      }
     }
     if (step !== 'waitForGameState') {
       didHandleWaitDoneRef.current = false;
