@@ -21,7 +21,6 @@ export interface ActionResponse<T> {
   // TODO: Also baseInformation and cardEffectInformations
 }
 
-// TODO: small letters
 export enum ResponseStatus {
   Ok = 'Ok',
   IllegalActionArguments = 'IllegalActionArguments',

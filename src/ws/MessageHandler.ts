@@ -48,11 +48,13 @@ export function handlePlayTechnologyCardResult(
     position: result.actionInformation!.targetPosition,
     recover: result.actionInformation!.didRecycle,
     moneyChange:
-      result.actionInformation!.payedMoneyForCard +
-      (result.actionInformation!.payedMoneyForRecycling ?? 0),
+      -1 *
+      (result.actionInformation!.payedMoneyForCard +
+        (result.actionInformation!.payedMoneyForRecycling ?? 0)),
     resourceChange:
-      result.actionInformation!.payedResourcesForCard -
-      (result.actionInformation!.gainedResourcesForRecycling ?? 0),
+      -1 *
+      (result.actionInformation!.payedResourcesForCard -
+        (result.actionInformation!.gainedResourcesForRecycling ?? 0)),
     newGameState: result.game,
   });
 }
@@ -67,8 +69,8 @@ export function handlePlayClimateCardResult(
     cardType: 'climateAction',
     position: result.game.board.climateActionCards.length - 1, // Always played at the end of the list
     recover: false,
-    moneyChange: result.actionInformation!.playedCard.moneyCosts.modifiedValue!,
-    resourceChange: result.actionInformation!.playedCard.resourceCosts.modifiedValue!,
+    moneyChange: -1 * result.actionInformation!.playedCard.moneyCosts.modifiedValue!,
+    resourceChange: -1 * result.actionInformation!.playedCard.resourceCosts.modifiedValue!,
     newGameState: result.game,
   });
 }
