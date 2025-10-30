@@ -48,7 +48,7 @@ const Die: React.FC<DieProps> = ({ playerName, result, step }) => {
     let interval: number;
 
     if (step === 'rolling') {
-      interval = setInterval(() => {
+      interval = window.setInterval(() => {
         setRollingNumber(Math.floor(Math.random() * 6) + 1);
       }, 100);
     }
@@ -63,13 +63,13 @@ const Die: React.FC<DieProps> = ({ playerName, result, step }) => {
   return (
     <Box
       sx={{
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
         backgroundColor: 'rgba(0,0,0,0.7)',
-        zIndex: 1000,
+        zIndex: 1300,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
