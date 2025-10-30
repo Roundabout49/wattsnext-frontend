@@ -19,7 +19,7 @@ const Status = () => {
     money,
     resources,
     /*technologySizes,*/
-  } = game;
+  } = game!;
 
   // TODO: Remove when technologySizes is implemented again
   const technologySizes: TechnologyEnergyMatrix = {

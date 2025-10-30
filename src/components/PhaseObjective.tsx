@@ -11,7 +11,7 @@ import { PhaseObjective } from '../types/Game';
 
 const PhaseObjectives = () => {
   const { game: gameState } = useGame();
-  const { phaseIndex: currentPhaseIndex, phases } = gameState;
+  const { phaseIndex: currentPhaseIndex, phases } = gameState!;
 
   const [visiblePhaseIndex, setVisiblePhaseIndex] = useState(currentPhaseIndex);
 
