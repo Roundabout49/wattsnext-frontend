@@ -66,7 +66,11 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
       <CardMedia
         component="img"
         sx={{ width: 150, height: 150, marginTop: 1, marginRight: 1, marginLeft: 'auto' }}
-        image={card.image}
+        image={
+          card.image !== ''
+            ? new URL(`../../assets/images/${card.image}`, import.meta.url).href
+            : ''
+        }
         alt={card.title}
       />
     </div>
