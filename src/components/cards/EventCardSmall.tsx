@@ -59,7 +59,7 @@ const EventCardSmall: React.FC<{ card: EventCard }> = ({ card }) => {
               sx={{
                 textAlign: 'center',
                 color: '#1565c0',
-                fontSize: '1rem',
+                fontSize: '1.25rem',
               }}
             >
               {card.name}
