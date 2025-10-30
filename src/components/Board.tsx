@@ -2,13 +2,14 @@ import { Box, Grid, IconButton, Stack, Typography } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import EmptyCardSmall from './cards/EmptyCardSmall';
 import ProgressCardSmall from './cards/ProgressCardSmall';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { useAction } from '../context/ActionContext';
 import { useSession } from '../context/SessionContext';
 import { TechnologyType } from '../types/TechnologyTypes';
 import EventCardSmall from './cards/EventCardSmall';
+import { getBoardPositionDomId } from '../utils/cardDomId';
 
 const Board: React.FC = () => {
   const { game: gameState } = useGame();
@@ -57,16 +58,11 @@ const Board: React.FC = () => {
   const { playerId } = useSession();
 
   const [showClimateActions, setShowClimateActions] = useState(true);
+
   const climateRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    if (!showClimateActions) return;
-
-    climateActions.forEach((_, index) => {
-      const cardId = `climate-action-${index}`;
-      registerCardRef(cardId, { current: climateRefs.current[index] });
-    });
-  }, [climateActions, showClimateActions, registerCardRef]);
+  const generationRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const distributionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const storageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const selectedCard = (() => {
     if (actionState?.type === 'playCard' && actionState.cardId) {
@@ -142,6 +138,10 @@ const Board: React.FC = () => {
                 <div
                   ref={(el) => {
                     climateRefs.current[index] = el;
+                    if (el) {
+                      const domId = getBoardPositionDomId('climate-action', index);
+                      registerCardRef(domId, el);
+                    }
                   }}
                 >
                   {card ? (
@@ -178,15 +178,17 @@ const Board: React.FC = () => {
                     : undefined;
               const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
 
-              const cardId = `generation-${index}`;
-              const cardRef = useRef<HTMLDivElement>(null);
-
-              useEffect(() => {
-                registerCardRef(cardId, cardRef);
-              }, [cardId]);
-
               return (
-                <div ref={cardRef} key={index}>
+                <div
+                  ref={(el) => {
+                    generationRefs.current[index] = el;
+                    if (el) {
+                      const domId = getBoardPositionDomId('Generation', index);
+                      registerCardRef(domId, el);
+                    }
+                  }}
+                  key={index}
+                >
                   {card ? (
                     <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
                   ) : (
@@ -206,15 +208,17 @@ const Board: React.FC = () => {
               const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
               const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
 
-              const cardId = `distribution-${index}`;
-              const cardRef = useRef<HTMLDivElement>(null);
-
-              useEffect(() => {
-                registerCardRef(cardId, cardRef);
-              }, [cardId]);
-
               return (
-                <div ref={cardRef} key={index}>
+                <div
+                  ref={(el) => {
+                    distributionRefs.current[index] = el;
+                    if (el) {
+                      const domId = getBoardPositionDomId('Distribution', index);
+                      registerCardRef(domId, el);
+                    }
+                  }}
+                  key={index}
+                >
                   {card ? (
                     <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
                   ) : (
@@ -234,15 +238,17 @@ const Board: React.FC = () => {
               const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
               const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
 
-              const cardId = `storage-${index}`;
-              const cardRef = useRef<HTMLDivElement>(null);
-
-              useEffect(() => {
-                registerCardRef(cardId, cardRef);
-              }, [cardId]);
-
               return (
-                <div ref={cardRef} key={index}>
+                <div
+                  ref={(el) => {
+                    storageRefs.current[index] = el;
+                    if (el) {
+                      const domId = getBoardPositionDomId('Storage', index);
+                      registerCardRef(domId, el);
+                    }
+                  }}
+                  key={index}
+                >
                   {card ? (
                     <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
                   ) : (

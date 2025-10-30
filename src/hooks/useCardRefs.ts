@@ -1,17 +1,15 @@
 import { useRef, RefObject, useMemo, createRef } from 'react';
 
-export function useCardRefs(cards: { name: string }[]) {
+export function useCardRefs(cards: { id: string }[]) {
   const refs = useRef<Record<string, RefObject<HTMLDivElement | null>>>({});
-
-  // TODO: Cards should not be used anymore (and also not their names to identify them), refactoring needed!
 
   useMemo(() => {
     cards.forEach((card) => {
-      if (!refs.current[card.name]) {
-        refs.current[card.name] = createRef<HTMLDivElement>();
+      if (!refs.current[card.id]) {
+        refs.current[card.id] = createRef<HTMLDivElement>();
       }
     });
-  }, [cards.map((c) => c.name).join(',')]);
+  }, [cards.map((c) => c.id).join(',')]);
 
   return refs.current;
 }

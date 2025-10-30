@@ -6,6 +6,7 @@ import { useCardAnimation } from '../context/CardAnimationContext';
 import ProgressCardSmall from '../components/cards/ProgressCardSmall';
 import { Player } from '../types/Game';
 import { ProgressCard } from '../types/ProgressCards';
+import { getBoardPositionDomId, getHandCardDomId } from '../utils/cardDomId';
 
 export function PlayCardHandler() {
   const { actionState, dispatchGameAction, setSelectedAction } = useAction();
@@ -61,7 +62,7 @@ export function PlayCardHandler() {
     if (step === 'animatePlayCard' && !didHandleAnimateCardRef.current) {
       didHandleAnimateCardRef.current = true;
 
-      const fromRef = actionState.cardId!;
+      const fromRef = getHandCardDomId(actionState.cardId!);
       const card: ProgressCard = players
         .find((p) => p.id === currentPlayerId)!
         .handCards.find((c) => c.id === actionState.cardId)!;
@@ -71,10 +72,10 @@ export function PlayCardHandler() {
         actionState.cardType === 'climateAction'
           ? 'climate-action'
           : card.type === 'technology'
-            ? card.supply.technology.toLowerCase()
+            ? card.supply.technology
             : '';
       const index = actionState.selectedPosition!;
-      const toRef = `${area}-${index}`;
+      const toRef = getBoardPositionDomId(area, index);
 
       animateResourcesChange(actionState.resourceChange ?? 0);
       animateMoneyChange(actionState.moneyChange ?? 0, () => {

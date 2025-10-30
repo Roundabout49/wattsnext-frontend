@@ -7,6 +7,7 @@ import { useCardAnimation } from '../context/CardAnimationContext';
 import { useSession } from '../context/SessionContext';
 import { useAction } from '../context/ActionContext';
 import { useCardRefs } from '../hooks/useCardRefs';
+import { getHandCardDomId } from '../utils/cardDomId';
 
 const HandCards = () => {
   const { game: gameState } = useGame();
@@ -23,9 +24,9 @@ const HandCards = () => {
 
   useEffect(() => {
     allCards.forEach((card) => {
-      const ref = cardRefs[card.id];
+      const ref = cardRefs[card.id]?.current;
       if (ref) {
-        registerCardRef(card.id, ref);
+        registerCardRef(getHandCardDomId(card.id), ref);
       }
     });
   }, [allCards, cardRefs, registerCardRef]);

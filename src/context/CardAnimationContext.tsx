@@ -1,4 +1,4 @@
-import React, { createContext, useState, useRef, RefObject, ReactNode, useContext } from 'react';
+import React, { createContext, useState, useRef, ReactNode, useContext } from 'react';
 import FlyingCard from '../components/cards/FlyingCard';
 
 const CardAnimationContext = createContext<CardAnimationContextType>({
@@ -8,11 +8,8 @@ const CardAnimationContext = createContext<CardAnimationContextType>({
 });
 
 interface CardAnimationContextType {
-  registerCardRef: (
-    id: string,
-    ref: RefObject<HTMLDivElement> | RefObject<HTMLDivElement | null> | null
-  ) => void;
-  getCardRef: (id: string) => RefObject<HTMLDivElement> | RefObject<HTMLDivElement | null> | null;
+  registerCardRef: (id: string, el: HTMLDivElement | null) => void;
+  getCardRef: (id: string) => HTMLDivElement | null;
   startCardAnimation: (
     fromId: string,
     toId: string,
@@ -22,9 +19,7 @@ interface CardAnimationContextType {
 }
 
 export const CardAnimationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const cardRefs = useRef<
-    Map<string, React.RefObject<HTMLDivElement> | React.RefObject<HTMLDivElement | null> | null>
-  >(new Map());
+  const cardRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
   const [animation, setAnimation] = useState<{
     fromRect: DOMRect;
     toRect: DOMRect;
@@ -32,11 +27,8 @@ export const CardAnimationProvider: React.FC<{ children: ReactNode }> = ({ child
     onDone?: () => void;
   } | null>(null);
 
-  const registerCardRef = (
-    id: string,
-    ref: RefObject<HTMLDivElement> | RefObject<HTMLDivElement | null> | null
-  ) => {
-    cardRefs.current.set(id, ref);
+  const registerCardRef = (id: string, el: HTMLDivElement | null) => {
+    cardRefs.current.set(id, el);
   };
 
   const getCardRef = (id: string) => cardRefs.current.get(id) ?? null;
@@ -48,15 +40,15 @@ export const CardAnimationProvider: React.FC<{ children: ReactNode }> = ({ child
     onDone?: () => void
   ) => {
     console.log('Starting card animation from', fromId, 'to', toId);
-    const fromRef = getCardRef(fromId);
-    const toRef = getCardRef(toId);
-    console.log('From ref:', fromRef, 'To ref:', toRef);
-    if (fromRef?.current && toRef?.current) {
-      const fromRect = fromRef.current.getBoundingClientRect();
-      const toRect = toRef.current.getBoundingClientRect();
+    const fromEl = getCardRef(fromId);
+    const toEl = getCardRef(toId);
+    console.log('From ref:', fromEl, 'To ref:', toEl);
+    if (fromEl && toEl) {
+      const fromRect = fromEl.getBoundingClientRect();
+      const toRect = toEl.getBoundingClientRect();
       setAnimation({ fromRect, toRect, content, onDone });
     } else {
-      onDone?.(); // Fallback
+      onDone?.();
     }
   };
 
