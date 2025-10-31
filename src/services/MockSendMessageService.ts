@@ -38,7 +38,7 @@ export function useMockSendMessageService(): SendMessageService {
         {
           game: game!,
           status: ResponseStatus.Ok,
-          actionInformation: {
+          actionInfo: {
             canRecycle: false,
             moneyForPlayingCard: card.moneyCosts.modifiedValue,
             resourcesForPlayingCard: card.resourceCosts.modifiedValue,
@@ -148,7 +148,7 @@ export function useMockSendMessageService(): SendMessageService {
         {
           game: newGameState,
           status: ResponseStatus.Ok,
-          actionInformation: {
+          actionInfo: {
             playedCard: card,
             targetPosition: position,
             drawnCard: newCard,
@@ -224,10 +224,10 @@ export function useMockSendMessageService(): SendMessageService {
         {
           game: newGameState,
           status: ResponseStatus.Ok,
-          actionInformation: {
+          actionInfo: {
             playedCard: card,
             drawnCard: newCard,
-            cardEffectInformations: [],
+            cardEffectInfos: [],
           },
         },
         dispatchGameAction
@@ -251,7 +251,7 @@ export function useMockSendMessageService(): SendMessageService {
             turnInPhase: game.turnInPhase + 1,
           },
           status: ResponseStatus.Ok,
-          actionInformation: {
+          actionInfo: {
             diceValue: amount,
           },
         },

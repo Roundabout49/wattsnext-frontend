@@ -28,7 +28,7 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
   const IconComponent =
     card.type === 'climateAction'
       ? card.achievement
-        ? Achievements[card.achievement].icon
+        ? Achievements[card.achievement]?.icon
         : null
       : null;
 

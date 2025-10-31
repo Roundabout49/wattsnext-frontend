@@ -17,7 +17,7 @@ export interface PlayClimateCardActionRequest {
 export interface ActionResponse<T> {
   game: Game;
   status: ResponseStatus;
-  actionInformation?: T;
+  actionInfo?: T;
   // TODO: Also baseInformation and cardEffectInformations
 }
 
@@ -53,7 +53,7 @@ export interface PlayTechnologyCardActionInformation {
 export interface PlayClimateCardActionInformation {
   playedCard: ClimateActionCard;
   drawnCard: ProgressCard;
-  cardEffectInformations: CardEffectInformation[];
+  cardEffectInfos: CardEffectInformation[];
 }
 
 export type CardEffectInformation =

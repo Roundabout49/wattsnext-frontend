@@ -17,7 +17,7 @@ export function handleEarnMoneyResult(
 ) {
   dispatch({
     type: 'EARN_MONEY_SET_AMOUNT',
-    amount: result.actionInformation!.diceValue,
+    amount: result.actionInfo!.diceValue,
     newGameState: result.game,
   });
 }
@@ -30,7 +30,7 @@ export function handlePlayTechnologyCardIntentResult(
   if (result.status === ResponseStatus.Ok) {
     dispatch({
       type: 'PLAY_CARD_SET_CAN_RECOVER',
-      canRecover: result.actionInformation!.canRecycle && false,
+      canRecover: result.actionInfo!.canRecycle && false,
     });
   } else {
     dispatch({ type: 'RESET' });
@@ -43,18 +43,18 @@ export function handlePlayTechnologyCardResult(
 ) {
   dispatch({
     type: 'PLAY_CARD_RESULT',
-    cardId: result.actionInformation!.playedCard.id,
+    cardId: result.actionInfo!.playedCard.id,
     cardType: 'technology',
-    position: result.actionInformation!.targetPosition,
-    recover: result.actionInformation!.didRecycle,
+    position: result.actionInfo!.targetPosition,
+    recover: result.actionInfo!.didRecycle,
     moneyChange:
       -1 *
-      (result.actionInformation!.payedMoneyForCard +
-        (result.actionInformation!.payedMoneyForRecycling ?? 0)),
+      (result.actionInfo!.payedMoneyForCard +
+        (result.actionInfo!.payedMoneyForRecycling ?? 0)),
     resourceChange:
       -1 *
-      (result.actionInformation!.payedResourcesForCard -
-        (result.actionInformation!.gainedResourcesForRecycling ?? 0)),
+      (result.actionInfo!.payedResourcesForCard -
+        (result.actionInfo!.gainedResourcesForRecycling ?? 0)),
     newGameState: result.game,
   });
 }
@@ -65,12 +65,12 @@ export function handlePlayClimateCardResult(
 ) {
   dispatch({
     type: 'PLAY_CARD_RESULT',
-    cardId: result.actionInformation!.playedCard.id,
+    cardId: result.actionInfo!.playedCard.id,
     cardType: 'climateAction',
     position: result.game.board.climateActionCards.length - 1, // Always played at the end of the list
     recover: false,
-    moneyChange: -1 * result.actionInformation!.playedCard.moneyCosts.modifiedValue!,
-    resourceChange: -1 * result.actionInformation!.playedCard.resourceCosts.modifiedValue!,
+    moneyChange: -1 * result.actionInfo!.playedCard.moneyCosts.modifiedValue!,
+    resourceChange: -1 * result.actionInfo!.playedCard.resourceCosts.modifiedValue!,
     newGameState: result.game,
   });
 }

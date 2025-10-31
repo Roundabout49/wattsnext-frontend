@@ -1,2 +1,3 @@
-export const HOST = import.meta.env.VITE_HOST as string
-export const USE_MOCK = (import.meta.env.VITE_USE_API as string) == 'true'
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string
+export const API_BROKER_URL = import.meta.env.VITE_API_BROKER_URL as string
+export const USE_MOCK = (import.meta.env.VITE_USE_MOCK as string) == 'true'
