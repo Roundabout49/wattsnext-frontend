@@ -17,6 +17,7 @@ export interface Game {
   turnsPerPhase: number;
   phases: PhaseObjective[];
   progressCardPileSize: number;
+  progressPoints: number;
   // technologySizes: TechnologyEnergyMatrix;
 }
 

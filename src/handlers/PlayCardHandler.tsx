@@ -92,13 +92,20 @@ export function PlayCardHandler() {
             };
           });
           startCardAnimation(fromRef, toRef, <ProgressCardSmall card={card} />, () =>
-            dispatchGameAction({ type: 'FINISH_ACTION' })
+            dispatchGameAction({ type: 'CLEANUP_ACTION' })
           );
         }, 1000);
       });
     }
     if (step !== 'animatePlayCard') {
       didHandleAnimateCardRef.current = false;
+    }
+
+    if (step === 'done') {
+      didHandleWaitIntentRef.current = false;
+      didHandleWaitDoneRef.current = false;
+      didHandleAnimateCardRef.current = false;
+      dispatchGameAction({ type: 'FINISH_ACTION' });
     }
   }, [
     actionState,

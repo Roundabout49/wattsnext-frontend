@@ -51,3 +51,7 @@ export interface SearchDeckActionState extends BaseActionState {
 export type ActionState = PlayCardActionState | EarnMoneyActionState;
 /*| DiscardCardsActionState
   | SearchDeckActionState;*/
+
+// Type-level check to ensure that all ActionStates have a 'done' step
+type MustHaveDoneStep<T extends { step: string }> = 'done' extends T['step'] ? T : never;
+export const _typecheck = null as unknown as MustHaveDoneStep<ActionState>;

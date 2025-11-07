@@ -18,8 +18,7 @@ export type PlayCardAction =
       resourceChange: number;
       newGameState: Game;
       cardType: 'technology' | 'climateAction';
-    }
-  | { type: 'PLAY_CARD_DONE' };
+    };
 
 export function playCardReducer(
   state: PlayCardActionState | null,
@@ -131,11 +130,6 @@ export function playCardReducer(
         moneyChange: action.moneyChange,
         resourceChange: action.resourceChange,
         newGameState: action.newGameState,
-      };
-    case 'PLAY_CARD_DONE':
-      return {
-        ...state,
-        step: 'done',
       };
     default:
       return state;

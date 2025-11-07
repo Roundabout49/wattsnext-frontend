@@ -47,13 +47,19 @@ export function EarnMoneyHandler() {
       setTimeout(() => {
         setShowDieAnimation(false);
         animateMoneyChange(actionState.amount ?? 0, () => {
-          setTimeout(() => dispatchGameAction({ type: 'FINISH_ACTION' }), 1000);
+          setTimeout(() => dispatchGameAction({ type: 'CLEANUP_ACTION' }), 1000);
         });
       }, 4000);
     }
 
     if (step !== 'animateDie') {
       didHandleAnimateDieRef.current = false;
+    }
+
+    if (step === 'done') {
+      didHandleWaitRef.current = false;
+      didHandleAnimateDieRef.current = false;
+      dispatchGameAction({ type: 'FINISH_ACTION' });
     }
   }, [
     actionState,

@@ -14,6 +14,9 @@ export type GameAction =
   | PlayCardAction
   | EarnMoneyAction
   | { type: 'RESET' }
+  // handlers can do any cleanup on done step and then dispatch FINISH_ACTION
+  | { type: 'CLEANUP_ACTION' }
+  // Reset action and state to null
   | { type: 'FINISH_ACTION' } /* ... */;
 
 type ActionDispatch = (action: GameAction) => void;
@@ -41,6 +44,17 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const combinedReducer = (state: ActionState | null, action: GameAction): ActionState | null => {
     if (action.type === 'RESET') {
       // TODO: Send reset to backend
+      return null;
+    }
+
+    if (action.type === 'CLEANUP_ACTION') {
+      // set state to done before finishing to allow handlers to clean up
+      if (state) {
+        return {
+          ...state,
+          step: 'done',
+        };
+      }
       return null;
     }
 

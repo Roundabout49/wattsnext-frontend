@@ -15,9 +15,9 @@ const Status = () => {
     phaseIndex: phase,
     turnInPhase: turn,
     turnsPerPhase: turnsInPhase,
-    phases,
     money,
     resources,
+    progressPoints,
     /*technologySizes,*/
   } = game!;
 
@@ -27,8 +27,6 @@ const Status = () => {
     Distribution: { Electricity: 2, Heat: 0 },
     Storage: { Electricity: 1, Heat: 3 },
   };
-
-  const progressPoints = phases[phase].progressPoints.value;
 
   return (
     <Box
