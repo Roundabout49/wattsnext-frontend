@@ -2,7 +2,7 @@ import { CircularProgress } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import { GameState } from '../types/Game';
 import GamePage from './GamePage';
-import JoinGame from './JoinGame';
+import JoinOrCreateGamePage from './JoinOrCreateGamePage';
 import Lobby from './Lobby';
 
 export default function Play() {
@@ -12,7 +12,7 @@ export default function Play() {
     <CircularProgress />;
   }
   if (!game) {
-    return <JoinGame />;
+    return <JoinOrCreateGamePage />;
   }
   if (game.state === GameState.Preparing) {
     return <Lobby />;
