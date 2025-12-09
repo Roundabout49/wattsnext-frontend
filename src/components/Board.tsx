@@ -83,7 +83,7 @@ const Board: React.FC = () => {
   const isSelectableTechnologySlot = (technology: TechnologyType) => {
     if (!isCurrentPlayer) return false;
     if (selectedCard?.type !== 'technology') return false;
-    if (selectedCard.supply.technology !== technology) return false;
+    if (selectedCard.supply.modifiedValue.technology !== technology) return false;
 
     return true;
   };

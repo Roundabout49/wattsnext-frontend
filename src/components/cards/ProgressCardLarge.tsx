@@ -6,7 +6,9 @@ import CardPoints from './CardPoints';
 
 const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
   const color =
-    card.type === 'technology' ? TechnologyTypes[card.supply.technology].color : 'green';
+    card.type === 'technology'
+      ? TechnologyTypes[card.supply.modifiedValue.technology].color
+      : 'green';
 
   return (
     <Card sx={{ width: 225, height: 400, position: 'relative', padding: 0 }}>
@@ -18,7 +20,7 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
             price: card.moneyCosts,
             resources: card.resourceCosts,
             type: card.type,
-            supply: card.supply,
+            supply: card.supply.modifiedValue,
           }}
         ></ProgressCardTop>
       ) : (
@@ -29,7 +31,7 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
             price: card.moneyCosts,
             resources: card.resourceCosts,
             type: card.type,
-            achievement: card.supply?.name,
+            achievement: card.supply.modifiedValue?.name,
           }}
         ></ProgressCardTop>
       )}

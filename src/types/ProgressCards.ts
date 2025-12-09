@@ -15,7 +15,7 @@ export interface IProgressCard {
   moneyCosts: ModifiableValue<number>;
   resourceCosts: ModifiableValue<number>;
   points?: ModifiableValue<ProgressPoints>;
-  supply?: Supply;
+  supply: ModifiableValue<Supply | undefined>;
   isPlayable: boolean;
   gameBeforeEffect?: GameState;
   type: 'technology' | 'climateAction';
@@ -30,12 +30,12 @@ export interface ModifiableValue<T> {
 export type Modification = { type: 'Stack'; multiplier: number } | { type: 'Card'; name: string };
 
 export interface TechnologyCard extends IProgressCard {
-  supply: Extract<Supply, { type: 'energy' }>;
+  supply: ModifiableValue<Extract<Supply, { type: 'energy' }>>;
   type: 'technology';
 }
 
 export interface ClimateActionCard extends IProgressCard {
-  supply?: Extract<Supply, { type: 'achievement' }>;
+  supply: ModifiableValue<Extract<Supply, { type: 'achievement' }> | undefined>;
   type: 'climateAction';
 }
 
