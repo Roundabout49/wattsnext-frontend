@@ -10,6 +10,10 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
       ? TechnologyTypes[card.supply.modifiedValue.technology].color
       : 'green';
 
+  const showPoints = !(
+    card.type === 'technology' && card.supply.modifiedValue.technology === 'Distribution'
+  );
+
   return (
     <Card sx={{ width: 225, height: 400, position: 'relative', padding: 0 }}>
       {card.type === 'technology' ? (
@@ -44,9 +48,14 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
             textAlign: 'center',
             marginTop: 1,
             marginBottom: 1,
+            height: 45,
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
-          <Typography variant="h6" sx={{ fontSize: '1rem' }}>
+          <Typography variant="h6" sx={{ fontSize: '1rem', lineHeight: 1 }}>
             {card.name}
           </Typography>
         </Box>
@@ -55,7 +64,7 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
         </Typography>
 
         <Box sx={{ position: 'absolute', top: 272, left: 0, right: 0 }}>
-          {card.points && <CardPoints modifiablePoints={card.points} />}
+          {showPoints && card.points && <CardPoints modifiablePoints={card.points} />}
         </Box>
 
         <Divider sx={{ position: 'absolute', top: 330, left: 0, right: 0 }} />

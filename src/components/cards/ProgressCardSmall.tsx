@@ -30,6 +30,13 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
     card.type === 'technology'
       ? TechnologyTypes[card.supply.modifiedValue.technology].color
       : 'green';
+
+  const nameFontSize = card.name.length > 25 ? '0.55rem' : '0.7rem';
+
+  const showPoints = !(
+    card.type === 'technology' && card.supply.modifiedValue.technology === 'Distribution'
+  );
+
   return (
     <div>
       <CardWrapperSmall
@@ -89,7 +96,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
               justifyContent: 'center',
             }}
           >
-            <Typography variant="h6" sx={{ fontSize: '0.7rem', lineHeight: 1 }}>
+            <Typography variant="h6" sx={{ fontSize: nameFontSize, lineHeight: 1 }}>
               {card.name}
             </Typography>
           </Box>
@@ -103,7 +110,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
               right: 0,
             }}
           >
-            {card.points && <CardPoints modifiablePoints={card.points} />}
+            {showPoints && card.points && <CardPoints modifiablePoints={card.points} />}
           </Box>
         </CardContent>
       </CardWrapperSmall>
