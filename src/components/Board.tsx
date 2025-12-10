@@ -20,39 +20,10 @@ const Board: React.FC = () => {
     generationCards: generation,
     storageCards: storage,
     distributionCards: distribution,
-    /*eventCards: events,
-    catastropheCard: catastrophe,*/
+    eventCards: events,
+    catastropheCard: catastrophe,
   } = gameState.board;
-  // TODO: Replace with real events from game state
-  const events = [
-    {
-      id: '1',
-      name: 'Sonniges Wetter',
-      phaseIndex: 0,
-      isCatastrophe: false,
-      eventDescription:
-        'Produzierter Solarstrom, der den aktuellen Bedarf in Deutschland übersteigt, wird ins Ausland verkauft.',
-      effectDescriptions: [
-        { text: 'Geld wird um 3 Einheiten erhöht.', type: 'MoneyAndResources' },
-        {
-          text: 'Speicher zählen mit ihrer Systempunktzahl in die Fortschrittspunkte, da sie vollständig geladen wurden.',
-          type: 'Points',
-        },
-      ],
-      effectConditionDescription:
-        'Falls Solarthermie- oder Photovoltaiktechnologien im Energiesystem vorhanden:',
-    },
-  ];
-  const catastrophe = {
-    id: '2',
-    name: 'Test Katastrophe',
-    phaseIndex: 0,
-    isCatastrophe: true,
-    eventDescription: 'Dies ist eine Testkatastrophe.',
-    effectDescriptions: [
-      { text: 'Du verlierst 3 Geld und 2 Ressourcen.', type: 'MoneyAndResources' },
-    ],
-  };
+
   const { registerCardRef } = useCardAnimation();
   const { actionState, dispatchGameAction } = useAction();
   const { playerId } = useSession();
