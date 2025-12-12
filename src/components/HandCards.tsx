@@ -68,7 +68,7 @@ const HandCards: React.FC<HandCardsProps> = ({ twoRows = true }) => {
             variant="outlined"
             sx={{
               p: 1,
-              backgroundColor: isOwn ? 'lightblue' : 'white',
+              backgroundColor: isOwn ? '#E4F2FF' : 'white',
               border: isOwn ? '2px solid #1976d2' : undefined,
             }}
           >

@@ -29,7 +29,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
   const color =
     card.type === 'technology'
       ? TechnologyTypes[card.supply.modifiedValue.technology].color
-      : 'green';
+      : '#70AD47';
 
   const nameFontSize = card.name.length > 25 ? '0.55rem' : '0.7rem';
 

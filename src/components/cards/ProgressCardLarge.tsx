@@ -8,7 +8,7 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
   const color =
     card.type === 'technology'
       ? TechnologyTypes[card.supply.modifiedValue.technology].color
-      : 'green';
+      : '#70AD47';
 
   const showPoints = !(
     card.type === 'technology' && card.supply.modifiedValue.technology === 'Distribution'

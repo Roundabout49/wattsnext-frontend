@@ -7,9 +7,9 @@ interface TechnologyTypeInfo {
 }
 
 export const TechnologyTypes: Record<string, TechnologyTypeInfo> = {
-  Generation: { label: 'Erzeugung', color: '#2196F3', shape: 'pentagon' },
-  Distribution: { label: 'Verteilung', color: '#F1407C', shape: 'star' },
-  Storage: { label: 'Speicher', color: '#FFB800', shape: 'circle' },
+  Generation: { label: 'Erzeugung', color: '#A3D5FF', shape: 'pentagon' },
+  Distribution: { label: 'Verteilung', color: '#FEA4AA', shape: 'star' },
+  Storage: { label: 'Speicher', color: '#FDDAA1', shape: 'circle' },
 } as const;
 
 export type TechnologyType = keyof typeof TechnologyTypes;

@@ -1,4 +1,4 @@
-import { Box, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Grid, IconButton, Stack } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import EmptyCardSmall from './cards/EmptyCardSmall';
 import ProgressCardSmall from './cards/ProgressCardSmall';
@@ -7,9 +7,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { useAction } from '../context/ActionContext';
 import { useSession } from '../context/SessionContext';
-import { TechnologyType } from '../types/TechnologyTypes';
+import { TechnologyType, TechnologyTypes } from '../types/TechnologyTypes';
 import EventCardSmall from './cards/EventCardSmall';
 import { getBoardPositionDomId } from '../utils/cardDomId';
+import boardBackground from '../assets/images/Spielbrett.png';
+import SectionHeader from './SectionHeader';
 
 const Board: React.FC = () => {
   const { game: gameState } = useGame();
@@ -76,7 +78,10 @@ const Board: React.FC = () => {
       sx={{
         position: 'relative',
         width: 640,
-        backgroundColor: 'lightgrey',
+        backgroundImage: `url(${boardBackground})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
         boxShadow: 2,
         padding: 1,
       }}
@@ -85,7 +90,7 @@ const Board: React.FC = () => {
         {/* Climate Actions */}
         <Grid size={20}>
           <Stack direction="row">
-            <Typography variant="h6">Klimaaktionen</Typography>
+            <SectionHeader label="Klimaaktionen" color="#70AD47" width={140} />
             <IconButton onClick={() => setShowClimateActions((prev) => !prev)} size="small">
               <ExpandMoreIcon
                 sx={{
@@ -132,7 +137,7 @@ const Board: React.FC = () => {
         {/* Technology Cards */}
         <Grid size={5}>
           <Stack spacing={1}>
-            <Typography variant="h6">Erzeugung</Typography>
+            <SectionHeader label="Erzeugung" color={TechnologyTypes['Generation'].color} />
             {generation.map((card, index) => {
               const isSelectable = isSelectableTechnologySlot('Generation');
               const selected = isSelected(isSelectable, index);
@@ -172,7 +177,7 @@ const Board: React.FC = () => {
         </Grid>
         <Grid size={5}>
           <Stack spacing={1}>
-            <Typography variant="h6">Verteilung</Typography>
+            <SectionHeader label="Verteilung" color={TechnologyTypes['Distribution'].color} />
             {distribution.map((card, index) => {
               const isSelectable = isSelectableTechnologySlot('Distribution');
               const selected = isSelected(isSelectable, index);
@@ -202,7 +207,7 @@ const Board: React.FC = () => {
         </Grid>
         <Grid size={5}>
           <Stack spacing={1}>
-            <Typography variant="h6">Speicher</Typography>
+            <SectionHeader label="Speicher" color={TechnologyTypes['Storage'].color} />
             {storage.map((card, index) => {
               const isSelectable = isSelectableTechnologySlot('Storage');
               const selected = isSelected(isSelectable, index);
@@ -235,7 +240,7 @@ const Board: React.FC = () => {
         {/* Event Cards */}
         <Grid size={4}>
           <Stack spacing={1}>
-            <Typography variant="h6">Ereignisse</Typography>
+            <SectionHeader label="Ereignisse" color="white" />
             {events ? (
               events[0] ? (
                 <EventCardSmall card={events[0]} />
