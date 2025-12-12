@@ -9,7 +9,11 @@ import { useAction } from '../context/ActionContext';
 import { useCardRefs } from '../hooks/useCardRefs';
 import { getHandCardDomId } from '../utils/cardDomId';
 
-const HandCards = () => {
+interface HandCardsProps {
+  twoRows?: boolean;
+}
+
+const HandCards: React.FC<HandCardsProps> = ({ twoRows = true }) => {
   const { game: gameState } = useGame();
   const { players, currentPlayerId } = gameState!;
   const { playerId } = useSession();
@@ -45,7 +49,7 @@ const HandCards = () => {
   })();
 
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
+    <Box display="flex" flexDirection="column" gap={2} sx={{ maxWidth: twoRows ? 372 : '100%' }}>
       {reorderedPlayers.map((player) => {
         const isOwn = player.id === playerId;
         const isCurrent = player.id === currentPlayerId;

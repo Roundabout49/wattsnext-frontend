@@ -6,8 +6,39 @@ import ActionBar from '../components/ActionBar';
 import { PlayCardHandler } from '../handlers/PlayCardHandler';
 import { EarnMoneyHandler } from '../handlers/EarnMoneyHandler';
 import AnimationOverlay from '../components/AnimationOverlay';
+import { useRef, useState, useEffect } from 'react';
+import { useGame } from '../context/GameContext';
 
 export default function GamePage() {
+  const { game } = useGame();
+
+  const boardRef = useRef<HTMLDivElement | null>(null);
+  const [boardWidth, setBoardWidth] = useState<number>(0);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  const statusWidth = 180;
+  const numOfCards = game?.players[0]?.handCards.length || 0;
+  const oneRowWidthNeeded = numOfCards * 124 + 50;
+  const twoRowsWidthNeeded = Math.ceil(numOfCards / 2) * 124 + 50;
+  const availableWidthBesidesBoard = containerWidth - boardWidth - statusWidth;
+
+  const twoRows =
+    numOfCards > 3 &&
+    availableWidthBesidesBoard < oneRowWidthNeeded &&
+    availableWidthBesidesBoard >= twoRowsWidthNeeded;
+
+  useEffect(() => {
+    const updateSize = () => {
+      if (boardRef.current) {
+        setBoardWidth(boardRef.current.offsetWidth);
+      }
+      setContainerWidth(window.innerWidth);
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: 1 }}>
       <AnimationOverlay />
@@ -34,12 +65,15 @@ export default function GamePage() {
             gap: 1,
           }}
         >
-          <Board />
-          <HandCards />
+          <Box ref={boardRef} sx={{ display: 'flex' }}>
+            <Board />
+          </Box>
+
+          <HandCards twoRows={twoRows} />
         </Box>
         <Box
           sx={{
-            width: 180,
+            width: statusWidth,
             display: 'flex',
             flexDirection: 'column',
             paddingTop: 1,
