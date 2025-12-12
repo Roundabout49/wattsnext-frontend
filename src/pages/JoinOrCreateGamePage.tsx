@@ -43,7 +43,6 @@ const JoinOrCreateGamePage: React.FC = () => {
     }
   };
 
-  // TODO: What happens if game with gameId does not exist?
   const handleJoinGame = async () => {
     if (!nicknameJoin.trim() || !gameIdInput.trim()) return;
     try {
@@ -78,117 +77,116 @@ const JoinOrCreateGamePage: React.FC = () => {
         />
       </Snackbar>
 
-      <Box display="flex" justifyContent="center" mt={4} px={2}>
-        <Stack
-          direction="row"
-          spacing={4}
-          flexWrap="wrap"
-          width="100%"
-          justifyContent="center"
-          alignItems="flex-start"
-        >
-          {/* ------------------ Create new game ------------------ */}
-          <Paper elevation={3} sx={{ p: 4, width: 400 }}>
-            <Stack spacing={3}>
-              <Typography variant="h5" textAlign="center">
-                Neues Spiel erstellen
-              </Typography>
+      <Box
+        display="flex"
+        flexWrap="wrap"
+        justifyContent="center"
+        mt={4}
+        px={2}
+        gap={4}
+        width="100%"
+      >
+        {/* ------------------ Create new game ------------------ */}
+        <Paper elevation={3} sx={{ p: 4, width: 400 }}>
+          <Stack spacing={3}>
+            <Typography variant="h5" textAlign="center">
+              Neues Spiel erstellen
+            </Typography>
 
-              <div>
-                <LabelWithInfo
-                  label="Dein Spitzname"
-                  info="Dieser Name wird den Mitspielenden angezeigt."
-                />
-                <TextField
-                  placeholder="Spitzname"
-                  value={nicknameCreate}
-                  onChange={(e) => setNicknameCreate(e.target.value)}
-                  fullWidth
-                />
-              </div>
+            <div>
+              <LabelWithInfo
+                label="Dein Spitzname"
+                info="Dieser Name wird den Mitspielenden angezeigt."
+              />
+              <TextField
+                placeholder="Spitzname"
+                value={nicknameCreate}
+                onChange={(e) => setNicknameCreate(e.target.value)}
+                fullWidth
+              />
+            </div>
 
-              <div>
-                <LabelWithInfo
-                  label="Szenario"
-                  info="Wähle aus, ob das Spiel mit einem Kohlekraftwerk oder einem Atomkraftwerk startet."
-                />
+            <div>
+              <LabelWithInfo
+                label="Szenario"
+                info="Wähle aus, ob das Spiel mit einem Kohlekraftwerk oder einem Atomkraftwerk startet."
+              />
 
-                <ToggleButtonGroup
-                  value={gameMode}
-                  exclusive
-                  fullWidth
-                  onChange={(_, value) => value && setGameMode(value)}
-                  sx={{
-                    mt: 1,
-                    '& .MuiToggleButton-root.Mui-selected': {
-                      backgroundColor: 'primary.main',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      borderColor: 'primary.main',
-                      '&:hover': {
-                        backgroundColor: 'primary.dark',
-                      },
+              <ToggleButtonGroup
+                value={gameMode}
+                exclusive
+                fullWidth
+                onChange={(_, value) => value && setGameMode(value)}
+                sx={{
+                  mt: 1,
+                  '& .MuiToggleButton-root.Mui-selected': {
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                    fontWeight: 'bold',
+                    borderColor: 'primary.main',
+                    '&:hover': {
+                      backgroundColor: 'primary.dark',
                     },
-                  }}
-                >
-                  <ToggleButton value={GameMode.StartWithCoal}>Kohleausstieg</ToggleButton>
-                  <ToggleButton value={GameMode.StartWithNuclear}>Atomkraftausstieg</ToggleButton>
-                </ToggleButtonGroup>
-              </div>
-
-              <Button
-                variant="contained"
-                onClick={handleCreateGame}
-                disabled={!nicknameCreate.trim()}
+                  },
+                }}
               >
-                Spiel erstellen
-              </Button>
-            </Stack>
-          </Paper>
+                <ToggleButton value={GameMode.StartWithCoal}>Kohleausstieg</ToggleButton>
+                <ToggleButton value={GameMode.StartWithNuclear}>Atomkraftausstieg</ToggleButton>
+              </ToggleButtonGroup>
+            </div>
 
-          {/* ------------------ Join existing game ------------------ */}
-          <Paper elevation={3} sx={{ p: 4, width: 400 }}>
-            <Stack spacing={3}>
-              <Typography variant="h5" textAlign="center">
-                Bestehendem Spiel beitreten
-              </Typography>
+            <Button
+              variant="contained"
+              onClick={handleCreateGame}
+              disabled={!nicknameCreate.trim()}
+            >
+              Spiel erstellen
+            </Button>
+          </Stack>
+        </Paper>
 
-              <div>
-                <LabelWithInfo
-                  label="Dein Spitzname"
-                  info="Dieser Name wird den Mitspielenden angezeigt."
-                />
-                <TextField
-                  placeholder="Spitzname"
-                  value={nicknameJoin}
-                  onChange={(e) => setNicknameJoin(e.target.value)}
-                  fullWidth
-                />
-              </div>
+        {/* ------------------ Join existing game ------------------ */}
+        <Paper elevation={3} sx={{ p: 4, width: 400 }}>
+          <Stack spacing={3}>
+            <Typography variant="h5" textAlign="center">
+              Bestehendem Spiel beitreten
+            </Typography>
 
-              <div>
-                <LabelWithInfo
-                  label="Spiel-ID"
-                  info="Wenn bereits jemand ein Spiel erstellt hat, kann er oder sie dir die Spiel-ID schicken, damit du beitreten kannst."
-                />
-                <TextField
-                  placeholder="12345678-abcd-1234-5678-abcdef123456"
-                  value={gameIdInput}
-                  onChange={(e) => setGameIdInput(e.target.value)}
-                  fullWidth
-                />
-              </div>
+            <div>
+              <LabelWithInfo
+                label="Dein Spitzname"
+                info="Dieser Name wird den Mitspielenden angezeigt."
+              />
+              <TextField
+                placeholder="Spitzname"
+                value={nicknameJoin}
+                onChange={(e) => setNicknameJoin(e.target.value)}
+                fullWidth
+              />
+            </div>
 
-              <Button
-                variant="contained"
-                onClick={handleJoinGame}
-                disabled={!nicknameJoin.trim() || !gameIdInput.trim()}
-              >
-                Spiel beitreten
-              </Button>
-            </Stack>
-          </Paper>
-        </Stack>
+            <div>
+              <LabelWithInfo
+                label="Spiel-ID"
+                info="Wenn bereits jemand ein Spiel erstellt hat, kann er oder sie dir die Spiel-ID schicken, damit du beitreten kannst."
+              />
+              <TextField
+                placeholder="12345678-abcd-1234-5678-abcdef123456"
+                value={gameIdInput}
+                onChange={(e) => setGameIdInput(e.target.value)}
+                fullWidth
+              />
+            </div>
+
+            <Button
+              variant="contained"
+              onClick={handleJoinGame}
+              disabled={!nicknameJoin.trim() || !gameIdInput.trim()}
+            >
+              Spiel beitreten
+            </Button>
+          </Stack>
+        </Paper>
       </Box>
     </>
   );

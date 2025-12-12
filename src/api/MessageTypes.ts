@@ -15,8 +15,18 @@ export interface JoinGameRequest {
   playerName: string;
 }
 
+export interface LeaveGameRequest {
+  gameId: string;
+  playerId: string;
+}
+
 export interface StartGameRequest {
   gameId: string;
+}
+
+export interface CancelGameRequest {
+  gameId: string;
+  playerId: string;
 }
 
 export interface CreateOrJoinGameResponse {

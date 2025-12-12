@@ -1,7 +1,9 @@
 import {
+  CancelGameRequest,
   CreateGameRequest,
   CreateOrJoinGameResponse,
   JoinGameRequest,
+  LeaveGameRequest,
   StartGameRequest,
 } from '../api/MessageTypes';
 import { exampleGameState } from '../assets/ExampleData';
@@ -66,6 +68,7 @@ export function useMockGameApiService(
               turnsPerPhase: 0,
               phases: [],
               progressCardPileSize: 0,
+              progressPoints: 0,
             },
             playerId: playerId,
           });
@@ -74,9 +77,21 @@ export function useMockGameApiService(
     },
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async leaveGame(_request: LeaveGameRequest): Promise<boolean> {
+      setGame(null);
+      return new Promise((resolve) => setTimeout(() => resolve(true), 300));
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async startGame(_request: StartGameRequest): Promise<void> {
       setGame((prev) => (prev ? { ...prev, state: GameState.Running } : null));
       return new Promise((resolve) => setTimeout(() => resolve(), 300));
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async cancelGame(_req: CancelGameRequest): Promise<boolean> {
+      setGame(null);
+      return new Promise((resolve) => setTimeout(() => resolve(true), 300));
     },
   };
 }

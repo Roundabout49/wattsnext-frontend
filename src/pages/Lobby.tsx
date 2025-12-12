@@ -15,7 +15,7 @@ import { useGameApi } from '../context/GameApiContext';
 
 export default function Lobby() {
   const { game } = useGame();
-  const { gameId, playerId } = useSession();
+  const { gameId, playerId, clearSession } = useSession();
 
   const gameApi = useGameApi();
 
@@ -36,8 +36,17 @@ export default function Lobby() {
     }
   };
 
-  const handleLeaveGame = () => {
-    // TODO: Backend call to leave game
+  const handleLeaveGame = async () => {
+    if (!gameId || !playerId) return;
+    try {
+      const leftSuccessfully = await gameApi.leaveGame({ gameId, playerId });
+      if (leftSuccessfully) {
+        clearSession();
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -51,8 +60,8 @@ export default function Lobby() {
       <Paper
         sx={{
           p: 3,
-          width: 'fit-content', // Breite richtet sich nach Inhalt
-          minWidth: 300, // etwas Mindestbreite für Lesbarkeit
+          width: 'fit-content',
+          minWidth: 300,
           textAlign: 'left',
         }}
       >
