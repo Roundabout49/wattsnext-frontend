@@ -49,7 +49,7 @@ const HandCards = () => {
       {reorderedPlayers.map((player) => {
         const isOwn = player.id === playerId;
         const isCurrent = player.id === currentPlayerId;
-        const isPlayable =
+        const handIsPlayable =
           isOwn &&
           isCurrent &&
           actionState?.type === 'playCard' &&
@@ -80,12 +80,13 @@ const HandCards = () => {
             <Collapse in={isOpen}>
               <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
                 {player.handCards.map((card) => {
+                  const cardIsPlayable = handIsPlayable && card.isPlayable;
                   const isSelected =
                     actionState?.type === 'playCard' && actionState.cardId === card.id;
                   const isAnySelected = actionState?.type == 'playCard' && !!actionState.cardId;
 
                   const handleClick = () => {
-                    if (!isPlayable) return;
+                    if (!cardIsPlayable) return;
 
                     if (isSelected) {
                       dispatchGameAction({ type: 'PLAY_CARD_DESELECT_CARD' });
@@ -103,7 +104,7 @@ const HandCards = () => {
                       <ProgressCardSmall
                         card={card}
                         highlight={
-                          isPlayable
+                          cardIsPlayable
                             ? isAnySelected
                               ? isSelected
                                 ? 'selected'
