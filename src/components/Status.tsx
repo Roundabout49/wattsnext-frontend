@@ -52,7 +52,7 @@ const Status = () => {
         }}
       >
         <Box sx={{ transform: 'scale(1.2)', transformOrigin: 'left' }}>
-          <PointsIcon points={progressPoints} color="green" />
+          <PointsIcon points={progressPoints} leafColor="green" />
         </Box>
         <Box sx={{ flexGrow: 1 }} />
         <PriceIcon price={money} />

@@ -2,7 +2,13 @@ import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import SpaIcon from '@mui/icons-material/Spa';
 
-const PointsIcon: FC<{ points: number; color: string }> = ({ points, color }) => {
+interface PointsIconProps {
+  points: number;
+  leafColor: string;
+  textColor?: string;
+}
+
+const PointsIcon: FC<PointsIconProps> = ({ points, leafColor, textColor = 'black' }) => {
   return (
     <Box
       sx={{
@@ -13,18 +19,20 @@ const PointsIcon: FC<{ points: number; color: string }> = ({ points, color }) =>
         width: 35,
         height: 35,
         borderRadius: '50%',
-        border: '2px solid black',
+        border: `2px solid ${textColor}`,
         backgroundColor: 'transparent',
       }}
     >
-      <Typography fontWeight="bold">{points}</Typography>
+      <Typography fontWeight="bold" sx={{ color: textColor }}>
+        {points}
+      </Typography>
       <SpaIcon
         sx={{
           position: 'absolute',
           bottom: -2,
           left: -2,
           fontSize: 16,
-          color: color,
+          color: leafColor,
         }}
       />
     </Box>

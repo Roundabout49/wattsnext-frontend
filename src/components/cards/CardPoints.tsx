@@ -27,7 +27,11 @@ const CardPoints: FC<{ modifiablePoints: ModifiableValue<ProgressPoints> }> = ({
     >
       <Stack direction="row" spacing={2} alignItems="center" sx={{ width: '100%' }}>
         {points.baseProgressPoints != null ? (
-          <PointsIcon points={points.baseProgressPoints} color="grey" />
+          <PointsIcon
+            points={points.baseProgressPoints}
+            leafColor="grey"
+            textColor={points.conditionsFulfilled ? 'grey' : 'black'}
+          />
         ) : (
           <Box sx={{ width: 32 }} />
         )}
@@ -85,7 +89,11 @@ const CardPoints: FC<{ modifiablePoints: ModifiableValue<ProgressPoints> }> = ({
           </svg>
         </Box>
 
-        <PointsIcon points={points.systemProgressPoints} color="green" />
+        <PointsIcon
+          points={points.systemProgressPoints}
+          leafColor="green"
+          textColor={points.conditionsFulfilled ? 'black' : 'gray'}
+        />
       </Stack>
     </Box>
   );

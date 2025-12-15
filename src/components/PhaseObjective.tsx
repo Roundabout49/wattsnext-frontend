@@ -89,13 +89,13 @@ const PhaseObjectives = () => {
       >
         {visiblePhaseIndex === currentPhaseIndex && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <PointsIcon points={objective.progressPoints.value} color="green" />
+            <PointsIcon points={objective.progressPoints.value} leafColor="green" />
             <Typography variant="h3" fontSize="1.8rem" sx={{ userSelect: 'none' }}>
               /
             </Typography>
           </Box>
         )}
-        <PointsIcon points={objective.progressPoints.target} color="green" />
+        <PointsIcon points={objective.progressPoints.target} leafColor="green" />
       </Box>
       {orderedTechnologyTypes.map((technologyType) => {
         const key = phaseObjectiveKeyMap[technologyType];
