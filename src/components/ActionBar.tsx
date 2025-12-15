@@ -172,64 +172,67 @@ const ActionBar = () => {
           width: '100%',
           backgroundColor: 'lightgrey',
           padding: 1,
-          display: 'flex',
-          justifyContent: 'center',
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, max-content) 1fr max-content',
           alignItems: 'center',
           position: 'sticky',
           top: 0,
           zIndex: 1000,
           boxShadow: 2,
           minHeight: 40,
+          whiteSpace: 'nowrap',
         }}
       >
-        {(() => {
-          switch (gameState!.state) {
-            case 'Cancelled':
-              return renderCancelled();
+        <Box sx={{ gridColumn: 1 }} />
 
-            case 'Won':
-              return renderWon();
+        <Box
+          sx={{ gridColumn: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          {(() => {
+            switch (gameState!.state) {
+              case 'Cancelled':
+                return renderCancelled();
 
-            case 'Lost':
-              return renderLost();
+              case 'Won':
+                return renderWon();
 
-            case 'Running':
-            default:
-              if (!currentPlayerName) {
-                return <Typography variant="body1">Kein Spielername</Typography>;
-              }
+              case 'Lost':
+                return renderLost();
 
-              return isCurrentPlayer ? (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    gap: 2,
-                  }}
-                >
-                  {renderOwnTurn()}
-                </Box>
-              ) : (
-                renderOtherTurn()
-              );
-          }
-        })()}
+              case 'Running':
+              default:
+                if (!currentPlayerName) {
+                  return <Typography variant="body1">Kein Spielername</Typography>;
+                }
+
+                return isCurrentPlayer ? (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      flexWrap: 'nowrap',
+                      gap: 2,
+                    }}
+                  >
+                    {renderOwnTurn()}
+                  </Box>
+                ) : (
+                  renderOtherTurn()
+                );
+            }
+          })()}
+        </Box>
 
         {gameState!.state === 'Running' && (
-          <IconButton
-            color="error"
-            onClick={() => setShowCancelConfirm(true)}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: '50%',
-              transform: 'translateY(-50%)',
-            }}
-            title="Spiel abbrechen"
-          >
-            <CancelIcon />
-          </IconButton>
+          <Box sx={{ gridColumn: 3 }}>
+            <IconButton
+              color="error"
+              onClick={() => setShowCancelConfirm(true)}
+              title="Spiel abbrechen"
+            >
+              <CancelIcon />
+            </IconButton>
+          </Box>
         )}
       </Box>
 

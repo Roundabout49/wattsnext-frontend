@@ -40,7 +40,15 @@ export default function GamePage() {
   }, []);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', mt: 1 }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        width: 'fit-content',
+        minWidth: '100%',
+        mt: 1,
+      }}
+    >
       <AnimationOverlay />
 
       <ActionBar />

@@ -29,7 +29,14 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
               <SendMessageProvider useMock={false}>
                 <DieAnimationProvider>
                   <CardAnimationProvider>
-                    <div>
+                    <Box
+                      sx={{
+                        minWidth: 'fit-content',
+                        overflowX: 'auto',
+                        overflowY: 'auto',
+                        width: '100%',
+                      }}
+                    >
                       <NavBar toggleTheme={toggleTheme} />
                       <Box sx={{ padding: 0 }}>
                         <Routes>
@@ -39,7 +46,7 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
                           <Route path="/rules" element={<Rules />} />
                         </Routes>
                       </Box>
-                    </div>
+                    </Box>
                   </CardAnimationProvider>
                 </DieAnimationProvider>
               </SendMessageProvider>
