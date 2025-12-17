@@ -72,7 +72,7 @@ export function PlayCardHandler() {
         actionState.cardType === 'climateAction'
           ? 'climate-action'
           : card.type === 'technology'
-            ? card.supply.technology
+            ? card.supply.modifiedValue.technology
             : '';
       const index = actionState.selectedPosition!;
       const toRef = getBoardPositionDomId(area, index);

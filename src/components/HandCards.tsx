@@ -56,10 +56,12 @@ const HandCards: React.FC<HandCardsProps> = ({ twoRows = true }) => {
         const handIsPlayable =
           isOwn &&
           isCurrent &&
-          actionState?.type === 'playCard' &&
-          (actionState.step === 'selectCard' ||
-            actionState.step === 'selectPosition' ||
-            actionState.step === 'confirm');
+          ((actionState?.type === 'playCard' &&
+            (actionState.step === 'selectCard' ||
+              actionState.step === 'selectPosition' ||
+              actionState.step === 'confirm')) ||
+            (actionState?.type === 'changeCard' &&
+              (actionState.step === 'selectCard' || actionState.step === 'confirm')));
         const isOpen = openStates[player.id] ?? true;
 
         return (
@@ -84,22 +86,33 @@ const HandCards: React.FC<HandCardsProps> = ({ twoRows = true }) => {
             <Collapse in={isOpen}>
               <Box mt={1} display="flex" flexWrap="wrap" gap={1}>
                 {player.handCards.map((card) => {
-                  const cardIsPlayable = handIsPlayable && card.isPlayable;
+                  const cardIsPlayable =
+                    handIsPlayable && (actionState?.type === 'playCard' ? card.isPlayable : true);
                   const isSelected =
-                    actionState?.type === 'playCard' && actionState.cardId === card.id;
-                  const isAnySelected = actionState?.type == 'playCard' && !!actionState.cardId;
+                    (actionState?.type === 'playCard' && actionState.cardId === card.id) ||
+                    (actionState?.type === 'changeCard' && actionState.cardId === card.id);
+                  const isAnySelected =
+                    (actionState?.type == 'playCard' || actionState?.type === 'changeCard') &&
+                    !!actionState.cardId;
 
                   const handleClick = () => {
                     if (!cardIsPlayable) return;
 
-                    if (isSelected) {
+                    if (isSelected && actionState?.type === 'playCard') {
                       dispatchGameAction({ type: 'PLAY_CARD_DESELECT_CARD' });
                     } else {
-                      dispatchGameAction({
-                        type: 'PLAY_CARD_SELECT_CARD',
-                        cardId: card.id,
-                        cardType: card.type,
-                      });
+                      if (actionState?.type === 'playCard') {
+                        dispatchGameAction({
+                          type: 'PLAY_CARD_SELECT_CARD',
+                          cardId: card.id,
+                          cardType: card.type,
+                        });
+                      } else if (actionState?.type === 'changeCard') {
+                        dispatchGameAction({
+                          type: 'CHANGE_CARD_SELECT_CARD',
+                          cardId: card.id,
+                        });
+                      }
                     }
                   };
 

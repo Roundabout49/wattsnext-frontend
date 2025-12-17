@@ -21,7 +21,6 @@ export function earnMoneyReducer(
       };
     }
     if (action.type === 'EARN_MONEY_SET_AMOUNT') {
-      console.log('Informed about money result');
       return {
         type: 'earnMoney',
         step: 'animateDie',

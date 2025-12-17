@@ -6,10 +6,11 @@ import {
   PlayTechnologyCardActionInformation,
   PlayClimateCardActionInformation,
   ResponseStatus,
+  ChangeCardActionInformation,
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
 
-// TODO: Handle all ResponseStatuses handlers
+// TODO: Handle all ResponseStatuses in handlers
 
 export function handleEarnMoneyResult(
   result: ActionResponse<EarnMoneyActionInformation>,
@@ -49,8 +50,7 @@ export function handlePlayTechnologyCardResult(
     recover: result.actionInfo!.didRecycle,
     moneyChange:
       -1 *
-      (result.actionInfo!.payedMoneyForCard +
-        (result.actionInfo!.payedMoneyForRecycling ?? 0)),
+      (result.actionInfo!.payedMoneyForCard + (result.actionInfo!.payedMoneyForRecycling ?? 0)),
     resourceChange:
       -1 *
       (result.actionInfo!.payedResourcesForCard -
@@ -71,6 +71,17 @@ export function handlePlayClimateCardResult(
     recover: false,
     moneyChange: -1 * result.actionInfo!.playedCard.moneyCosts.modifiedValue!,
     resourceChange: -1 * result.actionInfo!.playedCard.resourceCosts.modifiedValue!,
+    newGameState: result.game,
+  });
+}
+
+export function handleChangeCardResult(
+  result: ActionResponse<ChangeCardActionInformation>,
+  dispatch: Dispatch<GameAction>
+) {
+  dispatch({
+    type: 'CHANGE_CARD_RESULT',
+    discardedCardId: result.actionInfo!.discardedCard.id,
     newGameState: result.game,
   });
 }

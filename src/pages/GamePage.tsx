@@ -8,6 +8,7 @@ import { EarnMoneyHandler } from '../handlers/EarnMoneyHandler';
 import AnimationOverlay from '../components/AnimationOverlay';
 import { useRef, useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
+import { ChangeCardHandler } from '../handlers/ChangeCardHandler';
 
 export default function GamePage() {
   const { game } = useGame();
@@ -55,6 +56,7 @@ export default function GamePage() {
 
       <PlayCardHandler />
       <EarnMoneyHandler />
+      <ChangeCardHandler />
 
       <Box
         sx={{

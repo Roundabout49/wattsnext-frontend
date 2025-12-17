@@ -13,6 +13,7 @@ import {
   PlayTechnologyCardActionIntentRequest,
   ResponseStatus,
   PlayClimateCardActionRequest,
+  ChangeCardActionRequest,
 } from '../ws/MessageTypes';
 import { SendMessageService } from './SendMessageService';
 import { ClimateActionCard, TechnologyCard } from '../types/ProgressCards';
@@ -77,19 +78,19 @@ export function useMockSendMessageService(): SendMessageService {
       const updatedGeneration = [
         ...game.board.generationCards,
       ] as typeof game.board.generationCards;
-      if (card.type === 'technology' && card.supply.technology === 'Generation') {
+      if (card.type === 'technology' && card.supply.modifiedValue.technology === 'Generation') {
         updatedGeneration[position] = card;
       }
 
       const updatedStorage = [...game.board.storageCards] as typeof game.board.storageCards;
-      if (card.type === 'technology' && card.supply.technology === 'Storage') {
+      if (card.type === 'technology' && card.supply.modifiedValue.technology === 'Storage') {
         updatedStorage[position] = card;
       }
 
       const updatedDistribution = [
         ...game.board.distributionCards,
       ] as typeof game.board.distributionCards;
-      if (card.type === 'technology' && card.supply.technology === 'Distribution') {
+      if (card.type === 'technology' && card.supply.modifiedValue.technology === 'Distribution') {
         updatedDistribution[position] = card;
       }
 
@@ -131,17 +132,17 @@ export function useMockSendMessageService(): SendMessageService {
             : phase
         ),
         /* technologySizes:
-          card.type === 'technology'
-            ? {
-                ...gameState.technologySizes,
-                [card.supply.technology]: {
-                  ...gameState.technologySizes[card.supply.technology],
-                  [card.supply.energy]:
-                    (gameState.technologySizes[card.supply.technology][card.supply.energy] || 0) +
-                    card.supply.size,
-                },
-              }
-            : gameState.technologySizes,*/
+        card.type === 'technology'
+          ? {
+              ...gameState.technologySizes,
+              [card.supply.technology]: {
+                ...gameState.technologySizes[card.supply.technology],
+                [card.supply.energy]:
+                  (gameState.technologySizes[card.supply.technology][card.supply.energy] || 0) +
+                  card.supply.size,
+              },
+            }
+          : gameState.technologySizes,*/
         turnInPhase: game.turnInPhase + 1,
       };
       handlePlayTechnologyCardResult(
@@ -207,17 +208,17 @@ export function useMockSendMessageService(): SendMessageService {
             : phase
         ),
         /* technologySizes:
-          card.type === 'technology'
-            ? {
-                ...gameState.technologySizes,
-                [card.supply.technology]: {
-                  ...gameState.technologySizes[card.supply.technology],
-                  [card.supply.energy]:
-                    (gameState.technologySizes[card.supply.technology][card.supply.energy] || 0) +
-                    card.supply.size,
-                },
-              }
-            : gameState.technologySizes,*/
+        card.type === 'technology'
+          ? {
+              ...gameState.technologySizes,
+              [card.supply.technology]: {
+                ...gameState.technologySizes[card.supply.technology],
+                [card.supply.energy]:
+                  (gameState.technologySizes[card.supply.technology][card.supply.energy] || 0) +
+                  card.supply.size,
+              },
+            }
+          : gameState.technologySizes,*/
         turnInPhase: game.turnInPhase + 1,
       };
       handlePlayClimateCardResult(
@@ -257,6 +258,11 @@ export function useMockSendMessageService(): SendMessageService {
         },
         dispatchGameAction
       );
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    sendChangeCardAction: function (data: ChangeCardActionRequest): void {
+      throw new Error('Function not implemented.');
     },
   };
 }

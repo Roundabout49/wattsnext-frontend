@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useEffect, useReducer, useState }
 import {
   ActionKind,
   ActionState,
+  ChangeCardActionState,
   EarnMoneyActionState,
   PlayCardActionState,
 } from '../types/Actions';
@@ -9,10 +10,12 @@ import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
 import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
 import { useGame } from './GameContext';
 import { Game } from '../types/Game';
+import { ChangeCardAction, changeCardReducer } from '../reducers/changeCardReducer';
 
 export type GameAction =
   | PlayCardAction
   | EarnMoneyAction
+  | ChangeCardAction
   | { type: 'RESET' }
   // handlers can do any cleanup on done step and then dispatch FINISH_ACTION
   | { type: 'CLEANUP_ACTION' }
@@ -26,14 +29,16 @@ interface ActionContextType {
   setSelectedAction: (action: ActionKind) => void;
   actionState: ActionState | null;
   dispatchGameAction: ActionDispatch;
+  inChangeCardPhase: boolean;
+  setInChangeCardPhase: (inChangeCardPhase: boolean) => void;
 }
 
 const ActionContext = createContext<ActionContextType | undefined>(undefined);
 
 export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [selectedAction, _setSelectedAction] = useState<ActionKind>(null);
-
   const [pendingNewGameState, setPendingNewGameState] = useState<Game | null>(null);
+  const [inChangeCardPhase, setInChangeCardPhase] = useState<boolean>(true);
 
   const { setGame: setGameState } = useGame();
 
@@ -42,6 +47,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     state;
 
   const combinedReducer = (state: ActionState | null, action: GameAction): ActionState | null => {
+    // TODO: Not always possible
     if (action.type === 'RESET') {
       // TODO: Send reset to backend
       return null;
@@ -59,6 +65,9 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (action.type === 'FINISH_ACTION') {
+      if (state?.type !== 'changeCard') {
+        setInChangeCardPhase(true);
+      }
       return null;
     }
 
@@ -73,6 +82,10 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
           return playCardReducer(null, action);
         case 'EARN_MONEY_SET_AMOUNT':
           return earnMoneyReducer(null, action);
+        case 'CHANGE_CARD_INIT':
+          return changeCardReducer(null, action);
+        case 'CHANGE_CARD_RESULT':
+          return changeCardReducer(null, action);
         // TODO: Add other action initial states and result states
         default:
           return null;
@@ -85,6 +98,8 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         return playCardReducer(state as PlayCardActionState, action as PlayCardAction);
       case 'earnMoney':
         return earnMoneyReducer(state as EarnMoneyActionState, action as EarnMoneyAction);
+      case 'changeCard':
+        return changeCardReducer(state as ChangeCardActionState, action as ChangeCardAction);
       /*case 'discardCards':
         // return discardCardsReducer(state as DiscardCardsActionState, action);
         return state;
@@ -130,6 +145,9 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       case 'earnMoney':
         dispatchGameAction({ type: 'EARN_MONEY_INIT' } as EarnMoneyAction);
         break;
+      case 'changeCard':
+        dispatchGameAction({ type: 'CHANGE_CARD_INIT' } as ChangeCardAction);
+        break;
       /*case 'discardCards':
         // dispatch({ type: 'INIT_DISCARD_CARDS' } as DiscardCardsAction);
         break;
@@ -150,6 +168,8 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         setSelectedAction,
         actionState,
         dispatchGameAction: dispatchGameActionWithFinish,
+        inChangeCardPhase,
+        setInChangeCardPhase,
       }}
     >
       {children}

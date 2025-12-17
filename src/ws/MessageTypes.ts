@@ -14,6 +14,10 @@ export interface PlayClimateCardActionRequest {
   climateCardId: string;
 }
 
+export interface ChangeCardActionRequest {
+  progressCardId: string;
+}
+
 export interface ActionResponse<T> {
   game: Game;
   status: ResponseStatus;
@@ -60,8 +64,14 @@ export type CardEffectInformation =
   | { type: 'Money'; amount: number }
   | { type: 'Resource'; amount: number };
 
+export interface ChangeCardActionInformation {
+  discardedCard: ProgressCard;
+  drawnCard: ProgressCard;
+}
+
 export type OutgoingMessage =
   | PlayTechnologyCardActionIntentRequest
   | PlayTechnologyCardActionRequest
   | PlayClimateCardActionRequest
+  | ChangeCardActionRequest
   | null;

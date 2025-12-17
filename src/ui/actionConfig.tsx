@@ -91,4 +91,26 @@ export const actionUIConfig: ActionUIConfig = {
       buttons: () => [],
     },
   },
+
+  changeCard: {
+    selectCard: {
+      instruction: () => 'Wähle eine Karte, die du abwerfen möchtest.',
+      buttons: (resetAction) => [<CancelActionButton key="cancel" onCancel={resetAction} />],
+    },
+    confirm: {
+      instruction: () => 'Bestätige, dass du die Karte tauschen möchtest.',
+      buttons: (resetAction, _, handlers) => [
+        <CancelActionButton key="cancel" onCancel={resetAction} />,
+        <ConfirmActionButton key="confirm" onConfirm={() => handlers.onConfirmAction?.()} />,
+      ],
+    },
+    waitForGameState: {
+      instruction: () => 'Warte auf den Kartentausch...',
+      buttons: () => [],
+    },
+    done: {
+      instruction: () => 'Der Kartentausch ist abgeschlossen.',
+      buttons: () => [],
+    },
+  },
 };

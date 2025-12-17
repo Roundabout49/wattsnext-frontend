@@ -2,6 +2,7 @@ import {
   PlayTechnologyCardActionRequest,
   PlayTechnologyCardActionIntentRequest,
   PlayClimateCardActionRequest,
+  ChangeCardActionRequest,
 } from '../ws/MessageTypes';
 import { useWebSocket } from '../ws/WebSocketProvider';
 import { SendMessageService } from './SendMessageService';
@@ -24,6 +25,10 @@ export function useWebsocketSendMessageService(): SendMessageService {
 
     sendPlayClimateCardAction: (data: PlayClimateCardActionRequest) => {
       sendMessage('/app/game/playClimateCard', data);
+    },
+
+    sendChangeCardAction: (data: ChangeCardActionRequest) => {
+      sendMessage('/app/game/changeCard', data);
     },
   };
 }

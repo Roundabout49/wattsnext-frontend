@@ -4,6 +4,7 @@ import { OutgoingMessage } from './MessageTypes';
 import { useGame } from '../context/GameContext';
 import { useAction } from '../context/ActionContext';
 import {
+  handleChangeCardResult,
   handleEarnMoneyResult,
   handlePlayClimateCardResult,
   handlePlayTechnologyCardIntentResult,
@@ -68,6 +69,10 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       client.subscribe(`/topic/game/${gameId}/playClimateCardResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
         handlePlayClimateCardResult(result, dispatchGameAction);
+      });
+      client.subscribe(`/topic/game/${gameId}/changeCardResult`, (message: IMessage) => {
+        const result = JSON.parse(message.body);
+        handleChangeCardResult(result, dispatchGameAction);
       });
     };
 

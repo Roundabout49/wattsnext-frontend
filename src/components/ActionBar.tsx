@@ -12,7 +12,7 @@ import {
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useGame } from '../context/GameContext';
 import { useAction } from '../context/ActionContext';
-import { ActionKind, actionKinds } from '../types/Actions';
+import { ActionKind, realActionKinds } from '../types/Actions';
 import { useSession } from '../context/SessionContext';
 import { ActionHandlers, actionUIConfig } from '../ui/actionConfig';
 import { useState } from 'react';
@@ -24,7 +24,14 @@ const ActionBar = () => {
   const { gameId, playerId, clearSession } = useSession();
   const gameApi = useGameApi();
 
-  const { selectedAction, setSelectedAction, actionState, dispatchGameAction } = useAction();
+  const {
+    selectedAction,
+    setSelectedAction,
+    actionState,
+    dispatchGameAction,
+    inChangeCardPhase,
+    setInChangeCardPhase,
+  } = useAction();
 
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
@@ -32,9 +39,12 @@ const ActionBar = () => {
   const currentPlayerName =
     players.find((p) => p.id === currentPlayerId)?.name || 'Unbekannter Spieler';
 
+  const canChangeCard = (gameState?.money ?? 0) >= 1;
+
   const actionLabels: Record<Exclude<ActionKind, null>, string> = {
     playCard: 'Karte ausspielen',
     earnMoney: 'Geld verdienen',
+    changeCard: 'Karte tauschen',
   };
 
   const handleCancelGame = () => {
@@ -71,6 +81,10 @@ const ActionBar = () => {
         dispatchGameAction({
           type: 'EARN_MONEY_CONFIRM',
         });
+      } else if (actionState?.type === 'changeCard' && actionState.step === 'confirm') {
+        dispatchGameAction({
+          type: 'CHANGE_CARD_CONFIRM',
+        });
       }
     },
   };
@@ -99,14 +113,30 @@ const ActionBar = () => {
   };
 
   const renderOwnTurn = () => {
-    if (!selectedAction) {
+    if (!selectedAction && inChangeCardPhase && canChangeCard) {
+      return (
+        <>
+          <Typography variant="body1" sx={{ mr: 2 }}>
+            Du bist am Zug. Zuerst eine Handkarte für 1 Geld austauschen?
+          </Typography>
+          <Stack direction="row" spacing={1}>
+            <Button variant="contained" onClick={() => setSelectedAction('changeCard')}>
+              Karte tauschen
+            </Button>
+            <Button variant="contained" onClick={() => setInChangeCardPhase(false)}>
+              Überspringen
+            </Button>
+          </Stack>
+        </>
+      );
+    } else if (!selectedAction) {
       return (
         <>
           <Typography variant="body1" sx={{ mr: 2 }}>
             Du bist am Zug. Wähle eine Aktion:
           </Typography>
           <Stack direction="row" spacing={1}>
-            {actionKinds.map((action) => (
+            {realActionKinds.map((action) => (
               <Button key={action} variant="contained" onClick={() => setSelectedAction(action)}>
                 {actionLabels[action]}
               </Button>

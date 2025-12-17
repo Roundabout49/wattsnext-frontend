@@ -1,8 +1,13 @@
 import { Game } from './Game';
 
-export type ActionKind = 'playCard' | 'earnMoney' /*| 'discardCards' | 'searchDeck'*/ | null;
+export type ActionKind =
+  | 'playCard'
+  | 'earnMoney'
+  | 'changeCard' /*| 'discardCards' | 'searchDeck'*/
+  | null;
 
-export const actionKinds: Exclude<ActionKind, null>[] = [
+// Every turn contains exactly one of these action kinds
+export const realActionKinds: Exclude<Exclude<ActionKind, null>, 'changeCard'>[] = [
   'playCard',
   'earnMoney',
   /*'discardCards',
@@ -40,6 +45,12 @@ export interface EarnMoneyActionState extends BaseActionState {
   amount: number | null;
 }
 
+export interface ChangeCardActionState extends BaseActionState {
+  type: 'changeCard';
+  step: 'selectCard' | 'confirm' | 'waitForGameState' | 'done';
+  cardId: string | null;
+}
+
 /*export interface DiscardCardsActionState extends BaseActionState {
   type: 'discardCards';
 }
@@ -48,7 +59,7 @@ export interface SearchDeckActionState extends BaseActionState {
   type: 'searchDeck';
 }*/
 
-export type ActionState = PlayCardActionState | EarnMoneyActionState;
+export type ActionState = PlayCardActionState | EarnMoneyActionState | ChangeCardActionState;
 /*| DiscardCardsActionState
   | SearchDeckActionState;*/
 
