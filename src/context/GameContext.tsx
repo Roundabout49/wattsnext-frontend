@@ -8,6 +8,8 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 interface GameContextType {
   game: Game | null;
   setGame: React.Dispatch<React.SetStateAction<Game | null>>;
+  phaseCompleted: boolean;
+  setPhaseCompleted: React.Dispatch<React.SetStateAction<boolean>>;
   animateMoneyChange: (amount: number, onComplete?: () => void) => void;
   animateResourcesChange: (amount: number, onComplete?: () => void) => void;
   loading: boolean;
@@ -15,6 +17,7 @@ interface GameContextType {
 
 export function GameProvider({ children }: { children: ReactNode }) {
   const [game, setGame] = useState<Game | null>(null);
+  const [phaseCompleted, setPhaseCompleted] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
 
   const { gameId, playerId, clearSession } = useSession();
@@ -104,7 +107,15 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   return (
     <GameContext.Provider
-      value={{ game: game, setGame: setGame, animateMoneyChange, animateResourcesChange, loading }}
+      value={{
+        game,
+        setGame,
+        phaseCompleted,
+        setPhaseCompleted,
+        animateMoneyChange,
+        animateResourcesChange,
+        loading,
+      }}
     >
       {children}
     </GameContext.Provider>

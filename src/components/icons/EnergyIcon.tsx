@@ -23,8 +23,9 @@ const shapes = {
   ),
 };
 
-type EnergyIconProps = Omit<Extract<Supply, { type: 'energy' }>, 'form' | 'type'> & {
+type EnergyIconProps = Omit<Extract<Supply, { type: 'energy' }>, 'form' | 'type' | 'size'> & {
   form?: EnergyForm;
+  size?: number;
 };
 
 export type Shape = keyof typeof shapes;

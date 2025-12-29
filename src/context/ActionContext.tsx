@@ -31,16 +31,19 @@ interface ActionContextType {
   dispatchGameAction: ActionDispatch;
   inChangeCardPhase: boolean;
   setInChangeCardPhase: (inChangeCardPhase: boolean) => void;
+  setPendingPhaseCompleted: (phaseCompleted: boolean) => void;
 }
 
 const ActionContext = createContext<ActionContextType | undefined>(undefined);
 
 export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [selectedAction, _setSelectedAction] = useState<ActionKind>(null);
-  const [pendingNewGameState, setPendingNewGameState] = useState<Game | null>(null);
   const [inChangeCardPhase, setInChangeCardPhase] = useState<boolean>(true);
+  const [pendingPhaseCompleted, setPendingPhaseCompleted] = useState<boolean>(false);
 
-  const { setGame: setGameState } = useGame();
+  const [pendingNewGameState, setPendingNewGameState] = useState<Game | null>(null);
+
+  const { setGame: setGameState, setPhaseCompleted } = useGame();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fallbackReducer = (state: ActionState | null, _action: GameAction): ActionState | null =>
@@ -68,6 +71,10 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       if (state?.type !== 'changeCard') {
         setInChangeCardPhase(true);
       }
+      if (pendingPhaseCompleted !== null && pendingPhaseCompleted) {
+        setPhaseCompleted(true);
+        setPendingPhaseCompleted(false);
+      }
       return null;
     }
 
@@ -86,7 +93,6 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
           return changeCardReducer(null, action);
         case 'CHANGE_CARD_RESULT':
           return changeCardReducer(null, action);
-        // TODO: Add other action initial states and result states
         default:
           return null;
       }
@@ -100,12 +106,6 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         return earnMoneyReducer(state as EarnMoneyActionState, action as EarnMoneyAction);
       case 'changeCard':
         return changeCardReducer(state as ChangeCardActionState, action as ChangeCardAction);
-      /*case 'discardCards':
-        // return discardCardsReducer(state as DiscardCardsActionState, action);
-        return state;
-      case 'searchDeck':
-        // return searchDeckReducer(state as SearchDeckActionState, action);
-        return state;*/
       default:
         return fallbackReducer(state, action);
     }
@@ -114,19 +114,16 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [actionState, dispatchGameAction] = useReducer(combinedReducer, null);
 
   const dispatchGameActionWithFinish = (action: GameAction) => {
-    if (action.type === 'FINISH_ACTION' && actionState?.newGameState) {
-      console.log(
-        'Finishing action with new game state:',
-        actionState.newGameState.currentPlayerId
-      );
-      setPendingNewGameState(actionState.newGameState);
+    if (action.type === 'FINISH_ACTION') {
+      if (actionState?.newGameState) {
+        setPendingNewGameState(actionState.newGameState);
+      }
     }
     dispatchGameAction(action);
   };
 
   useEffect(() => {
     if (pendingNewGameState) {
-      console.log('Setting new game state:', pendingNewGameState.currentPlayerId);
       setGameState(pendingNewGameState);
       setPendingNewGameState(null);
       _setSelectedAction(null);
@@ -170,6 +167,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         dispatchGameAction: dispatchGameActionWithFinish,
         inChangeCardPhase,
         setInChangeCardPhase,
+        setPendingPhaseCompleted,
       }}
     >
       {children}

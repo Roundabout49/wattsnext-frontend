@@ -3,7 +3,7 @@ import { FC } from 'react';
 import SpaIcon from '@mui/icons-material/Spa';
 
 interface PointsIconProps {
-  points: number;
+  points?: number;
   leafColor: string;
   textColor?: string;
 }

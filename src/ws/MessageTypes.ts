@@ -22,7 +22,8 @@ export interface ActionResponse<T> {
   game: Game;
   status: ResponseStatus;
   actionInfo?: T;
-  // TODO: Also baseInformation and cardEffectInformations
+  baseInfo?: BaseInfo;
+  cardEffectInfo?: CardEffectInformation[];
 }
 
 export enum ResponseStatus {
@@ -30,6 +31,20 @@ export enum ResponseStatus {
   IllegalActionArguments = 'IllegalActionArguments',
   IllegalAction = 'IllegalAction',
 }
+
+export interface BaseInfo {
+  phaseCompleted: boolean;
+  gotNewStandardEventCard: boolean;
+  hasGameStateChanged: boolean;
+  requirementsFulfilled?: boolean;
+}
+
+export type CardEffectInformation =
+  | { type: 'Money'; amount: number }
+  | { type: 'Resources'; amount: number }
+  | { type: 'ProgressPoints'; amount: number }
+  | { type: 'GenerationAndDistributionTargets'; amount: number }
+  | { type: 'NuclearCatastrophe' };
 
 export interface EarnMoneyActionInformation {
   diceValue: number;
@@ -57,12 +72,7 @@ export interface PlayTechnologyCardActionInformation {
 export interface PlayClimateCardActionInformation {
   playedCard: ClimateActionCard;
   drawnCard: ProgressCard;
-  cardEffectInfos: CardEffectInformation[];
 }
-
-export type CardEffectInformation =
-  | { type: 'Money'; amount: number }
-  | { type: 'Resource'; amount: number };
 
 export interface ChangeCardActionInformation {
   discardedCard: ProgressCard;

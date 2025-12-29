@@ -31,7 +31,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
       ? TechnologyTypes[card.supply.modifiedValue.technology].color
       : '#70AD47';
 
-  const nameFontSize = card.name.length > 25 ? '0.55rem' : '0.7rem';
+  const nameFontSize = card.name.length >= 20 ? '0.55rem' : '0.7rem';
 
   const showPoints = !(
     card.type === 'technology' && card.supply.modifiedValue.technology === 'Distribution'

@@ -7,6 +7,7 @@ import {
   PlayClimateCardActionInformation,
   ResponseStatus,
   ChangeCardActionInformation,
+  BaseInfo,
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
 
@@ -14,8 +15,13 @@ import { GameAction } from '../context/ActionContext';
 
 export function handleEarnMoneyResult(
   result: ActionResponse<EarnMoneyActionInformation>,
-  dispatch: Dispatch<GameAction>
+  dispatch: Dispatch<GameAction>,
+  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
 ) {
+  if (result.baseInfo) {
+    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
+  }
+
   dispatch({
     type: 'EARN_MONEY_SET_AMOUNT',
     amount: result.actionInfo!.diceValue,
@@ -26,8 +32,13 @@ export function handleEarnMoneyResult(
 // TODO: Temporarily disabled recycling option
 export function handlePlayTechnologyCardIntentResult(
   result: ActionResponse<PlayTechnologyCardActionIntentInformation>,
-  dispatch: Dispatch<GameAction>
+  dispatch: Dispatch<GameAction>,
+  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
 ) {
+  if (result.baseInfo) {
+    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
+  }
+
   if (result.status === ResponseStatus.Ok) {
     dispatch({
       type: 'PLAY_CARD_SET_CAN_RECOVER',
@@ -40,8 +51,13 @@ export function handlePlayTechnologyCardIntentResult(
 
 export function handlePlayTechnologyCardResult(
   result: ActionResponse<PlayTechnologyCardActionInformation>,
-  dispatch: Dispatch<GameAction>
+  dispatch: Dispatch<GameAction>,
+  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
 ) {
+  if (result.baseInfo) {
+    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
+  }
+
   dispatch({
     type: 'PLAY_CARD_RESULT',
     cardId: result.actionInfo!.playedCard.id,
@@ -61,8 +77,13 @@ export function handlePlayTechnologyCardResult(
 
 export function handlePlayClimateCardResult(
   result: ActionResponse<PlayClimateCardActionInformation>,
-  dispatch: Dispatch<GameAction>
+  dispatch: Dispatch<GameAction>,
+  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
 ) {
+  if (result.baseInfo) {
+    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
+  }
+
   dispatch({
     type: 'PLAY_CARD_RESULT',
     cardId: result.actionInfo!.playedCard.id,
@@ -77,11 +98,29 @@ export function handlePlayClimateCardResult(
 
 export function handleChangeCardResult(
   result: ActionResponse<ChangeCardActionInformation>,
-  dispatch: Dispatch<GameAction>
+  dispatch: Dispatch<GameAction>,
+  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
 ) {
+  if (result.baseInfo) {
+    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
+  }
+
   dispatch({
     type: 'CHANGE_CARD_RESULT',
     discardedCardId: result.actionInfo!.discardedCard.id,
     newGameState: result.game,
   });
+}
+
+export function handleBaseInfo(
+  baseInfo: BaseInfo,
+  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
+) {
+  if (
+    baseInfo.phaseCompleted !== undefined &&
+    baseInfo.phaseCompleted !== null &&
+    baseInfo.phaseCompleted
+  ) {
+    setPendingPhaseCompleted(true);
+  }
 }

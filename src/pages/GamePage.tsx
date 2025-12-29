@@ -9,6 +9,7 @@ import AnimationOverlay from '../components/AnimationOverlay';
 import { useRef, useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import { ChangeCardHandler } from '../handlers/ChangeCardHandler';
+import PhaseEvaluation from '../components/PhaseEvaluation';
 
 export default function GamePage() {
   const { game } = useGame();
@@ -101,6 +102,8 @@ export default function GamePage() {
           </Box>
         </Box>
       </Box>
+
+      <PhaseEvaluation />
     </Box>
   );
 }

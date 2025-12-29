@@ -32,13 +32,14 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
                     <Box
                       sx={{
                         minWidth: 'fit-content',
-                        overflowX: 'auto',
-                        overflowY: 'auto',
                         width: '100%',
+                        minHeight: '100vh',
+                        display: 'flex',
+                        flexDirection: 'column',
                       }}
                     >
                       <NavBar toggleTheme={toggleTheme} />
-                      <Box sx={{ padding: 0 }}>
+                      <Box sx={{ flexGrow: 1 }}>
                         <Routes>
                           <Route path="/" element={<Home />} />
                           <Route path="/about" element={<About />} />

@@ -26,7 +26,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const clientRef = useRef<Client>(null);
   const [connected, setConnected] = useState(false);
   const { setGame } = useGame();
-  const { dispatchGameAction } = useAction();
+  const { dispatchGameAction, setPendingPhaseCompleted } = useAction();
   const { gameId, playerId } = useSession();
 
   useEffect(() => {
@@ -53,26 +53,30 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
 
       client.subscribe(`/topic/game/${gameId}/earnMoneyResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
-        handleEarnMoneyResult(result, dispatchGameAction);
+        handleEarnMoneyResult(result, dispatchGameAction, setPendingPhaseCompleted);
       });
       client.subscribe(
         `/topic/game/${gameId}/playTechnologyCardIntentResult`,
         (message: IMessage) => {
           const result = JSON.parse(message.body);
-          handlePlayTechnologyCardIntentResult(result, dispatchGameAction);
+          handlePlayTechnologyCardIntentResult(
+            result,
+            dispatchGameAction,
+            setPendingPhaseCompleted
+          );
         }
       );
       client.subscribe(`/topic/game/${gameId}/playTechnologyCardResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
-        handlePlayTechnologyCardResult(result, dispatchGameAction);
+        handlePlayTechnologyCardResult(result, dispatchGameAction, setPendingPhaseCompleted);
       });
       client.subscribe(`/topic/game/${gameId}/playClimateCardResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
-        handlePlayClimateCardResult(result, dispatchGameAction);
+        handlePlayClimateCardResult(result, dispatchGameAction, setPendingPhaseCompleted);
       });
       client.subscribe(`/topic/game/${gameId}/changeCardResult`, (message: IMessage) => {
         const result = JSON.parse(message.body);
-        handleChangeCardResult(result, dispatchGameAction);
+        handleChangeCardResult(result, dispatchGameAction, setPendingPhaseCompleted);
       });
     };
 

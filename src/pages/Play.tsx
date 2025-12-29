@@ -1,4 +1,4 @@
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import { GameState } from '../types/Game';
 import GamePage from './GamePage';
@@ -8,8 +8,19 @@ import Lobby from './Lobby';
 export default function Play() {
   const { game, loading } = useGame();
   if (loading) {
-    // TODO: Doesn't show up?
-    <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          height: '100%',
+          minHeight: '60vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
   if (!game) {
     return <JoinOrCreateGamePage />;
