@@ -10,14 +10,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
 import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useNavigate } from 'react-router-dom';
-import { useTheme, Theme } from '@mui/material/styles';
-
-interface NavBarProps {
-  toggleTheme: () => void;
-}
 
 const pages = [
   { name: 'Spielen', path: '/play' },
@@ -25,11 +18,9 @@ const pages = [
   { name: 'Über uns', path: '/about' },
 ];
 
-const NavBar: React.FC<NavBarProps> = ({ toggleTheme }) => {
+const NavBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const theme = useTheme<Theme>();
-  const themeMode = theme.palette.mode; // 'light' or 'dark'
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -120,11 +111,6 @@ const NavBar: React.FC<NavBarProps> = ({ toggleTheme }) => {
               </Button>
             ))}
           </Box>
-
-          {/* Theme Toggle Button */}
-          <IconButton onClick={toggleTheme} color="inherit">
-            {themeMode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-          </IconButton>
         </Toolbar>
       </Container>
     </AppBar>

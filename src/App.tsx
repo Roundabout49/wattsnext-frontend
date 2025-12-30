@@ -15,11 +15,7 @@ import { DieAnimationProvider } from './context/DieAnimationContext';
 import { GameApiProvider } from './context/GameApiContext';
 // import { USE_MOCK } from './base.ts';
 
-interface AppProps {
-  toggleTheme: () => void;
-}
-
-const App: React.FC<AppProps> = ({ toggleTheme }) => {
+const App = () => {
   return (
     <SessionProvider>
       <GameProvider>
@@ -38,7 +34,7 @@ const App: React.FC<AppProps> = ({ toggleTheme }) => {
                         flexDirection: 'column',
                       }}
                     >
-                      <NavBar toggleTheme={toggleTheme} />
+                      <NavBar />
                       <Box sx={{ flexGrow: 1 }}>
                         <Routes>
                           <Route path="/" element={<Home />} />
