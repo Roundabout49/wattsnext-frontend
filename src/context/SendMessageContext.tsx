@@ -1,18 +1,16 @@
 import { createContext, useContext } from 'react';
 import { SendMessageService } from '../services/SendMessageService';
-import { useMockSendMessageService } from '../services/MockSendMessageService';
 import { useWebsocketSendMessageService } from '../services/WebSocketSendMessageService';
 
 const SendMessageContext = createContext<SendMessageService | undefined>(undefined);
 
 export const SendMessageProvider = ({
   children,
-  useMock = false,
 }: {
   children: React.ReactNode;
   useMock?: boolean;
 }) => {
-  const service = useMock ? useMockSendMessageService() : useWebsocketSendMessageService();
+  const service = useWebsocketSendMessageService();
   return <SendMessageContext.Provider value={service}>{children}</SendMessageContext.Provider>;
 };
 

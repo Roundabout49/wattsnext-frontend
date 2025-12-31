@@ -2,20 +2,11 @@
 import React, { createContext, useContext } from 'react';
 import { GameApiService } from '../services/GameApiService';
 import { useHttpGameApiService } from '../services/HttpGameApiService';
-import { useMockGameApiService } from '../services/MockGameApiService';
-import { useGame } from './GameContext';
 
 const GameApiContext = createContext<GameApiService | undefined>(undefined);
 
-export const GameApiProvider = ({
-  children,
-  useMock = false,
-}: {
-  children: React.ReactNode;
-  useMock?: boolean;
-}) => {
-  const { setGame } = useGame();
-  const service = useMock ? useMockGameApiService(setGame) : useHttpGameApiService();
+export const GameApiProvider = ({ children }: { children: React.ReactNode; useMock?: boolean }) => {
+  const service = useHttpGameApiService();
 
   return <GameApiContext.Provider value={service}>{children}</GameApiContext.Provider>;
 };

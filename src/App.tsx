@@ -20,9 +20,9 @@ const App = () => {
     <SessionProvider>
       <GameProvider>
         <ActionProvider>
-          <GameApiProvider useMock={false}>
+          <GameApiProvider>
             <WebSocketProvider>
-              <SendMessageProvider useMock={false}>
+              <SendMessageProvider>
                 <DieAnimationProvider>
                   <CardAnimationProvider>
                     <Box
