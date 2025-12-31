@@ -52,6 +52,9 @@ const EventCardSmall: React.FC<{ card: EventCard }> = ({ card }) => {
               flexDirection: 'column',
               flexGrow: 1,
               justifyContent: 'flex-start',
+              '&:last-child': {
+                paddingBottom: 1,
+              },
             }}
           >
             <Typography

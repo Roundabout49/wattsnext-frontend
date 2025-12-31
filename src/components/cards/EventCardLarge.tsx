@@ -39,6 +39,9 @@ const EventCardLarge: React.FC<{ card: EventCard }> = ({ card }) => {
           justifyContent: 'flex-start',
           padding: 1,
           paddingBottom: 0,
+          '&:last-child': {
+            paddingBottom: 1,
+          },
         }}
       >
         {/* Name + Description */}
