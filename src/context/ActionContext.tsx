@@ -9,7 +9,6 @@ import {
 import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
 import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
 import { useGame } from './GameContext';
-import { Game } from '../types/Game';
 import { ChangeCardAction, changeCardReducer } from '../reducers/changeCardReducer';
 
 export type GameAction =
@@ -20,7 +19,9 @@ export type GameAction =
   // handlers can do any cleanup on done step and then dispatch FINISH_ACTION
   | { type: 'CLEANUP_ACTION' }
   // Reset action and state to null
-  | { type: 'FINISH_ACTION' } /* ... */;
+  | { type: 'FINISH_ACTION' }
+  // used internally to finally set action state to null
+  | { type: 'CLEAR_ACTION' };
 
 type ActionDispatch = (action: GameAction) => void;
 
@@ -41,8 +42,6 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [inChangeCardPhase, setInChangeCardPhase] = useState<boolean>(true);
   const [pendingPhaseCompleted, setPendingPhaseCompleted] = useState<boolean>(false);
 
-  const [pendingNewGameState, setPendingNewGameState] = useState<Game | null>(null);
-
   const { setGame: setGameState, setPhaseCompleted } = useGame();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -53,6 +52,10 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     // TODO: Not always possible
     if (action.type === 'RESET') {
       // TODO: Send reset to backend
+      return null;
+    }
+
+    if (action.type === 'CLEAR_ACTION') {
       return null;
     }
 
@@ -68,14 +71,12 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (action.type === 'FINISH_ACTION') {
-      if (state?.type !== 'changeCard') {
-        setInChangeCardPhase(true);
-      }
-      if (pendingPhaseCompleted !== null && pendingPhaseCompleted) {
-        setPhaseCompleted(true);
-        setPendingPhaseCompleted(false);
-      }
-      return null;
+      return state
+        ? {
+            ...state,
+            finishRequested: true,
+          }
+        : null;
     }
 
     // TODO: This is probably unnecessary here as the invalid cases are already handled in the individual reducers
@@ -113,24 +114,28 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
 
   const [actionState, dispatchGameAction] = useReducer(combinedReducer, null);
 
-  const dispatchGameActionWithFinish = (action: GameAction) => {
-    if (action.type === 'FINISH_ACTION') {
-      if (actionState?.newGameState) {
-        setPendingNewGameState(actionState.newGameState);
-      }
-    }
-    dispatchGameAction(action);
-  };
-
   useEffect(() => {
-    if (pendingNewGameState) {
-      setGameState(pendingNewGameState);
-      setPendingNewGameState(null);
-      _setSelectedAction(null);
+    if (!actionState?.finishRequested) return;
+
+    if (actionState.newGameState) {
+      setGameState(actionState.newGameState);
     }
-  }, [pendingNewGameState, setGameState]);
+
+    if (actionState.type !== 'changeCard') {
+      setInChangeCardPhase(true);
+    }
+
+    if (pendingPhaseCompleted) {
+      setPhaseCompleted(true);
+      setPendingPhaseCompleted(false);
+    }
+
+    _setSelectedAction(null);
+    dispatchGameAction({ type: 'CLEAR_ACTION' });
+  }, [actionState, pendingPhaseCompleted, setPhaseCompleted, setGameState]);
 
   const setSelectedAction = (action: ActionKind) => {
+    dispatchGameAction({ type: 'CLEAR_ACTION' });
     _setSelectedAction(action);
 
     switch (action) {
@@ -145,12 +150,6 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       case 'changeCard':
         dispatchGameAction({ type: 'CHANGE_CARD_INIT' } as ChangeCardAction);
         break;
-      /*case 'discardCards':
-        // dispatch({ type: 'INIT_DISCARD_CARDS' } as DiscardCardsAction);
-        break;
-      case 'searchDeck':
-        // dispatch({ type: 'INIT_SEARCH_DECK' } as SearchDeckAction);
-        break;*/
       case null:
       default:
         dispatchGameAction({ type: 'RESET' } as GameAction);
@@ -164,7 +163,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         selectedAction,
         setSelectedAction,
         actionState,
-        dispatchGameAction: dispatchGameActionWithFinish,
+        dispatchGameAction,
         inChangeCardPhase,
         setInChangeCardPhase,
         setPendingPhaseCompleted,

@@ -8,9 +8,14 @@ export function ChangeCardHandler() {
 
   // Ref-Guards to make sure to only handle each step once
   const didHandleWaitRef = useRef(false);
+  const didHandleDoneRef = useRef(false);
 
   useEffect(() => {
-    if (!actionState || actionState.type !== 'changeCard') return;
+    if (!actionState || actionState.type !== 'changeCard') {
+      didHandleWaitRef.current = false;
+      didHandleDoneRef.current = false;
+      return;
+    }
 
     const step = actionState.step;
 
@@ -24,10 +29,14 @@ export function ChangeCardHandler() {
       didHandleWaitRef.current = false;
     }
 
-    if (step === 'done') {
+    if (step === 'done' && !didHandleDoneRef.current) {
+      didHandleDoneRef.current = true;
       didHandleWaitRef.current = false;
       setInChangeCardPhase(false);
       dispatchGameAction({ type: 'FINISH_ACTION' });
+    }
+    if (step !== 'done') {
+      didHandleDoneRef.current = false;
     }
   }, [
     actionState,

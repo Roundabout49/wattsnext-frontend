@@ -18,6 +18,7 @@ interface BaseActionState {
   type: ActionKind;
   step: string;
   newGameState: Game | null;
+  finishRequested?: boolean;
 }
 
 export interface PlayCardActionState extends BaseActionState {

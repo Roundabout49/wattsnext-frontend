@@ -13,11 +13,17 @@ export function EarnMoneyHandler() {
   // Ref-Guards to make sure to only handle each step once
   const didHandleWaitRef = useRef(false);
   const didHandleAnimateDieRef = useRef(false);
+  const didHandleDoneRef = useRef(false);
 
   const currentPlayer = gameState!.players.find((p) => p.id === gameState!.currentPlayerId);
 
   useEffect(() => {
-    if (!actionState || actionState.type !== 'earnMoney') return;
+    if (!actionState || actionState.type !== 'earnMoney') {
+      didHandleWaitRef.current = false;
+      didHandleAnimateDieRef.current = false;
+      didHandleDoneRef.current = false;
+      return;
+    }
 
     const step = actionState.step;
 
@@ -56,7 +62,8 @@ export function EarnMoneyHandler() {
       didHandleAnimateDieRef.current = false;
     }
 
-    if (step === 'done') {
+    if (step === 'done' && !didHandleDoneRef.current) {
+      didHandleDoneRef.current = true;
       didHandleWaitRef.current = false;
       didHandleAnimateDieRef.current = false;
       dispatchGameAction({ type: 'FINISH_ACTION' });

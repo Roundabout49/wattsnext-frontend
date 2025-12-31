@@ -4,6 +4,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useGame } from '../context/GameContext';
 import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
+import PriceIcon from './icons/PriceIcon';
+import { GameState } from '../types/Game';
 
 const ROWS = [
   'progressPoints',
@@ -12,6 +14,7 @@ const ROWS = [
   'storage',
   'heat',
   'electricity',
+  'money',
 ] as const;
 
 const ROW_LABELS = [
@@ -21,6 +24,7 @@ const ROW_LABELS = [
   'Bedarf Speicherung',
   'Wärmeerzeugung',
   'Stromerzeugung',
+  'Geld',
 ];
 
 const LABEL_ICONS = [
@@ -30,6 +34,7 @@ const LABEL_ICONS = [
   <EnergyIcon key="storage" technology="Storage" />,
   <EnergyIcon key="heat" technology="Generation" form="Heat" size={1} />,
   <EnergyIcon key="electricity" technology="Generation" form="Electricity" size={1} />,
+  <PriceIcon key="money" />,
 ];
 
 const PhaseEvaluation = () => {
@@ -43,12 +48,12 @@ const PhaseEvaluation = () => {
       const timer = setTimeout(() => setRevealStep((prev) => prev + 1), 1000);
       return () => clearTimeout(timer);
     }
-  }, [revealStep]);
+  }, [phaseCompleted, revealStep]);
 
   if (!game || !phaseCompleted) return null;
 
   const { phases, phaseIndex } = game;
-  const completedPhase = phaseIndex - 1;
+  const completedPhase = game.state === GameState.Running ? phaseIndex - 1 : phaseIndex;
 
   const paddingTop = '40px';
   const rowHeight = 38;
@@ -113,7 +118,7 @@ const PhaseEvaluation = () => {
             <Grid sx={{ minWidth: 50, flexShrink: 0 }}>
               <Box pt={paddingTop}>
                 <Grid container direction="column" spacing={1}>
-                  {ROW_LABELS.map((_label, idx) => (
+                  {ROW_LABELS.map((label, idx) => (
                     <Grid
                       key={idx}
                       sx={{
@@ -125,7 +130,10 @@ const PhaseEvaluation = () => {
                     >
                       <Box
                         sx={{
-                          transform: idx === 0 ? 'scale(0.85)' : 'scale(0.6)',
+                          transform:
+                            label === 'Geld' || label === 'Fortschrittspunkte'
+                              ? 'scale(0.85) translateX(12px)'
+                              : 'scale(0.6)',
                           display: 'flex',
                           justifyContent: 'center',
                           alignItems: 'center',

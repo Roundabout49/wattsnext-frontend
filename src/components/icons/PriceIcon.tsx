@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 
 interface PriceIconProps {
-  price: number;
+  price?: number;
 }
 
 const PriceIcon: React.FC<PriceIconProps> = ({ price }) => {
@@ -21,7 +21,7 @@ const PriceIcon: React.FC<PriceIconProps> = ({ price }) => {
         border: '2px solid black',
       }}
     >
-      {price}
+      {price !== undefined && price}
     </Box>
   );
 };

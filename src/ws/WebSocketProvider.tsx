@@ -35,7 +35,6 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     const client = new Client({
       brokerURL: 'ws://localhost:8080/ws',
       reconnectDelay: 5000,
-      debug: (str) => console.log('[STOMP]', str),
       connectHeaders: {
         gameId: gameId,
         playerId: playerId,

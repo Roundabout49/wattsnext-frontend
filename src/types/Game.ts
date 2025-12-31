@@ -53,6 +53,7 @@ export interface PhaseObjective {
   // electricity and heat are actually booleans, so a target of 1 means required and is fulfilled when value > 0
   electricity: TargetableValue;
   heat: TargetableValue;
+  money: TargetableValue;
 }
 
 interface TargetableValue {

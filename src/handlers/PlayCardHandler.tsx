@@ -25,9 +25,16 @@ export function PlayCardHandler() {
   const didHandleWaitIntentRef = useRef(false);
   const didHandleWaitDoneRef = useRef(false);
   const didHandleAnimateCardRef = useRef(false);
+  const didHandleDoneRef = useRef(false);
 
   useEffect(() => {
-    if (!actionState || actionState.type !== 'playCard') return;
+    if (!actionState || actionState.type !== 'playCard') {
+      didHandleWaitIntentRef.current = false;
+      didHandleWaitDoneRef.current = false;
+      didHandleAnimateCardRef.current = false;
+      didHandleDoneRef.current = false;
+      return;
+    }
     const step = actionState.step;
 
     if (step === 'waitIfRecoverPossible' && !didHandleWaitIntentRef.current) {
@@ -101,11 +108,15 @@ export function PlayCardHandler() {
       didHandleAnimateCardRef.current = false;
     }
 
-    if (step === 'done') {
+    if (step === 'done' && !didHandleDoneRef.current) {
+      didHandleDoneRef.current = true;
       didHandleWaitIntentRef.current = false;
       didHandleWaitDoneRef.current = false;
       didHandleAnimateCardRef.current = false;
       dispatchGameAction({ type: 'FINISH_ACTION' });
+    }
+    if (step !== 'done') {
+      didHandleDoneRef.current = false;
     }
   }, [
     actionState,

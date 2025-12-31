@@ -52,7 +52,7 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
           left: 12.5,
         }}
       >
-        <PriceIcon price={card.price.originalValue} />
+        <PriceIcon price={card.price.modifiedValue} />
       </Box>
       <Box
         sx={{
@@ -61,7 +61,7 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
           left: 12.5,
         }}
       >
-        <ResourcesIcon resources={card.resources.originalValue} />
+        <ResourcesIcon resources={card.resources.modifiedValue} />
       </Box>
       <CardMedia
         component="img"
