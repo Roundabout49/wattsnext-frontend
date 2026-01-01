@@ -73,8 +73,6 @@ export function PlayCardHandler() {
       const card: ProgressCard = players
         .find((p) => p.id === currentPlayerId)!
         .handCards.find((c) => c.id === actionState.cardId)!;
-      console.log('player', players.find((p) => p.id === currentPlayerId)?.name);
-      console.log('cardId', actionState.cardId);
       const area =
         actionState.cardType === 'climateAction'
           ? 'climate-action'

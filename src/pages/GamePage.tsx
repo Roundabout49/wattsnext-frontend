@@ -98,7 +98,7 @@ export default function GamePage() {
               p: 1,
             }}
           >
-            Historie
+            {/* Historie can go here */}
           </Box>
         </Box>
       </Box>

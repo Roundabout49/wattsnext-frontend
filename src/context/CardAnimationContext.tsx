@@ -39,10 +39,8 @@ export const CardAnimationProvider: React.FC<{ children: ReactNode }> = ({ child
     content: ReactNode,
     onDone?: () => void
   ) => {
-    console.log('Starting card animation from', fromId, 'to', toId);
     const fromEl = getCardRef(fromId);
     const toEl = getCardRef(toId);
-    console.log('From ref:', fromEl, 'To ref:', toEl);
     if (fromEl && toEl) {
       const fromRect = fromEl.getBoundingClientRect();
       const toRect = toEl.getBoundingClientRect();
