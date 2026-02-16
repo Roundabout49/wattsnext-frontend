@@ -59,7 +59,15 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
             {card.name}
           </Typography>
         </Box>
-        <Typography variant="body2" sx={{ marginLeft: 1, marginRight: 1, lineHeight: 1 }}>
+        <Typography
+          variant="body2"
+          sx={{
+            marginLeft: 1,
+            marginRight: 1,
+            lineHeight: 1,
+            fontSize: card.text.length > 100 ? '0.75rem' : undefined,
+          }}
+        >
           {card.text}
         </Typography>
 

@@ -2,12 +2,12 @@ import { Box, Typography } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import PriceIcon from './icons/PriceIcon';
 import ResourcesIcon from './icons/ResourcesIcon';
-import EnergyIcon from './icons/EnergyIcon';
+// import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
 import PhaseObjectives from './PhaseObjective';
-import { orderedTechnologyTypes } from '../types/TechnologyTypes';
-import { orderedEnergyForms } from '../types/EnergyForms';
-import { TechnologyEnergyMatrix } from '../types/Game';
+// import { orderedTechnologyTypes } from '../types/TechnologyTypes';
+// import { orderedEnergyForms } from '../types/EnergyForms';
+// import { TechnologyEnergyMatrix } from '../types/Game';
 
 const Status = () => {
   const { game } = useGame();
@@ -22,18 +22,20 @@ const Status = () => {
   } = game!;
 
   // TODO: Remove when technologySizes is implemented again
+  /*
   const technologySizes: TechnologyEnergyMatrix = {
     Generation: { Electricity: 4, Heat: 2 },
     Distribution: { Electricity: 2, Heat: 0 },
     Storage: { Electricity: 1, Heat: 3 },
   };
+  */
 
   return (
     <Box
       sx={{
         position: 'relative',
         width: '100%',
-        height: 550,
+        height: 400, // 550 with energy matrix
         backgroundColor: 'lightgrey',
         padding: 1,
         display: 'flex',
@@ -59,6 +61,7 @@ const Status = () => {
         <ResourcesIcon resources={resources} />
       </Box>
 
+      {/*
       <Box
         sx={{
           display: 'flex',
@@ -90,6 +93,7 @@ const Status = () => {
           </Box>
         ))}
       </Box>
+      */}
 
       <PhaseObjectives />
     </Box>
