@@ -11,6 +11,7 @@ import {
   handlePlayTechnologyCardResult,
 } from './MessageHandler';
 import { useSession } from '../context/SessionContext';
+import { API_BROKER_URL } from '../base';
 
 const WebSocketContext = createContext<WebSocketContextType>({
   sendMessage: () => {},
@@ -33,7 +34,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     if (!gameId || !playerId) return;
 
     const client = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
+      brokerURL: API_BROKER_URL,
       reconnectDelay: 5000,
       connectHeaders: {
         gameId: gameId,

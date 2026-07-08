@@ -6,8 +6,9 @@ import {
   LeaveGameRequest,
   StartGameRequest,
 } from './MessageTypes';
+import { API_BASE_URL } from '../base';
 
-const BASE_URL = 'http://localhost:8080/api/game-init';
+const BASE_URL = `${API_BASE_URL}/game-init`;
 
 export async function createGame(req: CreateGameRequest): Promise<CreateOrJoinGameResponse> {
   const res = await fetch(`${BASE_URL}/create`, {
