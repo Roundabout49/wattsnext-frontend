@@ -25,3 +25,9 @@ dist-ssr
 
 # Custom ignores
 src/assets/cards.xlsx
+
+# Claude Code
+.claude/
+CLAUDE.md
+CLAUDE.local.md
+.mcp.json
