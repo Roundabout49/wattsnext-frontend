@@ -1,84 +1,45 @@
-import { useEffect, useRef } from 'react';
 import { useAction } from '../context/ActionContext';
 import { useSendMessage } from '../context/SendMessageContext';
 import { useDieAnimation } from '../context/DieAnimationContext';
 import { useGame } from '../context/GameContext';
+import { useActionStep } from '../hooks/useActionStep';
 
 export function EarnMoneyHandler() {
-  const { actionState, dispatchGameAction, setSelectedAction } = useAction();
+  const { actionState, dispatchGameAction } = useAction();
   const { sendEarnMoneyAction: sendEarnMoney } = useSendMessage();
   const { setShowDieAnimation, setDieAnimationData, setDieAnimationStep } = useDieAnimation();
   const { game: gameState, animateMoneyChange } = useGame();
 
-  // Ref-Guards to make sure to only handle each step once
-  const didHandleWaitRef = useRef(false);
-  const didHandleAnimateDieRef = useRef(false);
-  const didHandleDoneRef = useRef(false);
+  const currentPlayer = gameState?.players.find((p) => p.id === gameState.currentPlayerId);
 
-  const currentPlayer = gameState!.players.find((p) => p.id === gameState!.currentPlayerId);
+  useActionStep(actionState, 'earnMoney', 'waitForGameState', () => {
+    sendEarnMoney();
+  });
 
-  useEffect(() => {
-    if (!actionState || actionState.type !== 'earnMoney') {
-      didHandleWaitRef.current = false;
-      didHandleAnimateDieRef.current = false;
-      didHandleDoneRef.current = false;
-      return;
-    }
+  useActionStep(actionState, 'earnMoney', 'animateDie', (state) => {
+    setShowDieAnimation(true);
+    setDieAnimationData({
+      playerName: currentPlayer?.name || 'Unbekannter Spieler',
+      result: state.amount ?? 0,
+    });
+    setDieAnimationStep('rolling');
 
-    const step = actionState.step;
+    setTimeout(() => {
+      setDieAnimationStep('showResult');
+      dispatchGameAction({ type: 'DIE_ANIMATION_FINISHED' });
+    }, 2000);
 
-    if (step === 'waitForGameState' && !didHandleWaitRef.current) {
-      didHandleWaitRef.current = true;
-      sendEarnMoney();
-    }
-    if (step !== 'waitForGameState') {
-      didHandleWaitRef.current = false;
-    }
-
-    if (step === 'animateDie' && !didHandleAnimateDieRef.current) {
-      didHandleAnimateDieRef.current = true;
-
-      setShowDieAnimation(true);
-      setDieAnimationData({
-        playerName: currentPlayer?.name || 'Unbekannter Spieler',
-        result: actionState.amount ?? 0,
+    setTimeout(() => {
+      setShowDieAnimation(false);
+      animateMoneyChange(state.amount ?? 0, () => {
+        setTimeout(() => dispatchGameAction({ type: 'CLEANUP_ACTION' }), 1000);
       });
-      setDieAnimationStep('rolling');
+    }, 4000);
+  });
 
-      setTimeout(() => {
-        setDieAnimationStep('showResult');
-        dispatchGameAction({ type: 'DIE_ANIMATION_FINISHED' });
-      }, 2000);
-
-      setTimeout(() => {
-        setShowDieAnimation(false);
-        animateMoneyChange(actionState.amount ?? 0, () => {
-          setTimeout(() => dispatchGameAction({ type: 'CLEANUP_ACTION' }), 1000);
-        });
-      }, 4000);
-    }
-
-    if (step !== 'animateDie') {
-      didHandleAnimateDieRef.current = false;
-    }
-
-    if (step === 'done' && !didHandleDoneRef.current) {
-      didHandleDoneRef.current = true;
-      didHandleWaitRef.current = false;
-      didHandleAnimateDieRef.current = false;
-      dispatchGameAction({ type: 'FINISH_ACTION' });
-    }
-  }, [
-    actionState,
-    sendEarnMoney,
-    setShowDieAnimation,
-    setDieAnimationData,
-    setDieAnimationStep,
-    animateMoneyChange,
-    dispatchGameAction,
-    setSelectedAction,
-    currentPlayer,
-  ]);
+  useActionStep(actionState, 'earnMoney', 'done', () => {
+    dispatchGameAction({ type: 'FINISH_ACTION' });
+  });
 
   return null;
 }
