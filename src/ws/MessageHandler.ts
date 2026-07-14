@@ -11,108 +11,129 @@ import {
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
 
-// TODO: Handle all ResponseStatuses in handlers
+// Everything a result handler needs besides the result itself. Assembled once
+// in WebSocketProvider and passed to every handler (plain parameter object,
+// not a React context).
+export interface ResultHandlerContext {
+  dispatch: Dispatch<GameAction>;
+  setPendingPhaseCompleted: (phaseCompleted: boolean) => void;
+  notify: (message: string) => void;
+  playerId: string | null;
+}
+
+// The Ok entry is used when the backend reports success but the expected
+// actionInfo payload is missing.
+const errorMessages: Record<ResponseStatus, string> = {
+  [ResponseStatus.Ok]: 'Unerwartete Antwort vom Server.',
+  [ResponseStatus.IllegalAction]: 'Diese Aktion ist gerade nicht erlaubt.',
+  [ResponseStatus.IllegalActionArguments]: 'Die Aktion wurde mit ungültigen Angaben gesendet.',
+};
+
+/**
+ * Common envelope handling for every action result: processes baseInfo and,
+ * on an error status, aborts the action in progress instead of leaving it
+ * stuck in a waiting step. Only on success is the action-specific `onOk` run.
+ */
+function handleActionResult<T>(
+  result: ActionResponse<T>,
+  handlerContext: ResultHandlerContext,
+  onOk: (actionInfo: T) => void
+) {
+  if (result.baseInfo) {
+    handleBaseInfo(result.baseInfo, handlerContext.setPendingPhaseCompleted);
+  }
+
+  if (result.status !== ResponseStatus.Ok || !result.actionInfo) {
+    handlerContext.dispatch({ type: 'RESET' });
+    // Results are broadcast to every client in the game; only the player
+    // whose action failed should see the error message.
+    if (handlerContext.playerId === result.game.currentPlayerId) {
+      handlerContext.notify(errorMessages[result.status]);
+    }
+    return;
+  }
+
+  onOk(result.actionInfo);
+}
 
 export function handleEarnMoneyResult(
   result: ActionResponse<EarnMoneyActionInformation>,
-  dispatch: Dispatch<GameAction>,
-  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
+  handlerContext: ResultHandlerContext
 ) {
-  if (result.baseInfo) {
-    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
-  }
-
-  dispatch({
-    type: 'EARN_MONEY_SET_AMOUNT',
-    amount: result.actionInfo!.diceValue,
-    newGameState: result.game,
+  handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.dispatch({
+      type: 'EARN_MONEY_SET_AMOUNT',
+      amount: actionInfo.diceValue,
+      newGameState: result.game,
+    });
   });
 }
 
-// TODO: Temporarily disabled recycling option
+// Recycling is deliberately disabled in the standard game variant (a future
+// advanced mode would use it), hence the constant `&& false`.
 export function handlePlayTechnologyCardIntentResult(
   result: ActionResponse<PlayTechnologyCardActionIntentInformation>,
-  dispatch: Dispatch<GameAction>,
-  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
+  handlerContext: ResultHandlerContext
 ) {
-  if (result.baseInfo) {
-    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
-  }
-
-  if (result.status === ResponseStatus.Ok) {
-    dispatch({
+  handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.dispatch({
       type: 'PLAY_CARD_SET_CAN_RECOVER',
-      canRecover: result.actionInfo!.canRecycle && false,
+      canRecover: actionInfo.canRecycle && false,
     });
-  } else {
-    dispatch({ type: 'RESET' });
-  }
+  });
 }
 
 export function handlePlayTechnologyCardResult(
   result: ActionResponse<PlayTechnologyCardActionInformation>,
-  dispatch: Dispatch<GameAction>,
-  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
+  handlerContext: ResultHandlerContext
 ) {
-  if (result.baseInfo) {
-    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
-  }
-
-  dispatch({
-    type: 'PLAY_CARD_RESULT',
-    cardId: result.actionInfo!.playedCard.id,
-    cardType: 'technology',
-    position: result.actionInfo!.targetPosition,
-    recover: result.actionInfo!.didRecycle,
-    moneyChange:
-      -1 *
-      (result.actionInfo!.payedMoneyForCard + (result.actionInfo!.payedMoneyForRecycling ?? 0)),
-    resourceChange:
-      -1 *
-      (result.actionInfo!.payedResourcesForCard -
-        (result.actionInfo!.gainedResourcesForRecycling ?? 0)),
-    newGameState: result.game,
+  handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.dispatch({
+      type: 'PLAY_CARD_RESULT',
+      cardId: actionInfo.playedCard.id,
+      cardType: 'technology',
+      position: actionInfo.targetPosition,
+      recover: actionInfo.didRecycle,
+      moneyChange: -1 * (actionInfo.payedMoneyForCard + (actionInfo.payedMoneyForRecycling ?? 0)),
+      resourceChange:
+        -1 * (actionInfo.payedResourcesForCard - (actionInfo.gainedResourcesForRecycling ?? 0)),
+      newGameState: result.game,
+    });
   });
 }
 
 export function handlePlayClimateCardResult(
   result: ActionResponse<PlayClimateCardActionInformation>,
-  dispatch: Dispatch<GameAction>,
-  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
+  handlerContext: ResultHandlerContext
 ) {
-  if (result.baseInfo) {
-    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
-  }
-
-  dispatch({
-    type: 'PLAY_CARD_RESULT',
-    cardId: result.actionInfo!.playedCard.id,
-    cardType: 'climateAction',
-    position: result.game.board.climateActionCards.length - 1, // Always played at the end of the list
-    recover: false,
-    moneyChange: -1 * result.actionInfo!.playedCard.moneyCosts.modifiedValue!,
-    resourceChange: -1 * result.actionInfo!.playedCard.resourceCosts.modifiedValue!,
-    newGameState: result.game,
+  handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.dispatch({
+      type: 'PLAY_CARD_RESULT',
+      cardId: actionInfo.playedCard.id,
+      cardType: 'climateAction',
+      position: result.game.board.climateActionCards.length - 1, // Always played at the end of the list
+      recover: false,
+      moneyChange: -1 * actionInfo.playedCard.moneyCosts.modifiedValue!,
+      resourceChange: -1 * actionInfo.playedCard.resourceCosts.modifiedValue!,
+      newGameState: result.game,
+    });
   });
 }
 
 export function handleChangeCardResult(
   result: ActionResponse<ChangeCardActionInformation>,
-  dispatch: Dispatch<GameAction>,
-  setPendingPhaseCompleted: (phaseCompleted: boolean) => void
+  handlerContext: ResultHandlerContext
 ) {
-  if (result.baseInfo) {
-    handleBaseInfo(result.baseInfo, setPendingPhaseCompleted);
-  }
-
-  dispatch({
-    type: 'CHANGE_CARD_RESULT',
-    discardedCardId: result.actionInfo!.discardedCard.id,
-    newGameState: result.game,
+  handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.dispatch({
+      type: 'CHANGE_CARD_RESULT',
+      discardedCardId: actionInfo.discardedCard.id,
+      newGameState: result.game,
+    });
   });
 }
 
-export function handleBaseInfo(
+function handleBaseInfo(
   baseInfo: BaseInfo,
   setPendingPhaseCompleted: (phaseCompleted: boolean) => void
 ) {

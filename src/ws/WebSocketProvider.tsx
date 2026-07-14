@@ -9,8 +9,10 @@ import {
   handlePlayClimateCardResult,
   handlePlayTechnologyCardIntentResult,
   handlePlayTechnologyCardResult,
+  ResultHandlerContext,
 } from './MessageHandler';
 import { useSession } from '../context/SessionContext';
+import { useNotification } from '../context/NotificationContext';
 import { API_BROKER_URL } from '../base';
 
 const WebSocketContext = createContext<WebSocketContextType>({
@@ -29,9 +31,17 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const { setGame } = useGame();
   const { dispatchGameAction, setPendingPhaseCompleted } = useAction();
   const { gameId, playerId } = useSession();
+  const { notify } = useNotification();
 
   useEffect(() => {
     if (!gameId || !playerId) return;
+
+    const handlerContext: ResultHandlerContext = {
+      dispatch: dispatchGameAction,
+      setPendingPhaseCompleted,
+      notify,
+      playerId,
+    };
 
     const client = new Client({
       brokerURL: API_BROKER_URL,
@@ -46,38 +56,27 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       console.log('Connected to WebSocket');
       setConnected(true);
 
-      client.subscribe(`/topic/game/${gameId}`, (message: IMessage) => {
-        const gameState = JSON.parse(message.body);
-        setGame(gameState);
+      const gameTopic = `/topic/game/${gameId}`;
+
+      client.subscribe(gameTopic, (message: IMessage) => {
+        setGame(JSON.parse(message.body));
       });
 
-      client.subscribe(`/topic/game/${gameId}/earnMoneyResult`, (message: IMessage) => {
-        const result = JSON.parse(message.body);
-        handleEarnMoneyResult(result, dispatchGameAction, setPendingPhaseCompleted);
-      });
-      client.subscribe(
-        `/topic/game/${gameId}/playTechnologyCardIntentResult`,
-        (message: IMessage) => {
-          const result = JSON.parse(message.body);
-          handlePlayTechnologyCardIntentResult(
-            result,
-            dispatchGameAction,
-            setPendingPhaseCompleted
-          );
-        }
+      client.subscribe(`${gameTopic}/earnMoneyResult`, (message: IMessage) =>
+        handleEarnMoneyResult(JSON.parse(message.body), handlerContext)
       );
-      client.subscribe(`/topic/game/${gameId}/playTechnologyCardResult`, (message: IMessage) => {
-        const result = JSON.parse(message.body);
-        handlePlayTechnologyCardResult(result, dispatchGameAction, setPendingPhaseCompleted);
-      });
-      client.subscribe(`/topic/game/${gameId}/playClimateCardResult`, (message: IMessage) => {
-        const result = JSON.parse(message.body);
-        handlePlayClimateCardResult(result, dispatchGameAction, setPendingPhaseCompleted);
-      });
-      client.subscribe(`/topic/game/${gameId}/changeCardResult`, (message: IMessage) => {
-        const result = JSON.parse(message.body);
-        handleChangeCardResult(result, dispatchGameAction, setPendingPhaseCompleted);
-      });
+      client.subscribe(`${gameTopic}/playTechnologyCardIntentResult`, (message: IMessage) =>
+        handlePlayTechnologyCardIntentResult(JSON.parse(message.body), handlerContext)
+      );
+      client.subscribe(`${gameTopic}/playTechnologyCardResult`, (message: IMessage) =>
+        handlePlayTechnologyCardResult(JSON.parse(message.body), handlerContext)
+      );
+      client.subscribe(`${gameTopic}/playClimateCardResult`, (message: IMessage) =>
+        handlePlayClimateCardResult(JSON.parse(message.body), handlerContext)
+      );
+      client.subscribe(`${gameTopic}/changeCardResult`, (message: IMessage) =>
+        handleChangeCardResult(JSON.parse(message.body), handlerContext)
+      );
     };
 
     client.onStompError = (frame) => {

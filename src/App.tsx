@@ -13,45 +13,47 @@ import { WebSocketProvider } from './ws/WebSocketProvider';
 import { SendMessageProvider } from './context/SendMessageContext';
 import { DieAnimationProvider } from './context/DieAnimationContext';
 import { GameApiProvider } from './context/GameApiContext';
-// import { USE_MOCK } from './base.ts';
+import { NotificationProvider } from './context/NotificationContext';
 
 const App = () => {
   return (
-    <SessionProvider>
-      <GameProvider>
-        <ActionProvider>
-          <GameApiProvider>
-            <WebSocketProvider>
-              <SendMessageProvider>
-                <DieAnimationProvider>
-                  <CardAnimationProvider>
-                    <Box
-                      sx={{
-                        minWidth: 'fit-content',
-                        width: '100%',
-                        minHeight: '100vh',
-                        display: 'flex',
-                        flexDirection: 'column',
-                      }}
-                    >
-                      <NavBar />
-                      <Box sx={{ flexGrow: 1 }}>
-                        <Routes>
-                          <Route path="/" element={<Home />} />
-                          <Route path="/about" element={<About />} />
-                          <Route path="/play" element={<Play />} />
-                          <Route path="/rules" element={<Rules />} />
-                        </Routes>
+    <NotificationProvider>
+      <SessionProvider>
+        <GameProvider>
+          <ActionProvider>
+            <GameApiProvider>
+              <WebSocketProvider>
+                <SendMessageProvider>
+                  <DieAnimationProvider>
+                    <CardAnimationProvider>
+                      <Box
+                        sx={{
+                          minWidth: 'fit-content',
+                          width: '100%',
+                          minHeight: '100vh',
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <NavBar />
+                        <Box sx={{ flexGrow: 1 }}>
+                          <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/play" element={<Play />} />
+                            <Route path="/rules" element={<Rules />} />
+                          </Routes>
+                        </Box>
                       </Box>
-                    </Box>
-                  </CardAnimationProvider>
-                </DieAnimationProvider>
-              </SendMessageProvider>
-            </WebSocketProvider>
-          </GameApiProvider>
-        </ActionProvider>
-      </GameProvider>
-    </SessionProvider>
+                    </CardAnimationProvider>
+                  </DieAnimationProvider>
+                </SendMessageProvider>
+              </WebSocketProvider>
+            </GameApiProvider>
+          </ActionProvider>
+        </GameProvider>
+      </SessionProvider>
+    </NotificationProvider>
   );
 };
 
