@@ -10,6 +10,7 @@ import {
   BaseInfo,
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
+import { GAME_VARIANT } from '../gameConfig';
 
 // Everything a result handler needs besides the result itself. Assembled once
 // in WebSocketProvider and passed to every handler (plain parameter object,
@@ -69,8 +70,6 @@ export function handleEarnMoneyResult(
   });
 }
 
-// Recycling is deliberately disabled in the standard game variant (a future
-// advanced mode would use it), hence the constant `&& false`.
 export function handlePlayTechnologyCardIntentResult(
   result: ActionResponse<PlayTechnologyCardActionIntentInformation>,
   handlerContext: ResultHandlerContext
@@ -78,7 +77,7 @@ export function handlePlayTechnologyCardIntentResult(
   handleActionResult(result, handlerContext, (actionInfo) => {
     handlerContext.dispatch({
       type: 'PLAY_CARD_SET_CAN_RECOVER',
-      canRecover: actionInfo.canRecycle && false,
+      canRecover: actionInfo.canRecycle && GAME_VARIANT === 'advanced',
     });
   });
 }

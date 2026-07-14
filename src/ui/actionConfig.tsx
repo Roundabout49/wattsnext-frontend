@@ -3,6 +3,7 @@ import { ActionState } from '../types/Actions';
 import { CancelActionButton } from '../components/CancelActionButton';
 import { ConfirmActionButton } from '../components/ConfirmActionButton';
 import { Button } from '@mui/material';
+import { GAME_VARIANT } from '../gameConfig';
 
 type ActionUIElement = {
   instruction: (actionState: ActionState) => string;
@@ -35,7 +36,10 @@ export const actionUIConfig: ActionUIConfig = {
       buttons: (resetAction) => [<CancelActionButton key="cancel" onCancel={resetAction} />],
     },
     waitIfRecoverPossible: {
-      instruction: () => 'Warte auf Informationen zur Ressourcenrückgewinnung...',
+      instruction: () =>
+        GAME_VARIANT === 'advanced'
+          ? 'Warte auf Informationen zur Ressourcenrückgewinnung...'
+          : 'Spielzug wird geprüft...',
       buttons: () => [],
     },
     selectRecoverResources: {
