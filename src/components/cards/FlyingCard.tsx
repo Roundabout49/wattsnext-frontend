@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { ReactNode, useEffect, useState } from 'react';
+import { CARD_FLIGHT_MS } from '../../animationTimings';
 
 const FlyingCard: React.FC<{
   fromRect: DOMRect;
@@ -13,7 +14,7 @@ const FlyingCard: React.FC<{
     left: fromRect.left,
     width: fromRect.width,
     height: fromRect.height,
-    transition: 'all 0.5s ease-in-out',
+    transition: `all ${CARD_FLIGHT_MS}ms ease-in-out`,
     zIndex: 1000,
   });
 

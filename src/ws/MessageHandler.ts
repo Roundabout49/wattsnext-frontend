@@ -11,6 +11,7 @@ import {
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
 import { EventToShow } from '../context/EventAnimationContext';
+import { getEventSlotDomId } from '../utils/cardDomId';
 import { GAME_VARIANT } from '../gameConfig';
 
 // Everything a result handler needs besides the result itself. Assembled once
@@ -57,12 +58,18 @@ function handleActionResult<T>(
   }
 
   // A newly drawn standard event card is always the last one on the board;
-  // remember it (with its effects) so it can be animated once the action ends.
+  // remember it (with its effects and target slot) so it can be animated once
+  // the action ends.
   if (result.baseInfo?.gotNewStandardEventCard) {
     const events = result.game.board.eventCards;
-    const card = events[events.length - 1];
+    const index = events.length - 1;
+    const card = events[index];
     if (card) {
-      handlerContext.setPendingEvent({ card, effects: result.eventEffectInfo ?? [] });
+      handlerContext.setPendingEvent({
+        card,
+        effects: result.eventEffectInfo ?? [],
+        slotDomId: getEventSlotDomId(index),
+      });
     }
   }
 

@@ -12,6 +12,8 @@ import boardBackground from '../assets/images/Spielbrett.png';
 import SectionHeader from './SectionHeader';
 import BoardCardSlot from './BoardCardSlot';
 import TechnologyColumn from './TechnologyColumn';
+import { getCatastropheSlotDomId, getEventSlotDomId } from '../utils/cardDomId';
+import { useEventAnimation } from '../context/EventAnimationContext';
 
 const Board: React.FC = () => {
   const { game: gameState } = useGame();
@@ -29,6 +31,11 @@ const Board: React.FC = () => {
   const { registerCardRef } = useCardAnimation();
   const { actionState, dispatchGameAction } = useAction();
   const { playerId } = useSession();
+  const { activeEvent } = useEventAnimation();
+
+  // While an event card is flying onto a slot, keep that slot empty so the card
+  // only appears once it has landed.
+  const isFlyingTo = (slotId: string) => activeEvent?.slotDomId === slotId;
 
   const [showClimateActions, setShowClimateActions] = useState(true);
 
@@ -158,25 +165,27 @@ const Board: React.FC = () => {
         <Grid size={4}>
           <Stack spacing={1}>
             <SectionHeader label="Ereignisse" color="white" />
-            {events ? (
-              events[0] ? (
+            <div ref={(el) => registerCardRef(getEventSlotDomId(0), el)}>
+              {events?.[0] && !isFlyingTo(getEventSlotDomId(0)) ? (
                 <EventCardSmall card={events[0]} />
               ) : (
                 <EmptyCardSmall />
-              )
-            ) : (
-              <EmptyCardSmall />
-            )}
-            {events ? (
-              events[1] ? (
+              )}
+            </div>
+            <div ref={(el) => registerCardRef(getEventSlotDomId(1), el)}>
+              {events?.[1] && !isFlyingTo(getEventSlotDomId(1)) ? (
                 <EventCardSmall card={events[1]} />
               ) : (
                 <EmptyCardSmall />
-              )
-            ) : (
-              <EmptyCardSmall />
-            )}
-            {catastrophe ? <EventCardSmall card={catastrophe} /> : <EmptyCardSmall />}
+              )}
+            </div>
+            <div ref={(el) => registerCardRef(getCatastropheSlotDomId(), el)}>
+              {catastrophe && !isFlyingTo(getCatastropheSlotDomId()) ? (
+                <EventCardSmall card={catastrophe} />
+              ) : (
+                <EmptyCardSmall />
+              )}
+            </div>
           </Stack>
         </Grid>
       </Grid>

@@ -5,6 +5,8 @@ import { CardEffectInformation } from '../ws/MessageTypes';
 export interface EventToShow {
   card: EventCard;
   effects: CardEffectInformation[];
+  // DOM id of the board slot the card flies to when the overlay finishes.
+  slotDomId: string;
 }
 
 interface EventAnimationContextType {
