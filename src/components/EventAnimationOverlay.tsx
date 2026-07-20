@@ -15,7 +15,7 @@ interface Geometry {
 }
 
 const EventAnimationOverlay: React.FC = () => {
-  const { activeEvent, dismiss } = useEventAnimation();
+  const { activeEvent, dismiss, releaseEffects } = useEventAnimation();
   const { getCardRef } = useCardAnimation();
   const [phase, setPhase] = useState<Phase>('enter');
   const [geometry, setGeometry] = useState<Geometry | null>(null);
@@ -31,6 +31,8 @@ const EventAnimationOverlay: React.FC = () => {
     timers.push(window.setTimeout(() => setPhase('hold'), EVENT_ENTER_MS));
     timers.push(
       window.setTimeout(() => {
+        // The effects count up in the status display as the card leaves the centre.
+        releaseEffects();
         const slot = getCardRef(activeEvent.slotDomId);
         const from = cardRef.current?.getBoundingClientRect();
         if (slot && from) {
@@ -46,7 +48,7 @@ const EventAnimationOverlay: React.FC = () => {
     );
 
     return () => timers.forEach((t) => window.clearTimeout(t));
-  }, [activeEvent, dismiss, getCardRef]);
+  }, [activeEvent, dismiss, getCardRef, releaseEffects]);
 
   if (!activeEvent) return null;
 

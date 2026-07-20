@@ -6,6 +6,7 @@ import ResourcesIcon from './icons/ResourcesIcon';
 import PointsIcon from './icons/PointsIcon';
 import PhaseObjectives from './PhaseObjective';
 import { NumberTrend, useAnimatedNumber } from '../hooks/useAnimatedNumber';
+import { sumEventEffect, useEventAnimation } from '../context/EventAnimationContext';
 // import { orderedTechnologyTypes } from '../types/TechnologyTypes';
 // import { orderedEnergyForms } from '../types/EnergyForms';
 // import { TechnologyEnergyMatrix } from '../types/Game';
@@ -26,8 +27,15 @@ const Status = () => {
     /*technologySizes,*/
   } = game!;
 
-  const { value: displayedMoney, trend: moneyTrend } = useAnimatedNumber(money);
-  const { value: displayedResources, trend: resourcesTrend } = useAnimatedNumber(resources);
+  // While an event is centred, keep the numbers at their pre-event value; they
+  // only count up once the event's effects are released (card starts flying).
+  const { activeEvent, effectsReleased } = useEventAnimation();
+  const held = activeEvent && !effectsReleased ? activeEvent.effects : [];
+  const moneyTarget = money - sumEventEffect(held, 'Money');
+  const resourcesTarget = resources - sumEventEffect(held, 'Resources');
+
+  const { value: displayedMoney, trend: moneyTrend } = useAnimatedNumber(moneyTarget);
+  const { value: displayedResources, trend: resourcesTrend } = useAnimatedNumber(resourcesTarget);
 
   // TODO: Remove when technologySizes is implemented again
   /*
