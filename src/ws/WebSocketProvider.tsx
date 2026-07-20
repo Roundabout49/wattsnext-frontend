@@ -29,7 +29,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
   const clientRef = useRef<Client>(null);
   const [connected, setConnected] = useState(false);
   const { setGame } = useGame();
-  const { dispatchGameAction, setPendingPhaseCompleted } = useAction();
+  const { dispatchGameAction, setPendingPhaseCompleted, setPendingEvent } = useAction();
   const { gameId, playerId } = useSession();
   const { notify } = useNotification();
 
@@ -39,6 +39,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     const handlerContext: ResultHandlerContext = {
       dispatch: dispatchGameAction,
       setPendingPhaseCompleted,
+      setPendingEvent,
       notify,
       playerId,
     };

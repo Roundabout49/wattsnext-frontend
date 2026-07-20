@@ -10,6 +10,7 @@ import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
 import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
 import { useGame } from './GameContext';
 import { ChangeCardAction, changeCardReducer } from '../reducers/changeCardReducer';
+import { EventToShow, useEventAnimation } from './EventAnimationContext';
 
 export type GameAction =
   | PlayCardAction
@@ -33,6 +34,7 @@ interface ActionContextType {
   inChangeCardPhase: boolean;
   setInChangeCardPhase: (inChangeCardPhase: boolean) => void;
   setPendingPhaseCompleted: (phaseCompleted: boolean) => void;
+  setPendingEvent: (event: EventToShow) => void;
 }
 
 const ActionContext = createContext<ActionContextType | undefined>(undefined);
@@ -40,8 +42,10 @@ const ActionContext = createContext<ActionContextType | undefined>(undefined);
 export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [inChangeCardPhase, setInChangeCardPhase] = useState<boolean>(true);
   const [pendingPhaseCompleted, setPendingPhaseCompleted] = useState<boolean>(false);
+  const [pendingEvent, setPendingEvent] = useState<EventToShow | null>(null);
 
   const { setGame: setGameState, setPhaseCompleted } = useGame();
+  const { playEvent } = useEventAnimation();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fallbackReducer = (state: ActionState | null, _action: GameAction): ActionState | null =>
@@ -128,13 +132,18 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       setInChangeCardPhase(true);
     }
 
+    // Phase evaluation comes first. At a phase boundary the event is left to the
+    // (later) phase-boundary sequencing; mid-phase it plays right away.
     if (pendingPhaseCompleted) {
       setPhaseCompleted(true);
       setPendingPhaseCompleted(false);
+    } else if (pendingEvent) {
+      playEvent(pendingEvent);
     }
+    setPendingEvent(null);
 
     dispatchGameAction({ type: 'CLEAR_ACTION' });
-  }, [actionState, pendingPhaseCompleted, setPhaseCompleted, setGameState]);
+  }, [actionState, pendingEvent, playEvent, pendingPhaseCompleted, setPhaseCompleted, setGameState]);
 
   const setSelectedAction = (action: ActionKind) => {
     dispatchGameAction({ type: 'CLEAR_ACTION' });
@@ -168,6 +177,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         inChangeCardPhase,
         setInChangeCardPhase,
         setPendingPhaseCompleted,
+        setPendingEvent,
       }}
     >
       {children}

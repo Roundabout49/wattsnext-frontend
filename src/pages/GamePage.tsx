@@ -6,6 +6,7 @@ import ActionBar from '../components/ActionBar';
 import { PlayCardHandler } from '../handlers/PlayCardHandler';
 import { EarnMoneyHandler } from '../handlers/EarnMoneyHandler';
 import AnimationOverlay from '../components/AnimationOverlay';
+import EventAnimationOverlay from '../components/EventAnimationOverlay';
 import { useRef, useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import { ChangeCardHandler } from '../handlers/ChangeCardHandler';
@@ -52,6 +53,7 @@ export default function GamePage() {
       }}
     >
       <AnimationOverlay />
+      <EventAnimationOverlay />
 
       <ActionBar />
 

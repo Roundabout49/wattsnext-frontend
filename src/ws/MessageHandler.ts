@@ -10,6 +10,7 @@ import {
   BaseInfo,
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
+import { EventToShow } from '../context/EventAnimationContext';
 import { GAME_VARIANT } from '../gameConfig';
 
 // Everything a result handler needs besides the result itself. Assembled once
@@ -18,6 +19,7 @@ import { GAME_VARIANT } from '../gameConfig';
 export interface ResultHandlerContext {
   dispatch: Dispatch<GameAction>;
   setPendingPhaseCompleted: (phaseCompleted: boolean) => void;
+  setPendingEvent: (event: EventToShow) => void;
   notify: (message: string) => void;
   playerId: string | null;
 }
@@ -52,6 +54,16 @@ function handleActionResult<T>(
       handlerContext.notify(errorMessages[result.status]);
     }
     return;
+  }
+
+  // A newly drawn standard event card is always the last one on the board;
+  // remember it (with its effects) so it can be animated once the action ends.
+  if (result.baseInfo?.gotNewStandardEventCard) {
+    const events = result.game.board.eventCards;
+    const card = events[events.length - 1];
+    if (card) {
+      handlerContext.setPendingEvent({ card, effects: result.eventEffectInfo ?? [] });
+    }
   }
 
   onOk(result.actionInfo);
