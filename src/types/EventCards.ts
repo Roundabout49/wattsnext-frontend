@@ -1,5 +1,3 @@
-import { SvgIconComponent } from '@mui/icons-material';
-
 export interface EventCard {
   id: string;
   name: string;
@@ -15,10 +13,5 @@ export interface EffectDescription {
   type: EffectType;
 }
 
-export const EffectTypes: Record<string, SvgIconComponent | null> = {
-  MoneyAndResources: null,
-  Points: null,
-  EnergySystem: null,
-} as const;
-
-export type EffectType = keyof typeof EffectTypes;
+// Must stay in sync with the backend EffectType enum.
+export type EffectType = 'MoneyAndResources' | 'Points' | 'EnergySystem';

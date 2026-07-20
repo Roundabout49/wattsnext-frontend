@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { EventCard } from '../../types/EventCards';
+import EffectTypeIcon from '../icons/EffectTypeIcon';
 
 const EventCardLarge: React.FC<{ card: EventCard }> = ({ card }) => {
   const headerColor = card.isCatastrophe ? '#b30000' : '#2c9aff';
@@ -97,18 +98,15 @@ const EventCardLarge: React.FC<{ card: EventCard }> = ({ card }) => {
               >
                 <Box
                   sx={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: '50%',
-                    backgroundColor: '#bbdefb',
+                    width: 34,
+                    height: 34,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontWeight: 'bold',
                     flexShrink: 0,
                   }}
                 >
-                  {/* Platzhalter-Icon */}?
+                  <EffectTypeIcon type={effect.type} />
                 </Box>
                 <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
                   {effect.text}
