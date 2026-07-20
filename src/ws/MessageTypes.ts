@@ -24,6 +24,7 @@ export interface ActionResponse<T> {
   actionInfo?: T;
   baseInfo?: BaseInfo;
   cardEffectInfo?: CardEffectInformation[];
+  eventEffectInfo?: CardEffectInformation[];
 }
 
 export enum ResponseStatus {

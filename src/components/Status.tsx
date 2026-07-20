@@ -5,10 +5,14 @@ import ResourcesIcon from './icons/ResourcesIcon';
 // import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
 import PhaseObjectives from './PhaseObjective';
-import { useAnimatedNumber } from '../hooks/useAnimatedNumber';
+import { NumberTrend, useAnimatedNumber } from '../hooks/useAnimatedNumber';
 // import { orderedTechnologyTypes } from '../types/TechnologyTypes';
 // import { orderedEnergyForms } from '../types/EnergyForms';
 // import { TechnologyEnergyMatrix } from '../types/Game';
+
+// Green while a value counts up, red while it counts down, normal once settled.
+const trendColor = (trend: NumberTrend): string | undefined =>
+  trend === 'up' ? '#2e7d32' : trend === 'down' ? '#d32f2f' : undefined;
 
 const Status = () => {
   const { game } = useGame();
@@ -22,8 +26,8 @@ const Status = () => {
     /*technologySizes,*/
   } = game!;
 
-  const displayedMoney = useAnimatedNumber(money);
-  const displayedResources = useAnimatedNumber(resources);
+  const { value: displayedMoney, trend: moneyTrend } = useAnimatedNumber(money);
+  const { value: displayedResources, trend: resourcesTrend } = useAnimatedNumber(resources);
 
   // TODO: Remove when technologySizes is implemented again
   /*
@@ -61,8 +65,8 @@ const Status = () => {
           <PointsIcon points={progressPoints} leafColor="green" />
         </Box>
         <Box sx={{ flexGrow: 1 }} />
-        <PriceIcon price={displayedMoney} />
-        <ResourcesIcon resources={displayedResources} />
+        <PriceIcon price={displayedMoney} color={trendColor(moneyTrend)} />
+        <ResourcesIcon resources={displayedResources} color={trendColor(resourcesTrend)} />
       </Box>
 
       {/*
