@@ -79,7 +79,8 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         : null;
     }
 
-    // TODO: This is probably unnecessary here as the invalid cases are already handled in the individual reducers
+    // State is null before INIT, but also permanently on observer clients: they
+    // never dispatch INIT yet must build state from RESULT broadcasts to animate.
     if (!state) {
       switch (action.type) {
         case 'PLAY_CARD_INIT':
