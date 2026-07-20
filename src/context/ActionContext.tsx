@@ -38,7 +38,6 @@ interface ActionContextType {
 const ActionContext = createContext<ActionContextType | undefined>(undefined);
 
 export const ActionProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedAction, _setSelectedAction] = useState<ActionKind>(null);
   const [inChangeCardPhase, setInChangeCardPhase] = useState<boolean>(true);
   const [pendingPhaseCompleted, setPendingPhaseCompleted] = useState<boolean>(false);
 
@@ -115,6 +114,9 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
 
   const [actionState, dispatchGameAction] = useReducer(combinedReducer, null);
 
+  // Which action is selected follows from the action in progress.
+  const selectedAction = actionState?.type ?? null;
+
   useEffect(() => {
     if (!actionState?.finishRequested) return;
 
@@ -131,22 +133,11 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       setPendingPhaseCompleted(false);
     }
 
-    _setSelectedAction(null);
     dispatchGameAction({ type: 'CLEAR_ACTION' });
   }, [actionState, pendingPhaseCompleted, setPhaseCompleted, setGameState]);
 
-  // If an action is aborted outside the normal finish flow (e.g. the backend
-  // rejected it and the result handler dispatched RESET), clear the selection
-  // as well so the ActionBar offers the action menu again.
-  useEffect(() => {
-    if (!actionState && selectedAction) {
-      _setSelectedAction(null);
-    }
-  }, [actionState, selectedAction]);
-
   const setSelectedAction = (action: ActionKind) => {
     dispatchGameAction({ type: 'CLEAR_ACTION' });
-    _setSelectedAction(action);
 
     switch (action) {
       case 'playCard':
