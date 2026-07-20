@@ -8,7 +8,7 @@ export function EarnMoneyHandler() {
   const { actionState, dispatchGameAction } = useAction();
   const { sendEarnMoneyAction: sendEarnMoney } = useSendMessage();
   const { setShowDieAnimation, setDieAnimationData, setDieAnimationStep } = useDieAnimation();
-  const { game: gameState, animateMoneyChange } = useGame();
+  const { game: gameState } = useGame();
 
   const currentPlayer = gameState?.players.find((p) => p.id === gameState.currentPlayerId);
 
@@ -26,14 +26,12 @@ export function EarnMoneyHandler() {
 
     setTimeout(() => {
       setDieAnimationStep('showResult');
-      dispatchGameAction({ type: 'DIE_ANIMATION_FINISHED' });
     }, 2000);
 
+    // FINISH_ACTION applies the server state; the money display then ticks up visibly
     setTimeout(() => {
       setShowDieAnimation(false);
-      animateMoneyChange(state.amount ?? 0, () => {
-        setTimeout(() => dispatchGameAction({ type: 'CLEANUP_ACTION' }), 1000);
-      });
+      dispatchGameAction({ type: 'CLEANUP_ACTION' });
     }, 4000);
   });
 

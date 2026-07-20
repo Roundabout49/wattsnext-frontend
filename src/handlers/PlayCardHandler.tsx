@@ -15,7 +15,7 @@ export function PlayCardHandler() {
     sendPlayTechnologyCardAction,
     sendPlayClimateCardAction,
   } = useSendMessage();
-  const { animateMoneyChange, animateResourcesChange, setGame: setGameState, game } = useGame();
+  const { setGame: setGameState, game } = useGame();
   const { startCardAnimation } = useCardAnimation();
 
   const players: Player[] = game ? game.players : [];
@@ -56,25 +56,21 @@ export function PlayCardHandler() {
     const index = state.selectedPosition!;
     const toRef = getBoardPositionDomId(area, index);
 
-    animateResourcesChange(state.resourceChange ?? 0);
-    animateMoneyChange(state.moneyChange ?? 0, () => {
-      setTimeout(() => {
-        setGameState((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            players: prev.players.map((p) =>
-              p.id === currentPlayerId
-                ? { ...p, handCards: p.handCards.filter((c) => c.id !== state.cardId) }
-                : p
-            ),
-          };
-        });
-        startCardAnimation(fromRef, toRef, <ProgressCardSmall card={card} />, () =>
-          dispatchGameAction({ type: 'CLEANUP_ACTION' })
-        );
-      }, 1000);
+    // Local hand-card removal for the flight; FINISH_ACTION applies the server state afterwards
+    setGameState((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        players: prev.players.map((p) =>
+          p.id === currentPlayerId
+            ? { ...p, handCards: p.handCards.filter((c) => c.id !== state.cardId) }
+            : p
+        ),
+      };
     });
+    startCardAnimation(fromRef, toRef, <ProgressCardSmall card={card} />, () =>
+      dispatchGameAction({ type: 'CLEANUP_ACTION' })
+    );
   });
 
   useActionStep(actionState, 'playCard', 'done', () => {

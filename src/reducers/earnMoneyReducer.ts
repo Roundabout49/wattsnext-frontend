@@ -4,8 +4,7 @@ import { Game } from '../types/Game';
 export type EarnMoneyAction =
   | { type: 'EARN_MONEY_INIT' }
   | { type: 'EARN_MONEY_CONFIRM' }
-  | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number; newGameState: Game }
-  | { type: 'DIE_ANIMATION_FINISHED' };
+  | { type: 'EARN_MONEY_SET_AMOUNT'; amount: number; newGameState: Game };
 
 export function earnMoneyReducer(
   state: EarnMoneyActionState | null,
@@ -50,11 +49,6 @@ export function earnMoneyReducer(
         step: 'animateDie',
         amount: action.amount,
         newGameState: action.newGameState,
-      };
-    case 'DIE_ANIMATION_FINISHED':
-      return {
-        ...state,
-        step: 'done',
       };
     default:
       return state;

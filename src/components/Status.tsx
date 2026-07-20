@@ -5,6 +5,7 @@ import ResourcesIcon from './icons/ResourcesIcon';
 // import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
 import PhaseObjectives from './PhaseObjective';
+import { useAnimatedNumber } from '../hooks/useAnimatedNumber';
 // import { orderedTechnologyTypes } from '../types/TechnologyTypes';
 // import { orderedEnergyForms } from '../types/EnergyForms';
 // import { TechnologyEnergyMatrix } from '../types/Game';
@@ -20,6 +21,9 @@ const Status = () => {
     progressPoints,
     /*technologySizes,*/
   } = game!;
+
+  const displayedMoney = useAnimatedNumber(money);
+  const displayedResources = useAnimatedNumber(resources);
 
   // TODO: Remove when technologySizes is implemented again
   /*
@@ -57,8 +61,8 @@ const Status = () => {
           <PointsIcon points={progressPoints} leafColor="green" />
         </Box>
         <Box sx={{ flexGrow: 1 }} />
-        <PriceIcon price={money} />
-        <ResourcesIcon resources={resources} />
+        <PriceIcon price={displayedMoney} />
+        <ResourcesIcon resources={displayedResources} />
       </Box>
 
       {/*
