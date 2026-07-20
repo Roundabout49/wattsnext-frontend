@@ -8,6 +8,8 @@ import { orderedTechnologyTypes, TechnologyType } from '../types/TechnologyTypes
 import EnergyIcon from './icons/EnergyIcon';
 import { EnergyForm, EnergyForms } from '../types/EnergyForms';
 import { PhaseObjective } from '../types/Game';
+import { useAnimatedNumber } from '../hooks/useAnimatedNumber';
+import { sumEventEffect, useEventAnimation } from '../context/EventAnimationContext';
 
 const PhaseObjectives = () => {
   const { game: gameState } = useGame();
@@ -28,6 +30,26 @@ const PhaseObjectives = () => {
   };
 
   const objective = phases[visiblePhaseIndex];
+
+  // Generation and distribution targets animate when an event changes them, and
+  // hold the event's delta until the card flies (like the money/resource counters).
+  // They are always computed from the current phase so navigating phases doesn't
+  // trigger a count.
+  const currentObjective = phases[currentPhaseIndex];
+  const { activeEvent, effectsReleased } = useEventAnimation();
+  const heldEffects = activeEvent && !effectsReleased ? activeEvent.effects : [];
+  const targetDelta = sumEventEffect(heldEffects, 'GenerationAndDistributionTargets');
+  const animatedTargets: Record<TechnologyType, number> = {
+    Generation: useAnimatedNumber(currentObjective.generation.target - targetDelta).value,
+    Distribution: useAnimatedNumber(currentObjective.distribution.target - targetDelta).value,
+    Storage: useAnimatedNumber(currentObjective.storage.target).value,
+  };
+
+  const isCurrentPhase = visiblePhaseIndex === currentPhaseIndex;
+  // Animate only while an event is changing the targets; navigating phases and
+  // phase changes both jump.
+  const targetValueFor = (technologyType: TechnologyType, key: keyof PhaseObjective): number =>
+    isCurrentPhase && activeEvent ? animatedTargets[technologyType] : objective[key].target;
 
   const phaseObjectiveKeyMap: Record<TechnologyType | EnergyForm, keyof PhaseObjective> = {
     Generation: 'generation',
@@ -114,7 +136,7 @@ const PhaseObjectives = () => {
                   </Typography>
                 </Box>
               )}
-              <EnergyIcon technology={technologyType} size={objective[key].target} />
+              <EnergyIcon technology={technologyType} size={targetValueFor(technologyType, key)} />
             </Box>
           </Box>
         );
