@@ -1,17 +1,17 @@
 import { Box, Grid, IconButton, Stack } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import EmptyCardSmall from './cards/EmptyCardSmall';
-import ProgressCardSmall from './cards/ProgressCardSmall';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { useAction } from '../context/ActionContext';
 import { useSession } from '../context/SessionContext';
-import { TechnologyType, TechnologyTypes } from '../types/TechnologyTypes';
+import { TechnologyTypes } from '../types/TechnologyTypes';
 import EventCardSmall from './cards/EventCardSmall';
-import { getBoardPositionDomId } from '../utils/cardDomId';
 import boardBackground from '../assets/images/Spielbrett.png';
 import SectionHeader from './SectionHeader';
+import BoardCardSlot from './BoardCardSlot';
+import TechnologyColumn from './TechnologyColumn';
 
 const Board: React.FC = () => {
   const { game: gameState } = useGame();
@@ -32,11 +32,6 @@ const Board: React.FC = () => {
 
   const [showClimateActions, setShowClimateActions] = useState(true);
 
-  const climateRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const generationRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const distributionRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const storageRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   const selectedCard = (() => {
     if (actionState?.type === 'playCard' && actionState.cardId) {
       const card = gameState.players
@@ -49,20 +44,10 @@ const Board: React.FC = () => {
   })();
 
   const isCurrentPlayer = playerId === currentPlayerId;
+  const selectedPosition = actionState?.type === 'playCard' ? actionState.selectedPosition : null;
 
   const selectableClimateIndex =
     isCurrentPlayer && selectedCard?.type === 'climateAction' ? climateActions.length : -1;
-
-  const isSelectableTechnologySlot = (technology: TechnologyType) => {
-    if (!isCurrentPlayer) return false;
-    if (selectedCard?.type !== 'technology') return false;
-    if (selectedCard.supply.modifiedValue.technology !== technology) return false;
-
-    return true;
-  };
-
-  const isSelected = (isSelectable: boolean, index: number) =>
-    isSelectable && actionState?.type === 'playCard' && actionState.selectedPosition === index;
 
   const handleSelectPosition = (index: number) => {
     if (isCurrentPlayer && actionState?.type === 'playCard') {
@@ -105,27 +90,20 @@ const Board: React.FC = () => {
           [...Array(10)].map((_, index) => {
             const card = climateActions[index] ?? null;
             const isSelectable = index === selectableClimateIndex;
-            const selected = isSelected(isSelectable, index);
+            const selected = isSelectable && selectedPosition === index;
             const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
             const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
 
             return (
               <Grid size={4} key={index}>
-                <div
-                  ref={(el) => {
-                    climateRefs.current[index] = el;
-                    if (el) {
-                      const domId = getBoardPositionDomId('climate-action', index);
-                      registerCardRef(domId, el);
-                    }
-                  }}
-                >
-                  {card ? (
-                    <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
-                  ) : (
-                    <EmptyCardSmall highlight={highlight} onClick={onClick} />
-                  )}
-                </div>
+                <BoardCardSlot
+                  card={card}
+                  area="climate-action"
+                  index={index}
+                  registerCardRef={registerCardRef}
+                  highlight={highlight}
+                  onClick={onClick}
+                />
               </Grid>
             );
           })}
@@ -136,104 +114,43 @@ const Board: React.FC = () => {
 
         {/* Technology Cards */}
         <Grid size={5}>
-          <Stack spacing={1}>
-            <SectionHeader label="Erzeugung" color={TechnologyTypes['Generation'].color} />
-            {generation.map((card, index) => {
-              const isSelectable = isSelectableTechnologySlot('Generation');
-              const selected = isSelected(isSelectable, index);
-              const anySelected =
-                isSelectable &&
-                actionState?.type === 'playCard' &&
-                actionState.selectedPosition !== null;
-              const highlight = selected
-                ? 'selected'
-                : anySelected
-                  ? 'notSelected'
-                  : isSelectable
-                    ? 'selectable'
-                    : undefined;
-              const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
-
-              return (
-                <div
-                  ref={(el) => {
-                    generationRefs.current[index] = el;
-                    if (el) {
-                      const domId = getBoardPositionDomId('Generation', index);
-                      registerCardRef(domId, el);
-                    }
-                  }}
-                  key={index}
-                >
-                  {card ? (
-                    <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
-                  ) : (
-                    <EmptyCardSmall highlight={highlight} onClick={onClick} />
-                  )}
-                </div>
-              );
-            })}
-          </Stack>
+          <TechnologyColumn
+            label="Erzeugung"
+            color={TechnologyTypes['Generation'].color}
+            technologyType="Generation"
+            cards={generation}
+            selectedCard={selectedCard}
+            isCurrentPlayer={isCurrentPlayer}
+            selectedPosition={selectedPosition}
+            onSelectPosition={handleSelectPosition}
+            registerCardRef={registerCardRef}
+          />
         </Grid>
         <Grid size={5}>
-          <Stack spacing={1}>
-            <SectionHeader label="Verteilung" color={TechnologyTypes['Distribution'].color} />
-            {distribution.map((card, index) => {
-              const isSelectable = isSelectableTechnologySlot('Distribution');
-              const selected = isSelected(isSelectable, index);
-              const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
-              const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
-
-              return (
-                <div
-                  ref={(el) => {
-                    distributionRefs.current[index] = el;
-                    if (el) {
-                      const domId = getBoardPositionDomId('Distribution', index);
-                      registerCardRef(domId, el);
-                    }
-                  }}
-                  key={index}
-                >
-                  {card ? (
-                    <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
-                  ) : (
-                    <EmptyCardSmall highlight={highlight} onClick={onClick} />
-                  )}
-                </div>
-              );
-            })}
-          </Stack>
+          <TechnologyColumn
+            label="Verteilung"
+            color={TechnologyTypes['Distribution'].color}
+            technologyType="Distribution"
+            cards={distribution}
+            selectedCard={selectedCard}
+            isCurrentPlayer={isCurrentPlayer}
+            selectedPosition={selectedPosition}
+            onSelectPosition={handleSelectPosition}
+            registerCardRef={registerCardRef}
+          />
         </Grid>
         <Grid size={5}>
-          <Stack spacing={1}>
-            <SectionHeader label="Speicher" color={TechnologyTypes['Storage'].color} />
-            {storage.map((card, index) => {
-              const isSelectable = isSelectableTechnologySlot('Storage');
-              const selected = isSelected(isSelectable, index);
-              const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
-              const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
-
-              return (
-                <div
-                  ref={(el) => {
-                    storageRefs.current[index] = el;
-                    if (el) {
-                      const domId = getBoardPositionDomId('Storage', index);
-                      registerCardRef(domId, el);
-                    }
-                  }}
-                  key={index}
-                >
-                  {card ? (
-                    <ProgressCardSmall card={card} highlight={highlight} onClick={onClick} />
-                  ) : (
-                    <EmptyCardSmall highlight={highlight} onClick={onClick} />
-                  )}
-                </div>
-              );
-            })}
-          </Stack>
+          <TechnologyColumn
+            label="Speicher"
+            color={TechnologyTypes['Storage'].color}
+            technologyType="Storage"
+            cards={storage}
+            selectedCard={selectedCard}
+            isCurrentPlayer={isCurrentPlayer}
+            selectedPosition={selectedPosition}
+            onSelectPosition={handleSelectPosition}
+            registerCardRef={registerCardRef}
+          />
         </Grid>
         <Grid size={1} />
 
