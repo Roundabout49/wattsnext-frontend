@@ -3,6 +3,7 @@ import { useSendMessage } from '../context/SendMessageContext';
 import { useDieAnimation } from '../context/DieAnimationContext';
 import { useGame } from '../context/GameContext';
 import { useActionStep } from '../hooks/useActionStep';
+import { DIE_ROLLING_MS, DIE_SHOWING_RESULT_MS } from '../animationTimings';
 
 export function EarnMoneyHandler() {
   const { actionState, dispatchGameAction } = useAction();
@@ -26,13 +27,13 @@ export function EarnMoneyHandler() {
 
     setTimeout(() => {
       setDieAnimationStep('showResult');
-    }, 2000);
+    }, DIE_ROLLING_MS);
 
     // FINISH_ACTION applies the server state; the money display then ticks up visibly
     setTimeout(() => {
       setShowDieAnimation(false);
       dispatchGameAction({ type: 'CLEANUP_ACTION' });
-    }, 4000);
+    }, DIE_ROLLING_MS + DIE_SHOWING_RESULT_MS);
   });
 
   useActionStep(actionState, 'earnMoney', 'done', () => {
