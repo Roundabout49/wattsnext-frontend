@@ -10,3 +10,5 @@ export const EVENT_ENTER_MS = 400; // event card scales/fades into the centre
 export const EVENT_HOLD_MS = 7000; // event card stays centred and readable
 export const EVENT_EXIT_MS = 400; // event card fades out again (fallback when no slot to fly to)
 export const EVENT_FLY_MS = 700; // event card flies from the centre onto its board slot
+
+export const RESOLUTION_MESSAGE_MS = 4000; // "X played Y" stays in the status bar after an action

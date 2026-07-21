@@ -31,6 +31,7 @@ const ActionBar = () => {
     dispatchGameAction,
     inChangeCardPhase,
     setInChangeCardPhase,
+    resolutionMessage,
   } = useAction();
 
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
@@ -233,6 +234,12 @@ const ActionBar = () => {
               default:
                 if (!currentPlayerName) {
                   return <Typography variant="body1">Kein Spielername</Typography>;
+                }
+
+                // While the previous action resolves, show what happened instead
+                // of jumping straight to the next turn prompt.
+                if (resolutionMessage && !selectedAction) {
+                  return <Typography variant="body1">{resolutionMessage}</Typography>;
                 }
 
                 return isCurrentPlayer ? (

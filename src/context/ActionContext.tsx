@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useReducer, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useReducer, useRef, useState } from 'react';
 import {
   ActionKind,
   ActionState,
@@ -10,7 +10,28 @@ import { PlayCardAction, playCardReducer } from '../reducers/playCardReducer';
 import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer';
 import { useGame } from './GameContext';
 import { ChangeCardAction, changeCardReducer } from '../reducers/changeCardReducer';
-import { EventToShow, useEventAnimation } from './EventAnimationContext';
+import { EventToShow, sumEventEffect, useEventAnimation } from './EventAnimationContext';
+import {
+  EVENT_ENTER_MS,
+  EVENT_FLY_MS,
+  EVENT_HOLD_MS,
+  NUMBER_TICK_MS,
+  NUMBER_TREND_HOLD_MS,
+  RESOLUTION_MESSAGE_MS,
+} from '../animationTimings';
+import { CardEffectInformation } from '../ws/MessageTypes';
+
+// How long an event takes to resolve visually: the overlay plus the number
+// counting that starts once the card flies (whichever finishes last).
+function eventResolutionMs(effects: CardEffectInformation[]): number {
+  const maxDelta = Math.max(
+    Math.abs(sumEventEffect(effects, 'Money')),
+    Math.abs(sumEventEffect(effects, 'Resources')),
+    Math.abs(sumEventEffect(effects, 'GenerationAndDistributionTargets'))
+  );
+  const countingMs = maxDelta * NUMBER_TICK_MS + NUMBER_TREND_HOLD_MS;
+  return EVENT_ENTER_MS + EVENT_HOLD_MS + Math.max(EVENT_FLY_MS, countingMs);
+}
 
 export type GameAction =
   | PlayCardAction
@@ -35,6 +56,9 @@ interface ActionContextType {
   setInChangeCardPhase: (inChangeCardPhase: boolean) => void;
   setPendingPhaseCompleted: (phaseCompleted: boolean) => void;
   setPendingEvent: (event: EventToShow) => void;
+  // Short "X played Y" message shown while the previous action resolves.
+  resolutionMessage: string | null;
+  setPendingActionMessage: (message: string) => void;
 }
 
 const ActionContext = createContext<ActionContextType | undefined>(undefined);
@@ -43,9 +67,24 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [inChangeCardPhase, setInChangeCardPhase] = useState<boolean>(true);
   const [pendingPhaseCompleted, setPendingPhaseCompleted] = useState<boolean>(false);
   const [pendingEvent, setPendingEvent] = useState<EventToShow | null>(null);
+  const [resolutionMessage, setResolutionMessage] = useState<string | null>(null);
+  const pendingActionMessageRef = useRef<string | null>(null);
+  const resolutionTimerRef = useRef<number | undefined>(undefined);
 
   const { setGame: setGameState, setPhaseCompleted } = useGame();
   const { playEvent } = useEventAnimation();
+
+  const setPendingActionMessage = (message: string) => {
+    pendingActionMessageRef.current = message;
+  };
+
+  // Show the pending "X played Y" message for `durationMs`, then clear it so the
+  // next-turn prompt only appears once the resolution animations are done.
+  const showActionResult = (message: string, durationMs: number) => {
+    setResolutionMessage(message);
+    if (resolutionTimerRef.current) window.clearTimeout(resolutionTimerRef.current);
+    resolutionTimerRef.current = window.setTimeout(() => setResolutionMessage(null), durationMs);
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fallbackReducer = (state: ActionState | null, _action: GameAction): ActionState | null =>
@@ -134,6 +173,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
 
     // Phase evaluation comes first. At a phase boundary the event is left to the
     // (later) phase-boundary sequencing; mid-phase it plays right away.
+    const playsEvent = !pendingPhaseCompleted && !!pendingEvent;
     if (pendingPhaseCompleted) {
       setPhaseCompleted(true);
       setPendingPhaseCompleted(false);
@@ -141,6 +181,13 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       playEvent(pendingEvent);
     }
     setPendingEvent(null);
+
+    if (pendingActionMessageRef.current) {
+      const duration =
+        playsEvent && pendingEvent ? eventResolutionMs(pendingEvent.effects) : RESOLUTION_MESSAGE_MS;
+      showActionResult(pendingActionMessageRef.current, duration);
+      pendingActionMessageRef.current = null;
+    }
 
     dispatchGameAction({ type: 'CLEAR_ACTION' });
   }, [actionState, pendingEvent, playEvent, pendingPhaseCompleted, setPhaseCompleted, setGameState]);
@@ -178,6 +225,8 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         setInChangeCardPhase,
         setPendingPhaseCompleted,
         setPendingEvent,
+        resolutionMessage,
+        setPendingActionMessage,
       }}
     >
       {children}

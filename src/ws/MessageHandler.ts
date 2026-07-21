@@ -13,6 +13,7 @@ import { GameAction } from '../context/ActionContext';
 import { EventToShow } from '../context/EventAnimationContext';
 import { getEventSlotDomId } from '../utils/cardDomId';
 import { GAME_VARIANT } from '../gameConfig';
+import { Game } from '../types/Game';
 
 // Everything a result handler needs besides the result itself. Assembled once
 // in WebSocketProvider and passed to every handler (plain parameter object,
@@ -21,8 +22,24 @@ export interface ResultHandlerContext {
   dispatch: Dispatch<GameAction>;
   setPendingPhaseCompleted: (phaseCompleted: boolean) => void;
   setPendingEvent: (event: EventToShow) => void;
+  setPendingActionMessage: (message: string) => void;
   notify: (message: string) => void;
   playerId: string | null;
+}
+
+/**
+ * Sentence subject for the player who just acted, e.g. "Du hast" for the local
+ * player or "Anna hat" for others. Actions advance the turn (currentPlayer is
+ * already the next one in the result), so the actor is the previous move — except
+ * changing a card, which does not advance the turn.
+ */
+function actorPrefix(game: Game, advanced: boolean, playerId: string | null): string {
+  const playerCount = game.players.length;
+  if (playerCount === 0) return 'Ein Spieler hat';
+  const totalMove = game.turnsPerPhase * game.phaseIndex + game.turnInPhase;
+  const index = (((advanced ? totalMove - 1 : totalMove) % playerCount) + playerCount) % playerCount;
+  const player = game.players[index];
+  return player.id === playerId ? 'Du hast' : `${player.name} hat`;
 }
 
 // The Ok entry is used when the backend reports success but the expected
@@ -81,6 +98,9 @@ export function handleEarnMoneyResult(
   handlerContext: ResultHandlerContext
 ) {
   handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.setPendingActionMessage(
+      `${actorPrefix(result.game, true, handlerContext.playerId)} Geld verdient (Würfel: ${actionInfo.diceValue}).`
+    );
     handlerContext.dispatch({
       type: 'EARN_MONEY_SET_AMOUNT',
       amount: actionInfo.diceValue,
@@ -106,6 +126,9 @@ export function handlePlayTechnologyCardResult(
   handlerContext: ResultHandlerContext
 ) {
   handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.setPendingActionMessage(
+      `${actorPrefix(result.game, true, handlerContext.playerId)} „${actionInfo.playedCard.name}" gespielt.`
+    );
     handlerContext.dispatch({
       type: 'PLAY_CARD_RESULT',
       cardId: actionInfo.playedCard.id,
@@ -125,6 +148,9 @@ export function handlePlayClimateCardResult(
   handlerContext: ResultHandlerContext
 ) {
   handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.setPendingActionMessage(
+      `${actorPrefix(result.game, true, handlerContext.playerId)} „${actionInfo.playedCard.name}" gespielt.`
+    );
     handlerContext.dispatch({
       type: 'PLAY_CARD_RESULT',
       cardId: actionInfo.playedCard.id,
@@ -143,6 +169,9 @@ export function handleChangeCardResult(
   handlerContext: ResultHandlerContext
 ) {
   handleActionResult(result, handlerContext, (actionInfo) => {
+    handlerContext.setPendingActionMessage(
+      `${actorPrefix(result.game, false, handlerContext.playerId)} eine Karte getauscht.`
+    );
     handlerContext.dispatch({
       type: 'CHANGE_CARD_RESULT',
       discardedCardId: actionInfo.discardedCard.id,
