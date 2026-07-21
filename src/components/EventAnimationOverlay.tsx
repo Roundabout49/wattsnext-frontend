@@ -54,6 +54,8 @@ const EventAnimationOverlay: React.FC = () => {
 
   const shown = phase === 'hold';
   const duration = phase === 'fly' ? EVENT_FLY_MS : phase === 'exit' ? EVENT_EXIT_MS : EVENT_ENTER_MS;
+  // Catastrophes get a dramatic dark-red backdrop instead of plain black.
+  const backdropRgb = activeEvent.card.isCatastrophe ? '80, 0, 0' : '0, 0, 0';
 
   let cardTransform = 'scale(1)';
   let cardOrigin = 'center';
@@ -85,7 +87,7 @@ const EventAnimationOverlay: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         gap: 2,
-        backgroundColor: `rgba(0, 0, 0, ${shown ? 0.6 : 0})`,
+        backgroundColor: `rgba(${backdropRgb}, ${shown ? 0.6 : 0})`,
         transition: `background-color ${duration}ms ease`,
         pointerEvents: shown ? 'auto' : 'none',
       }}

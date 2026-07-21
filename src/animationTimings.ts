@@ -12,3 +12,6 @@ export const EVENT_EXIT_MS = 400; // event card fades out again (fallback when n
 export const EVENT_FLY_MS = 700; // event card flies from the centre onto its board slot
 
 export const RESOLUTION_MESSAGE_MS = 4000; // "X played Y" stays in the status bar after an action
+
+export const PHASE_EVAL_ROW_MS = 1000; // each phase-evaluation row is revealed after this
+export const PHASE_EVAL_AUTOCLOSE_MS = 2000; // evaluation auto-closes this long after the last row

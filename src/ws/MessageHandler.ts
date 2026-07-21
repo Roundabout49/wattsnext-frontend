@@ -11,7 +11,7 @@ import {
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
 import { EventToShow } from '../context/EventAnimationContext';
-import { getEventSlotDomId } from '../utils/cardDomId';
+import { getCatastropheSlotDomId, getEventSlotDomId } from '../utils/cardDomId';
 import { GAME_VARIANT } from '../gameConfig';
 import { Game } from '../types/Game';
 
@@ -22,6 +22,7 @@ export interface ResultHandlerContext {
   dispatch: Dispatch<GameAction>;
   setPendingPhaseCompleted: (phaseCompleted: boolean) => void;
   setPendingEvent: (event: EventToShow) => void;
+  setPendingPhaseEvents: (events: EventToShow[]) => void;
   setPendingActionMessage: (message: string) => void;
   notify: (message: string) => void;
   playerId: string | null;
@@ -74,16 +75,33 @@ function handleActionResult<T>(
     return;
   }
 
-  // A newly drawn standard event card is always the last one on the board;
-  // remember it (with its effects and target slot) so it can be animated once
-  // the action ends.
-  if (result.baseInfo?.gotNewStandardEventCard) {
-    const events = result.game.board.eventCards;
-    const index = events.length - 1;
-    const card = events[index];
-    if (card) {
+  // Remember drawn event cards so they can be animated once the action ends.
+  // A newly drawn standard event is always the last card in board.eventCards.
+  const baseInfo = result.baseInfo;
+  if (baseInfo?.gotNewStandardEventCard) {
+    const board = result.game.board;
+    const index = board.eventCards.length - 1;
+    const standardCard = board.eventCards[index];
+
+    if (baseInfo.phaseCompleted) {
+      // Phase boundary: play after the evaluation table — the catastrophe (only
+      // drawn when the targets were missed) first, then the new phase's event.
+      const queue: EventToShow[] = [];
+      if (board.catastropheCard) {
+        queue.push({
+          card: board.catastropheCard,
+          effects: [],
+          slotDomId: getCatastropheSlotDomId(),
+        });
+      }
+      if (standardCard) {
+        queue.push({ card: standardCard, effects: [], slotDomId: getEventSlotDomId(index) });
+      }
+      handlerContext.setPendingPhaseEvents(queue);
+    } else if (standardCard) {
+      // Mid-phase: play right after the action, with its effects.
       handlerContext.setPendingEvent({
-        card,
+        card: standardCard,
         effects: result.eventEffectInfo ?? [],
         slotDomId: getEventSlotDomId(index),
       });

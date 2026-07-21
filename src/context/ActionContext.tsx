@@ -56,6 +56,8 @@ interface ActionContextType {
   setInChangeCardPhase: (inChangeCardPhase: boolean) => void;
   setPendingPhaseCompleted: (phaseCompleted: boolean) => void;
   setPendingEvent: (event: EventToShow) => void;
+  // Events queued at a phase boundary, played after the evaluation table closes.
+  setPendingPhaseEvents: (events: EventToShow[]) => void;
   // Short "X played Y" message shown while the previous action resolves.
   resolutionMessage: string | null;
   setPendingActionMessage: (message: string) => void;
@@ -70,12 +72,25 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const [resolutionMessage, setResolutionMessage] = useState<string | null>(null);
   const pendingActionMessageRef = useRef<string | null>(null);
   const resolutionTimerRef = useRef<number | undefined>(undefined);
+  const pendingPhaseEventsRef = useRef<EventToShow[]>([]);
+  const prevPhaseCompletedRef = useRef(false);
 
-  const { setGame: setGameState, setPhaseCompleted } = useGame();
+  const { setGame: setGameState, phaseCompleted, setPhaseCompleted } = useGame();
   const { playEvent } = useEventAnimation();
 
   const setPendingActionMessage = (message: string) => {
     pendingActionMessageRef.current = message;
+  };
+
+  const setPendingPhaseEvents = (events: EventToShow[]) => {
+    pendingPhaseEventsRef.current = events;
+  };
+
+  // Play a queue of events one after another (catastrophe, then the new event).
+  const playQueue = (events: EventToShow[]) => {
+    if (events.length === 0) return;
+    const [next, ...rest] = events;
+    playEvent(next, () => playQueue(rest));
   };
 
   // Show the pending "X played Y" message for `durationMs`, then clear it so the
@@ -85,6 +100,17 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
     if (resolutionTimerRef.current) window.clearTimeout(resolutionTimerRef.current);
     resolutionTimerRef.current = window.setTimeout(() => setResolutionMessage(null), durationMs);
   };
+
+  // Once the evaluation table has closed, play the queued phase-boundary events.
+  useEffect(() => {
+    const wasOpen = prevPhaseCompletedRef.current;
+    prevPhaseCompletedRef.current = phaseCompleted;
+    if (wasOpen && !phaseCompleted && pendingPhaseEventsRef.current.length > 0) {
+      const queue = pendingPhaseEventsRef.current;
+      pendingPhaseEventsRef.current = [];
+      playQueue(queue);
+    }
+  }, [phaseCompleted]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fallbackReducer = (state: ActionState | null, _action: GameAction): ActionState | null =>
@@ -225,6 +251,7 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
         setInChangeCardPhase,
         setPendingPhaseCompleted,
         setPendingEvent,
+        setPendingPhaseEvents,
         resolutionMessage,
         setPendingActionMessage,
       }}

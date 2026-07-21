@@ -1,11 +1,11 @@
 import React from 'react';
-import { Grid, Paper, Typography, Box, Modal, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Grid, Paper, Typography, Box, Modal } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
 import PriceIcon from './icons/PriceIcon';
 import { GameState } from '../types/Game';
+import { PHASE_EVAL_AUTOCLOSE_MS, PHASE_EVAL_ROW_MS } from '../animationTimings';
 
 const ROWS = [
   'progressPoints',
@@ -45,10 +45,18 @@ const PhaseEvaluation = () => {
     if (!phaseCompleted) return;
 
     if (revealStep < ROWS.length - 1) {
-      const timer = setTimeout(() => setRevealStep((prev) => prev + 1), 1000);
+      const timer = setTimeout(() => setRevealStep((prev) => prev + 1), PHASE_EVAL_ROW_MS);
       return () => clearTimeout(timer);
     }
-  }, [phaseCompleted, revealStep]);
+
+    // Close automatically once everything is revealed, so all clients move on to
+    // the catastrophe/event animations at the same time.
+    const timer = setTimeout(() => {
+      setPhaseCompleted(false);
+      setRevealStep(-1);
+    }, PHASE_EVAL_AUTOCLOSE_MS);
+    return () => clearTimeout(timer);
+  }, [phaseCompleted, revealStep, setPhaseCompleted]);
 
   if (!game || !phaseCompleted) return null;
 
@@ -58,15 +66,8 @@ const PhaseEvaluation = () => {
   const paddingTop = '40px';
   const rowHeight = 38;
 
-  const onClose = () => {
-    if (phaseCompleted) {
-      setPhaseCompleted(false);
-      setRevealStep(-1);
-    }
-  };
-
   return (
-    <Modal open={phaseCompleted} onClose={onClose}>
+    <Modal open={phaseCompleted}>
       <Box
         sx={{
           position: 'absolute',
@@ -87,9 +88,6 @@ const PhaseEvaluation = () => {
           overflowY: 'auto',
         }}
       >
-        <IconButton onClick={onClose} sx={{ position: 'absolute', top: 8, right: 8 }}>
-          <CloseIcon />
-        </IconButton>
         <Box sx={{ overflowX: 'auto' }}>
           <Grid container spacing={2} alignItems="start" wrap="nowrap">
             {/* Labels */}
