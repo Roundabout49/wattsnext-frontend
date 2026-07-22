@@ -126,7 +126,7 @@ const Status = () => {
       </Box>
       */}
 
-      <PhaseObjectives />
+      <PhaseObjectives currentPhaseIndex={displayedTurn.phase} />
     </Box>
   );
 };

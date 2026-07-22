@@ -1,7 +1,7 @@
 import { Box, IconButton, Typography } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import PointsIcon from './icons/PointsIcon';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { orderedTechnologyTypes, TechnologyType } from '../types/TechnologyTypes';
@@ -11,11 +11,19 @@ import { PhaseObjective } from '../types/Game';
 import { useAnimatedNumber } from '../hooks/useAnimatedNumber';
 import { sumEventEffect, useEventAnimation } from '../context/EventAnimationContext';
 
-const PhaseObjectives = () => {
+// currentPhaseIndex is the phase shown in the status header; it lags the real
+// game phase while an action is resolving, so the objective view switches at the
+// same moment as the "Phase X, Zug Y" line above.
+const PhaseObjectives = ({ currentPhaseIndex }: { currentPhaseIndex: number }) => {
   const { game: gameState } = useGame();
-  const { phaseIndex: currentPhaseIndex, phases } = gameState!;
+  const { phases } = gameState!;
 
   const [visiblePhaseIndex, setVisiblePhaseIndex] = useState(currentPhaseIndex);
+
+  // Jump to the new phase on a phase change, while still allowing manual navigation.
+  useEffect(() => {
+    setVisiblePhaseIndex(currentPhaseIndex);
+  }, [currentPhaseIndex]);
 
   const handlePrev = () => {
     if (visiblePhaseIndex > 0) {
