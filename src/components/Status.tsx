@@ -1,5 +1,7 @@
 import { Box, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useGame } from '../context/GameContext';
+import { useAction } from '../context/ActionContext';
 import PriceIcon from './icons/PriceIcon';
 import ResourcesIcon from './icons/ResourcesIcon';
 // import EnergyIcon from './icons/EnergyIcon';
@@ -37,6 +39,14 @@ const Status = () => {
   const { value: displayedMoney, trend: moneyTrend } = useAnimatedNumber(moneyTarget);
   const { value: displayedResources, trend: resourcesTrend } = useAnimatedNumber(resourcesTarget);
 
+  // Hold the phase/turn display while a resolution message is shown, so the turn
+  // counter only advances once the previous action has fully resolved.
+  const { resolutionMessage } = useAction();
+  const [displayedTurn, setDisplayedTurn] = useState({ phase, turn });
+  useEffect(() => {
+    if (!resolutionMessage) setDisplayedTurn({ phase, turn });
+  }, [phase, turn, resolutionMessage]);
+
   // TODO: Remove when technologySizes is implemented again
   /*
   const technologySizes: TechnologyEnergyMatrix = {
@@ -60,7 +70,7 @@ const Status = () => {
       }}
     >
       <Typography variant="h6" fontSize="1.1rem">
-        Phase {phase + 1}, Zug {turn + 1}/{turnsInPhase}
+        Phase {displayedTurn.phase + 1}, Zug {displayedTurn.turn + 1}/{turnsInPhase}
       </Typography>
 
       <Box
