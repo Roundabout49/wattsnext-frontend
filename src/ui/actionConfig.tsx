@@ -89,11 +89,7 @@ export const actionUIConfig: ActionUIConfig = {
       instruction: () => 'Würfeln ...',
       buttons: () => [],
     },
-    done: {
-      instruction: (actionState) =>
-        actionState.type === 'earnMoney' ? `Du hast ${actionState.amount} Geld verdient.` : '',
-      buttons: () => [],
-    },
+    // The "done" step shows nothing; the status-bar resolution message reports the result.
   },
 
   changeCard: {
@@ -112,9 +108,6 @@ export const actionUIConfig: ActionUIConfig = {
       instruction: () => 'Warte auf den Kartentausch...',
       buttons: () => [],
     },
-    done: {
-      instruction: () => 'Der Kartentausch ist abgeschlossen.',
-      buttons: () => [],
-    },
+    // The "done" step shows nothing; the status-bar resolution message reports the result.
   },
 };

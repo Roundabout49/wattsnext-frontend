@@ -117,7 +117,7 @@ export function handleEarnMoneyResult(
 ) {
   handleActionResult(result, handlerContext, (actionInfo) => {
     handlerContext.setPendingActionMessage(
-      `${actorPrefix(result.game, true, handlerContext.playerId)} Geld verdient (Würfel: ${actionInfo.diceValue}).`
+      `${actorPrefix(result.game, true, handlerContext.playerId)} ${actionInfo.diceValue} Geld verdient.`
     );
     handlerContext.dispatch({
       type: 'EARN_MONEY_SET_AMOUNT',
