@@ -8,6 +8,7 @@ import { useSession } from '../context/SessionContext';
 import { useAction } from '../context/ActionContext';
 import { useCardRefs } from '../hooks/useCardRefs';
 import { getHandCardDomId } from '../utils/cardDomId';
+import { HAND_CARD_DISCARD_MS, HAND_CARD_ENTER_MS } from '../animationTimings';
 
 interface HandCardsProps {
   twoRows?: boolean;
@@ -94,6 +95,10 @@ const HandCards: React.FC<HandCardsProps> = ({ twoRows = true }) => {
                   const isAnySelected =
                     (actionState?.type == 'playCard' || actionState?.type === 'changeCard') &&
                     !!actionState.cardId;
+                  const isDiscarding =
+                    actionState?.type === 'changeCard' &&
+                    (actionState.step === 'animateChangeCard' || actionState.step === 'done') &&
+                    actionState.cardId === card.id;
 
                   const handleClick = () => {
                     if (!cardIsPlayable) return;
@@ -117,7 +122,22 @@ const HandCards: React.FC<HandCardsProps> = ({ twoRows = true }) => {
                   };
 
                   return (
-                    <div ref={cardRefs[card.id]} key={card.id}>
+                    <Box
+                      ref={cardRefs[card.id]}
+                      key={card.id}
+                      sx={{
+                        animation: `${HAND_CARD_ENTER_MS}ms ease cardEnter`,
+                        '@keyframes cardEnter': {
+                          from: { opacity: 0, transform: 'scale(0.8)' },
+                          to: { opacity: 1, transform: 'scale(1)' },
+                        },
+                        ...(isDiscarding && {
+                          opacity: 0,
+                          transform: 'scale(0.7)',
+                          transition: `${HAND_CARD_DISCARD_MS}ms ease`,
+                        }),
+                      }}
+                    >
                       <ProgressCardSmall
                         card={card}
                         highlight={
@@ -131,7 +151,7 @@ const HandCards: React.FC<HandCardsProps> = ({ twoRows = true }) => {
                         }
                         onClick={handleClick}
                       />
-                    </div>
+                    </Box>
                   );
                 })}
               </Box>

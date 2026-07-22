@@ -48,7 +48,7 @@ export interface EarnMoneyActionState extends BaseActionState {
 
 export interface ChangeCardActionState extends BaseActionState {
   type: 'changeCard';
-  step: 'selectCard' | 'confirm' | 'waitForGameState' | 'done';
+  step: 'selectCard' | 'confirm' | 'waitForGameState' | 'animateChangeCard' | 'done';
   cardId: string | null;
 }
 

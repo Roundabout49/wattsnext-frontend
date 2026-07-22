@@ -23,7 +23,7 @@ export function changeCardReducer(
     if (action.type === 'CHANGE_CARD_RESULT') {
       return {
         type: 'changeCard',
-        step: 'done',
+        step: 'animateChangeCard',
         cardId: action.discardedCardId,
         newGameState: action.newGameState,
       };
@@ -53,7 +53,7 @@ export function changeCardReducer(
     case 'CHANGE_CARD_RESULT':
       return {
         ...state,
-        step: 'done',
+        step: 'animateChangeCard',
         cardId: action.discardedCardId,
         newGameState: action.newGameState,
       };
