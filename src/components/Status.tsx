@@ -7,6 +7,7 @@ import ResourcesIcon from './icons/ResourcesIcon';
 // import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
 import PhaseObjectives from './PhaseObjective';
+import StatDelta from './StatDelta';
 import { NumberTrend, useAnimatedNumber } from '../hooks/useAnimatedNumber';
 import { sumEventEffect, useEventAnimation } from '../context/EventAnimationContext';
 // import { orderedTechnologyTypes } from '../types/TechnologyTypes';
@@ -83,8 +84,12 @@ const Status = () => {
           <PointsIcon points={progressPoints} leafColor="green" />
         </Box>
         <Box sx={{ flexGrow: 1 }} />
-        <PriceIcon price={displayedMoney} color={trendColor(moneyTrend)} />
-        <ResourcesIcon resources={displayedResources} color={trendColor(resourcesTrend)} />
+        <StatDelta value={moneyTarget}>
+          <PriceIcon price={displayedMoney} color={trendColor(moneyTrend)} />
+        </StatDelta>
+        <StatDelta value={resourcesTarget}>
+          <ResourcesIcon resources={displayedResources} color={trendColor(resourcesTrend)} />
+        </StatDelta>
       </Box>
 
       {/*

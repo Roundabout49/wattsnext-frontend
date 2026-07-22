@@ -5,6 +5,8 @@ export const DIE_SHOWING_RESULT_MS = 2000; // result stays visible before the ov
 export const CARD_FLIGHT_MS = 500; // a card flies between two board/hand positions
 export const NUMBER_TICK_MS = 250; // step interval when a displayed number counts towards its target
 export const NUMBER_TREND_HOLD_MS = 400; // how long the final number keeps its green/red colour after settling
+export const STAT_PULSE_MS = 250; // a stat icon briefly scales up when its value changes
+export const STAT_FLOAT_MS = 900; // a floating "+N/−N" delta rises and fades above a stat
 
 export const EVENT_ENTER_MS = 400; // event card scales/fades into the centre
 export const EVENT_HOLD_MS = 7000; // event card stays centred and readable
