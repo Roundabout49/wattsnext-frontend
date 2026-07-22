@@ -11,6 +11,8 @@ import { EarnMoneyAction, earnMoneyReducer } from '../reducers/earnMoneyReducer'
 import { useGame } from './GameContext';
 import { ChangeCardAction, changeCardReducer } from '../reducers/changeCardReducer';
 import { EventToShow, sumEventEffect, useEventAnimation } from './EventAnimationContext';
+import { GameState } from '../types/Game';
+import { getEventSlotDomId } from '../utils/cardDomId';
 import {
   EVENT_ENTER_MS,
   EVENT_FLY_MS,
@@ -74,8 +76,9 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
   const resolutionTimerRef = useRef<number | undefined>(undefined);
   const pendingPhaseEventsRef = useRef<EventToShow[]>([]);
   const prevPhaseCompletedRef = useRef(false);
+  const prevGameStateRef = useRef<GameState | undefined>(undefined);
 
-  const { setGame: setGameState, phaseCompleted, setPhaseCompleted } = useGame();
+  const { setGame: setGameState, game, phaseCompleted, setPhaseCompleted } = useGame();
   const { playEvent } = useEventAnimation();
 
   const setPendingActionMessage = (message: string) => {
@@ -111,6 +114,19 @@ export const ActionProvider = ({ children }: { children: ReactNode }) => {
       playQueue(queue);
     }
   }, [phaseCompleted]);
+
+  // The first event is drawn at game start (backend prepare()), so it never comes
+  // through an action result — animate it when the game becomes Running.
+  useEffect(() => {
+    const prev = prevGameStateRef.current;
+    prevGameStateRef.current = game?.state;
+    if (prev === GameState.Preparing && game?.state === GameState.Running) {
+      const first = game.board.eventCards[0];
+      if (first) {
+        playEvent({ card: first, effects: [], slotDomId: getEventSlotDomId(0) });
+      }
+    }
+  }, [game?.state]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const fallbackReducer = (state: ActionState | null, _action: GameAction): ActionState | null =>
