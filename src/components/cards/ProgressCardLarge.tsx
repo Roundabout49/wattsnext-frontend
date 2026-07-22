@@ -25,6 +25,7 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
             resources: card.resourceCosts,
             type: card.type,
             supply: card.supply.modifiedValue,
+            phase: card.phase,
           }}
         ></ProgressCardTop>
       ) : (
@@ -36,6 +37,7 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
             resources: card.resourceCosts,
             type: card.type,
             achievement: card.supply.modifiedValue?.name,
+            phase: card.phase,
           }}
         ></ProgressCardTop>
       )}

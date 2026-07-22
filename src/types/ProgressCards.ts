@@ -19,6 +19,8 @@ export interface IProgressCard {
   isPlayable: boolean;
   gameBeforeEffect?: GameState;
   type: 'technology' | 'climateAction';
+  // 1-indexed phase the card belongs to (I, II, III), computed by the backend
+  phase: number;
 }
 
 export interface ModifiableValue<T> {
