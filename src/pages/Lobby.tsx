@@ -24,7 +24,7 @@ export default function Lobby() {
   }
 
   const handleCopyId = () => {
-    navigator.clipboard.writeText(game.id);
+    if (game.shareCode) navigator.clipboard.writeText(game.shareCode);
   };
 
   const handleStartGame = () => {
@@ -67,7 +67,7 @@ export default function Lobby() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Typography variant="h6" sx={{ mr: 1 }}>
-            Neues Spiel mit ID
+            Neues Spiel mit Code
           </Typography>
           <Typography
             variant="h6"
@@ -78,7 +78,7 @@ export default function Lobby() {
               borderRadius: 1,
             }}
           >
-            {gameId}
+            {game.shareCode}
           </Typography>
           <IconButton onClick={handleCopyId} size="small" sx={{ ml: 1 }}>
             <ContentCopyIcon fontSize="small" />

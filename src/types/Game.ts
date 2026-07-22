@@ -5,6 +5,9 @@ import { TechnologyType } from './TechnologyTypes';
 
 export interface Game {
   id: string;
+  // Short code to share for joining. Only present on the lobby (GameInit) object, not on a
+  // running game.
+  shareCode?: string;
   state: GameState;
   money: number;
   resources: number;

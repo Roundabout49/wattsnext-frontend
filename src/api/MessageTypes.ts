@@ -11,7 +11,7 @@ export enum GameMode {
 }
 
 export interface JoinGameRequest {
-  gameId: string;
+  shareCode: string;
   playerName: string;
 }
 

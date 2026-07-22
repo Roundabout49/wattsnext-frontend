@@ -22,7 +22,7 @@ const JoinOrCreateGamePage: React.FC = () => {
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.StartWithCoal);
 
   const [nicknameJoin, setNicknameJoin] = useState('');
-  const [gameIdInput, setGameIdInput] = useState('');
+  const [shareCodeInput, setShareCodeInput] = useState('');
   const [showJoinError, setShowJoinError] = useState(false);
 
   const { setSession } = useSession();
@@ -44,18 +44,18 @@ const JoinOrCreateGamePage: React.FC = () => {
   };
 
   const handleJoinGame = async () => {
-    if (!nicknameJoin.trim() || !gameIdInput.trim()) return;
+    if (!nicknameJoin.trim() || !shareCodeInput.trim()) return;
     try {
       const { game, playerId }: CreateOrJoinGameResponse = await gameApi.joinGame({
         playerName: nicknameJoin,
-        gameId: gameIdInput,
+        shareCode: shareCodeInput,
       });
       setSession(game.id, playerId, game.players.find((p) => p.id === playerId)?.name || '?');
       setGame(game);
     } catch (err) {
       console.error(err);
       setShowJoinError(true);
-      setGameIdInput('');
+      setShareCodeInput('');
     }
   };
 
@@ -167,13 +167,13 @@ const JoinOrCreateGamePage: React.FC = () => {
 
             <div>
               <LabelWithInfo
-                label="Spiel-ID"
-                info="Wenn bereits jemand ein Spiel erstellt hat, kann er oder sie dir die Spiel-ID schicken, damit du beitreten kannst."
+                label="Spiel-Code"
+                info="Wenn bereits jemand ein Spiel erstellt hat, kann er oder sie dir den Spiel-Code schicken, damit du beitreten kannst."
               />
               <TextField
-                placeholder="12345678-abcd-1234-5678-abcdef123456"
-                value={gameIdInput}
-                onChange={(e) => setGameIdInput(e.target.value)}
+                placeholder="A7K2"
+                value={shareCodeInput}
+                onChange={(e) => setShareCodeInput(e.target.value)}
                 fullWidth
               />
             </div>
@@ -181,7 +181,7 @@ const JoinOrCreateGamePage: React.FC = () => {
             <Button
               variant="contained"
               onClick={handleJoinGame}
-              disabled={!nicknameJoin.trim() || !gameIdInput.trim()}
+              disabled={!nicknameJoin.trim() || !shareCodeInput.trim()}
             >
               Spiel beitreten
             </Button>
