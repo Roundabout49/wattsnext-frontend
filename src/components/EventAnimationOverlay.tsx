@@ -21,6 +21,16 @@ const EventAnimationOverlay: React.FC = () => {
   const [geometry, setGeometry] = useState<Geometry | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
 
+  // Keep the latest context callbacks in refs so the timeline effect can depend
+  // only on `activeEvent`. Otherwise releaseEffects() re-renders the provider,
+  // changes the callback identities and restarts the effect — showing the card twice.
+  const dismissRef = useRef(dismiss);
+  dismissRef.current = dismiss;
+  const releaseEffectsRef = useRef(releaseEffects);
+  releaseEffectsRef.current = releaseEffects;
+  const getCardRefRef = useRef(getCardRef);
+  getCardRefRef.current = getCardRef;
+
   useEffect(() => {
     if (!activeEvent) return;
 
@@ -32,23 +42,23 @@ const EventAnimationOverlay: React.FC = () => {
     timers.push(
       window.setTimeout(() => {
         // The effects count up in the status display as the card leaves the centre.
-        releaseEffects();
-        const slot = getCardRef(activeEvent.slotDomId);
+        releaseEffectsRef.current();
+        const slot = getCardRefRef.current(activeEvent.slotDomId);
         const from = cardRef.current?.getBoundingClientRect();
         if (slot && from) {
           setGeometry({ from, to: slot.getBoundingClientRect() });
           setPhase('fly');
-          timers.push(window.setTimeout(dismiss, EVENT_FLY_MS));
+          timers.push(window.setTimeout(() => dismissRef.current(), EVENT_FLY_MS));
         } else {
           // No slot to fly to: just fade out.
           setPhase('exit');
-          timers.push(window.setTimeout(dismiss, EVENT_EXIT_MS));
+          timers.push(window.setTimeout(() => dismissRef.current(), EVENT_EXIT_MS));
         }
       }, EVENT_ENTER_MS + EVENT_HOLD_MS)
     );
 
     return () => timers.forEach((t) => window.clearTimeout(t));
-  }, [activeEvent, dismiss, getCardRef, releaseEffects]);
+  }, [activeEvent]);
 
   if (!activeEvent) return null;
 
