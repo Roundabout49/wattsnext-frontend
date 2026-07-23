@@ -12,6 +12,7 @@ import {
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useSession } from '../context/SessionContext';
 import { useGameApi } from '../context/GameApiContext';
+import { boardColors } from '../themes';
 
 export default function Lobby() {
   const { game } = useGame();
@@ -73,7 +74,7 @@ export default function Lobby() {
             variant="h6"
             sx={{
               fontFamily: 'monospace',
-              bgcolor: 'grey.100',
+              bgcolor: boardColors.skyLight,
               px: 1,
               borderRadius: 1,
             }}
@@ -96,7 +97,7 @@ export default function Lobby() {
                   isSelf && (
                     <Button
                       size="small"
-                      color="secondary"
+                      color="error"
                       variant="contained"
                       onClick={() => handleLeaveGame()}
                     >

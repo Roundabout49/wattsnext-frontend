@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
-import OfflineBoltIcon from '@mui/icons-material/OfflineBolt';
+import WindradIcon from './WindradIcon';
 import { useNavigate } from 'react-router-dom';
 
 const pages = [
@@ -35,7 +35,7 @@ const NavBar = () => {
       <Container maxWidth={false}>
         <Toolbar disableGutters>
           {/* Logo / Title for larger screens */}
-          <OfflineBoltIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <WindradIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -80,7 +80,7 @@ const NavBar = () => {
           </Box>
 
           {/* Logo / Title for smaller screens */}
-          <OfflineBoltIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <WindradIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap

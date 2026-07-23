@@ -3,6 +3,7 @@ import { useGame } from '../context/GameContext';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Box, Paper, Typography, IconButton, Collapse } from '@mui/material';
 import ProgressCardSmall from './cards/ProgressCardSmall';
+import { boardColors } from '../themes';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { useSession } from '../context/SessionContext';
 import { useAction } from '../context/ActionContext';
@@ -71,8 +72,9 @@ const HandCards: React.FC<HandCardsProps> = ({ twoRows = true }) => {
             variant="outlined"
             sx={{
               p: 1,
-              backgroundColor: isOwn ? '#E4F2FF' : 'white',
-              border: isOwn ? '2px solid #1976d2' : undefined,
+              backgroundColor: isOwn ? boardColors.skyLight : 'background.paper',
+              border: isOwn ? '2px solid' : undefined,
+              borderColor: isOwn ? 'primary.main' : undefined,
             }}
           >
             <Box display="flex" alignItems="center" justifyContent="space-between">
