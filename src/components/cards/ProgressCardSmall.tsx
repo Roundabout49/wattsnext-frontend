@@ -6,6 +6,7 @@ import ProgressCardLarge from './ProgressCardLarge';
 import { ProgressCard } from '../../types/ProgressCards';
 import CardPoints from './CardPoints';
 import CardWrapperSmall, { Highlight } from './CardWrapperSmall';
+import { supplyModification } from '../../utils/valueModification';
 
 interface ProgressCardSmallProps {
   card: ProgressCard;
@@ -63,6 +64,7 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
                 resources: card.resourceCosts,
                 type: card.type,
                 supply: card.supply.modifiedValue,
+                supplyModification: supplyModification(card.supply),
               }}
             ></ProgressCardTop>
           ) : (

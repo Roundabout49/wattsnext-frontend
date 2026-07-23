@@ -2,6 +2,8 @@ import { Box, SvgIcon, Typography } from '@mui/material';
 import { TechnologyTypes } from '../../types/TechnologyTypes';
 import { EnergyForm, EnergyForms } from '../../types/EnergyForms';
 import { Supply } from '../../types/ProgressCards';
+import ModificationBadge from '../cards/ModificationBadge';
+import { ModificationBadgeInfo } from '../../utils/valueModification';
 
 const shapes = {
   circle: <circle cx="50" cy="50" r="42" fill="currentColor" stroke="black" strokeWidth="3" />,
@@ -26,16 +28,19 @@ const shapes = {
 type EnergyIconProps = Omit<Extract<Supply, { type: 'energy' }>, 'form' | 'type' | 'size'> & {
   form?: EnergyForm;
   size?: number;
+  /** When set, shows a corner badge marking that the supply size was modified. */
+  modification?: ModificationBadgeInfo;
 };
 
 export type Shape = keyof typeof shapes;
 
-const EnergyIcon: React.FC<EnergyIconProps> = ({ technology, size, form }) => {
+const EnergyIcon: React.FC<EnergyIconProps> = ({ technology, size, form, modification }) => {
   const { color, shape } = TechnologyTypes[technology];
   const IconComponent = form ? EnergyForms[form].icon : null;
 
   return (
     <Box position="relative" width={50} height={50} display="inline-block">
+      {modification && <ModificationBadge info={modification} />}
       <SvgIcon component="svg" viewBox="0 0 100 100" sx={{ fontSize: 60, color }}>
         {shapes[shape]}
       </SvgIcon>

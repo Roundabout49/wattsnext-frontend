@@ -3,9 +3,34 @@ import EnergyIcon from '../icons/EnergyIcon';
 import { Achievement, Achievements, ModifiableValue, Supply } from '../../types/ProgressCards';
 import PriceIcon from '../icons/PriceIcon';
 import ResourcesIcon from '../icons/ResourcesIcon';
+import { costModification, ModificationBadgeInfo } from '../../utils/valueModification';
 
 const romanNumerals = ['I', 'II', 'III', 'IV', 'V'];
 const toRoman = (n: number) => romanNumerals[n - 1] ?? String(n);
+
+/**
+ * Small original value shown next to a modified cost icon, struck through diagonally
+ * (bottom-left to top-right) to signal it was replaced.
+ */
+const OriginalValue: React.FC<{ value: number }> = ({ value }) => (
+  <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+    <Typography sx={{ fontSize: '0.85rem', lineHeight: 1, color: 'text.secondary' }}>
+      {value}
+    </Typography>
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '-20%',
+        width: '140%',
+        height: '1.5px',
+        backgroundColor: 'text.secondary',
+        transform: 'rotate(-30deg)',
+        transformOrigin: 'center',
+      }}
+    />
+  </Box>
+);
 
 interface ProgressCardTopProps {
   title: string;
@@ -15,11 +40,14 @@ interface ProgressCardTopProps {
   type: 'technology' | 'climateAction';
   // 1-indexed phase; when set, its Roman numeral is shown in the top-right corner
   phase?: number;
+  // Show the original value next to modified cost icons (only fits on the large card).
+  showOriginalValues?: boolean;
 }
 
 interface TechnologyCardTopProps extends ProgressCardTopProps {
   type: 'technology';
   supply: Extract<Supply, { type: 'energy' }>;
+  supplyModification?: ModificationBadgeInfo;
 }
 
 interface ClimateActionCardTopProps extends ProgressCardTopProps {
@@ -40,11 +68,14 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
   const imageSrc =
     card.image !== '' ? new URL(`../../assets/images/${card.image}`, import.meta.url).href : '';
 
+  const priceModification = costModification(card.price);
+  const resourcesModification = costModification(card.resources);
+
   return (
     <div style={{ width: 225, height: 150, position: 'relative', padding: 0 }}>
       <Box sx={{ position: 'absolute', top: 2, left: 2 }}>
         {card.type === 'technology' ? (
-          <EnergyIcon {...card.supply} />
+          <EnergyIcon {...card.supply} modification={card.supplyModification} />
         ) : (
           IconComponent && (
             <Box sx={{ position: 'absolute', top: 0, left: 8 }}>
@@ -58,18 +89,30 @@ const ProgressCardTop: React.FC<{ card: TechnologyCardTopProps | ClimateActionCa
           position: 'absolute',
           top: 70,
           left: 12.5,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.5,
         }}
       >
-        <PriceIcon price={card.price.modifiedValue} />
+        <PriceIcon price={card.price.modifiedValue} modification={priceModification} />
+        {card.showOriginalValues && priceModification && (
+          <OriginalValue value={card.price.originalValue} />
+        )}
       </Box>
       <Box
         sx={{
           position: 'absolute',
           top: 115,
           left: 12.5,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 0.5,
         }}
       >
-        <ResourcesIcon resources={card.resources.modifiedValue} />
+        <ResourcesIcon resources={card.resources.modifiedValue} modification={resourcesModification} />
+        {card.showOriginalValues && resourcesModification && (
+          <OriginalValue value={card.resources.originalValue} />
+        )}
       </Box>
       <CardMedia
         component="img"

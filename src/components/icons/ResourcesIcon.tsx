@@ -1,15 +1,20 @@
 import { Box } from '@mui/material';
+import ModificationBadge from '../cards/ModificationBadge';
+import { ModificationBadgeInfo } from '../../utils/valueModification';
 
 interface ResourcesIconProps {
   resources: number;
   /** Overrides the number colour, e.g. to flash green/red while counting. */
   color?: string;
+  /** When set, shows a corner badge marking that the value was modified. */
+  modification?: ModificationBadgeInfo;
 }
 
-const ResourcesIcon: React.FC<ResourcesIconProps> = ({ resources, color }) => {
+const ResourcesIcon: React.FC<ResourcesIconProps> = ({ resources, color, modification }) => {
   return (
     <Box
       sx={{
+        position: 'relative',
         width: 35,
         height: 35,
         backgroundColor: '#8a8a8a',
@@ -23,6 +28,7 @@ const ResourcesIcon: React.FC<ResourcesIconProps> = ({ resources, color }) => {
       }}
     >
       {resources}
+      {modification && <ModificationBadge info={modification} />}
     </Box>
   );
 };
