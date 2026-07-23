@@ -29,7 +29,8 @@ export interface ModifiableValue<T> {
   modifications: Modification[];
 }
 
-export type Modification = { type: 'Stack'; multiplier: number } | { type: 'Card'; name: string };
+// 'Stack' is reserved for the dormant advanced mode and not emitted by the backend yet.
+export type Modification = { type: 'Card'; name: string };
 
 export interface TechnologyCard extends IProgressCard {
   supply: ModifiableValue<Extract<Supply, { type: 'energy' }>>;

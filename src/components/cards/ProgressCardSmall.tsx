@@ -131,6 +131,9 @@ const ProgressCardSmall: React.FC<ProgressCardSmallProps> = ({ card, highlight, 
         }}
         onClose={handlePopoverClose}
         disableRestoreFocus
+        // Let the card + its grey modifications drawer define the visuals; without this the white
+        // Paper shows through the drawer's rounded bottom corners.
+        PaperProps={{ sx: { backgroundColor: 'transparent', boxShadow: 'none', overflow: 'visible' } }}
       >
         <ProgressCardLarge card={card}></ProgressCardLarge>
       </Popover>

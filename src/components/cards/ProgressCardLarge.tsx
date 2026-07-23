@@ -3,6 +3,7 @@ import { TechnologyTypes } from '../../types/TechnologyTypes';
 import ProgressCardTop from './ProgressCardTop';
 import { ProgressCard } from '../../types/ProgressCards';
 import CardPoints from './CardPoints';
+import CardModifications from './CardModifications';
 import { supplyModification } from '../../utils/valueModification';
 
 const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
@@ -16,7 +17,8 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
   );
 
   return (
-    <Card sx={{ width: 225, height: 400, position: 'relative', padding: 0 }}>
+    <Box sx={{ width: 225 }}>
+      <Card sx={{ width: 225, height: 400, position: 'relative', zIndex: 1, padding: 0 }}>
       {card.type === 'technology' ? (
         <ProgressCardTop
           card={{
@@ -98,7 +100,9 @@ const ProgressCardLarge: React.FC<{ card: ProgressCard }> = ({ card }) => {
           {card.explanation}
         </Typography>
       </CardContent>
-    </Card>
+      </Card>
+      <CardModifications card={card} />
+    </Box>
   );
 };
 
