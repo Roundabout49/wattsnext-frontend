@@ -24,6 +24,10 @@ const GameEndOverlay: React.FC = () => {
 
   if (!active) return null;
 
+  // A game lost with negative money ended because a mandatory payment (e.g. an event card)
+  // could not be covered — communicate that explicitly, it differs from missing the targets.
+  const isBankrupt = !isWon && (game?.money ?? 0) < 0;
+
   const look = isWon
     ? {
         bg: 'rgba(20, 83, 45, 0.94)',
@@ -31,12 +35,19 @@ const GameEndOverlay: React.FC = () => {
         title: 'Gewonnen!',
         text: 'Ihr habt die Energiewende geschafft!',
       }
-    : {
-        bg: 'rgba(90, 22, 22, 0.94)',
-        emoji: '😢',
-        title: 'Verloren',
-        text: 'Die Energiewende ist diesmal nicht gelungen.',
-      };
+    : isBankrupt
+      ? {
+          bg: 'rgba(90, 22, 22, 0.94)',
+          emoji: '😢',
+          title: 'Verloren',
+          text: 'Das Geld hat nicht gereicht, um eine fällige Zahlung zu leisten.',
+        }
+      : {
+          bg: 'rgba(90, 22, 22, 0.94)',
+          emoji: '😢',
+          title: 'Verloren',
+          text: 'Die Energiewende ist diesmal nicht gelungen.',
+        };
 
   return (
     <Box
@@ -64,7 +75,16 @@ const GameEndOverlay: React.FC = () => {
       <Typography variant="h6" sx={{ maxWidth: 480 }}>
         {look.text}
       </Typography>
-      <Button variant="contained" color="inherit" onClick={() => setDismissed(true)}>
+      <Button
+        variant="contained"
+        onClick={() => setDismissed(true)}
+        sx={{
+          backgroundColor: 'white',
+          color: look.bg,
+          fontWeight: 'bold',
+          '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.85)' },
+        }}
+      >
         Ergebnis ansehen
       </Button>
     </Box>
