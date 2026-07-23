@@ -1,4 +1,4 @@
-import { createElement, FC } from 'react';
+import { createElement, FC, ReactNode } from 'react';
 import {
   Achievements,
   isEnergy,
@@ -7,13 +7,46 @@ import {
   ProgressPoints,
 } from '../../types/ProgressCards';
 import { Box, Stack } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 import EnergyIcon from '../icons/EnergyIcon';
 import PointsIcon from '../icons/PointsIcon';
+
+/** Small corner marker on the system points icon (red X = blocked, green check = guaranteed). */
+const StatusBadge: FC<{ icon: ReactNode; color: string }> = ({ icon, color }) => (
+  <Box
+    sx={{
+      position: 'absolute',
+      top: -8,
+      left: -8,
+      width: 22,
+      height: 22,
+      borderRadius: '50%',
+      backgroundColor: '#fff',
+      border: `2px solid ${color}`,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 2,
+    }}
+  >
+    {icon}
+  </Box>
+);
 
 const CardPoints: FC<{ modifiablePoints: ModifiableValue<ProgressPoints> }> = ({
   modifiablePoints,
 }) => {
   const points = modifiablePoints.modifiedValue;
+
+  // A `never` requirement means the system points can never be reached, no matter the other conditions.
+  const systemPointsBlocked = points.conditions?.some((cond) => cond.type === 'never') ?? false;
+
+  // A modifier that clears all conditions (e.g. "Windiges Wetter") guarantees the system points.
+  // Detected by the base conditions being non-empty while the modified ones are empty.
+  const systemPointsGuaranteed =
+    (modifiablePoints.originalValue.conditions?.length ?? 0) > 0 &&
+    (points.conditions?.length ?? 0) === 0;
 
   return (
     <Box
@@ -89,11 +122,19 @@ const CardPoints: FC<{ modifiablePoints: ModifiableValue<ProgressPoints> }> = ({
           </svg>
         </Box>
 
-        <PointsIcon
-          points={points.systemProgressPoints}
-          leafColor="green"
-          textColor={points.conditionsFulfilled ? 'black' : 'gray'}
-        />
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+          <PointsIcon
+            points={points.systemProgressPoints}
+            leafColor="green"
+            textColor={points.conditionsFulfilled ? 'black' : 'gray'}
+          />
+          {systemPointsBlocked && (
+            <StatusBadge color="#c62828" icon={<CloseIcon sx={{ fontSize: 16, color: '#c62828' }} />} />
+          )}
+          {systemPointsGuaranteed && (
+            <StatusBadge color="#2e7d32" icon={<CheckIcon sx={{ fontSize: 16, color: '#2e7d32' }} />} />
+          )}
+        </Box>
       </Stack>
     </Box>
   );
