@@ -1,18 +1,20 @@
 import { Box, Typography, Link, Button } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import EnergyLandscape from '../components/EnergyLandscape';
 
 export default function About() {
   return (
-    <Box
-      sx={{
-        maxWidth: 900,
-        mx: 'auto',
-        mt: 6,
-        px: 2,
-        pb: 8,
-        textAlign: 'center',
-      }}
-    >
+    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box
+        sx={{
+          maxWidth: 900,
+          mx: 'auto',
+          mt: 6,
+          px: 2,
+          pb: 8,
+          textAlign: 'center',
+        }}
+      >
       <Typography variant="h3" gutterBottom>
         Über ENZo – Watts Next?
       </Typography>
@@ -37,6 +39,11 @@ export default function About() {
       >
         Zur offiziellen Watts Next? Webseite
       </Button>
+      </Box>
+
+      <Box sx={{ mt: 'auto' }}>
+        <EnergyLandscape variant="minimal" />
+      </Box>
     </Box>
   );
 }

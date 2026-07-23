@@ -38,7 +38,7 @@ const App = () => {
                         }}
                       >
                         <NavBar />
-                        <Box sx={{ flexGrow: 1 }}>
+                        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                           <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/about" element={<About />} />

@@ -13,6 +13,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useSession } from '../context/SessionContext';
 import { useGameApi } from '../context/GameApiContext';
 import { boardColors } from '../themes';
+import EnergyLandscape from '../components/EnergyLandscape';
 
 export default function Lobby() {
   const { game } = useGame();
@@ -51,13 +52,14 @@ export default function Lobby() {
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        mt: 4,
-      }}
-    >
+    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          mt: 4,
+        }}
+      >
       <Paper
         sx={{
           p: 3,
@@ -128,6 +130,11 @@ export default function Lobby() {
           </Button>
         </Box>
       </Paper>
+      </Box>
+
+      <Box sx={{ mt: 'auto' }}>
+        <EnergyLandscape variant="minimal" />
+      </Box>
     </Box>
   );
 }

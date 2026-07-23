@@ -16,6 +16,7 @@ import { CreateOrJoinGameResponse, GameMode } from '../api/MessageTypes';
 import { useGameApi } from '../context/GameApiContext';
 import { useGame } from '../context/GameContext';
 import { LabelWithInfo } from '../components/LabelWithInfo';
+import EnergyLandscape from '../components/EnergyLandscape';
 
 const JoinOrCreateGamePage: React.FC = () => {
   const [nicknameCreate, setNicknameCreate] = useState('');
@@ -67,7 +68,7 @@ const JoinOrCreateGamePage: React.FC = () => {
   };
 
   return (
-    <>
+    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
       <Snackbar
         open={showJoinError}
         autoHideDuration={4000}
@@ -195,7 +196,11 @@ const JoinOrCreateGamePage: React.FC = () => {
           </Stack>
         </Paper>
       </Box>
-    </>
+
+      <Box sx={{ mt: 'auto' }}>
+        <EnergyLandscape variant="minimal" />
+      </Box>
+    </Box>
   );
 };
 

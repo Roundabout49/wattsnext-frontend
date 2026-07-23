@@ -1,18 +1,20 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { VideoTutorial } from '../components/VideoTutorial';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import EnergyLandscape from '../components/EnergyLandscape';
 
 export default function Rules() {
   return (
-    <Box
-      sx={{
-        maxWidth: 900,
-        mx: 'auto',
-        mt: 6,
-        px: 2,
-        pb: 4,
-      }}
-    >
+    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box
+        sx={{
+          maxWidth: 900,
+          mx: 'auto',
+          mt: 6,
+          px: 2,
+          pb: 4,
+        }}
+      >
       <Typography variant="h3" gutterBottom textAlign="center">
         Spielregeln
       </Typography>
@@ -69,6 +71,11 @@ export default function Rules() {
             PDF herunterladen
           </Button>
         </Stack>
+      </Box>
+      </Box>
+
+      <Box sx={{ mt: 'auto' }}>
+        <EnergyLandscape variant="minimal" />
       </Box>
     </Box>
   );
