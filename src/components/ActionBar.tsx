@@ -17,6 +17,7 @@ import { useSession } from '../context/SessionContext';
 import { ActionHandlers, actionUIConfig } from '../ui/actionConfig';
 import { useState } from 'react';
 import { useGameApi } from '../context/GameApiContext';
+import { boardColors } from '../themes';
 
 const ActionBar = () => {
   const { game: gameState } = useGame();
@@ -201,7 +202,7 @@ const ActionBar = () => {
       <Box
         sx={{
           width: '100%',
-          backgroundColor: 'lightgrey',
+          backgroundColor: boardColors.skyLight,
           padding: 1,
           display: 'grid',
           gridTemplateColumns: 'minmax(0, max-content) 1fr max-content',

@@ -7,6 +7,7 @@ import ResourcesIcon from './icons/ResourcesIcon';
 // import EnergyIcon from './icons/EnergyIcon';
 import PointsIcon from './icons/PointsIcon';
 import PhaseObjectives from './PhaseObjective';
+import { boardColors } from '../themes';
 import StatDelta from './StatDelta';
 import { NumberTrend, useAnimatedNumber } from '../hooks/useAnimatedNumber';
 import { sumEventEffect, useEventAnimation } from '../context/EventAnimationContext';
@@ -63,7 +64,7 @@ const Status = () => {
         position: 'relative',
         width: '100%',
         height: 400, // 550 with energy matrix
-        backgroundColor: 'lightgrey',
+        backgroundColor: boardColors.skyLight,
         padding: 1,
         display: 'flex',
         flexDirection: 'column',
