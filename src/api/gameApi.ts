@@ -26,7 +26,13 @@ export async function joinGame(req: JoinGameRequest): Promise<CreateOrJoinGameRe
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),
   });
-  if (!res.ok) throw new Error('Failed to join game');
+  if (!res.ok) {
+    // Carry the status so callers can distinguish a full lobby (409) from an unknown
+    // game code and show the right message.
+    const error = new Error('Failed to join game') as Error & { status?: number };
+    error.status = res.status;
+    throw error;
+  }
   return res.json();
 }
 

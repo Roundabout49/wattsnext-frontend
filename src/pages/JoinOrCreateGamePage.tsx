@@ -24,6 +24,7 @@ const JoinOrCreateGamePage: React.FC = () => {
   const [nicknameJoin, setNicknameJoin] = useState('');
   const [shareCodeInput, setShareCodeInput] = useState('');
   const [showJoinError, setShowJoinError] = useState(false);
+  const [joinErrorMessage, setJoinErrorMessage] = useState('');
 
   const { setSession } = useSession();
   const { setGame } = useGame();
@@ -54,6 +55,12 @@ const JoinOrCreateGamePage: React.FC = () => {
       setGame(game);
     } catch (err) {
       console.error(err);
+      const status = (err as { status?: number }).status;
+      setJoinErrorMessage(
+        status === 409
+          ? 'Die Lobby ist voll. Es können maximal 6 Personen an einem Spiel teilnehmen.'
+          : 'Es existiert kein Spiel mit dieser ID.'
+      );
       setShowJoinError(true);
       setShareCodeInput('');
     }
@@ -68,7 +75,7 @@ const JoinOrCreateGamePage: React.FC = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <SnackbarContent
-          message="Es existiert kein Spiel mit dieser ID."
+          message={joinErrorMessage}
           sx={{
             backgroundColor: 'error.main',
             color: 'white',
