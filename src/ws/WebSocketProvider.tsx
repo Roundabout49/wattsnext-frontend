@@ -4,6 +4,7 @@ import { OutgoingMessage } from './MessageTypes';
 import { useGame } from '../context/GameContext';
 import { useAction } from '../context/ActionContext';
 import {
+  handleAnswerQuizResult,
   handleChangeCardResult,
   handleEarnMoneyResult,
   handlePlayClimateCardResult,
@@ -11,6 +12,7 @@ import {
   handlePlayTechnologyCardResult,
   ResultHandlerContext,
 } from './MessageHandler';
+import { useQuizAnimation } from '../context/QuizAnimationContext';
 import { useSession } from '../context/SessionContext';
 import { useNotification } from '../context/NotificationContext';
 import { API_BROKER_URL } from '../base';
@@ -36,6 +38,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     setPendingPhaseEvents,
     setPendingActionMessage,
   } = useAction();
+  const { showReveal: showQuizReveal } = useQuizAnimation();
   const { gameId, playerId } = useSession();
   const { notify } = useNotification();
 
@@ -48,6 +51,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       setPendingEvent,
       setPendingPhaseEvents,
       setPendingActionMessage,
+      showQuizReveal,
       notify,
       playerId,
     };
@@ -85,6 +89,9 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
       );
       client.subscribe(`${gameTopic}/changeCardResult`, (message: IMessage) =>
         handleChangeCardResult(JSON.parse(message.body), handlerContext)
+      );
+      client.subscribe(`${gameTopic}/answerQuizResult`, (message: IMessage) =>
+        handleAnswerQuizResult(JSON.parse(message.body), handlerContext)
       );
     };
 

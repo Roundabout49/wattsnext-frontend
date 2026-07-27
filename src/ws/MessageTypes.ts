@@ -18,6 +18,10 @@ export interface ChangeCardActionRequest {
   progressCardId: string;
 }
 
+export interface AnswerQuizActionRequest {
+  optionIndex: number;
+}
+
 export interface ActionResponse<T> {
   game: Game;
   status: ResponseStatus;
@@ -36,6 +40,7 @@ export enum ResponseStatus {
 export interface BaseInfo {
   phaseCompleted: boolean;
   gotNewStandardEventCard: boolean;
+  gotNewQuiz: boolean;
   hasGameStateChanged: boolean;
   requirementsFulfilled?: boolean;
 }
@@ -80,9 +85,18 @@ export interface ChangeCardActionInformation {
   drawnCard: ProgressCard;
 }
 
+export interface AnswerQuizActionInformation {
+  chosenIndex: number;
+  correctIndex: number;
+  wasCorrect: boolean;
+  moneyDelta: number;
+  explanation: string;
+}
+
 export type OutgoingMessage =
   | PlayTechnologyCardActionIntentRequest
   | PlayTechnologyCardActionRequest
   | PlayClimateCardActionRequest
   | ChangeCardActionRequest
+  | AnswerQuizActionRequest
   | null;

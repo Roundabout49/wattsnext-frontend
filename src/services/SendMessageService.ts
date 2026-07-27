@@ -3,6 +3,7 @@ import {
   PlayTechnologyCardActionIntentRequest,
   PlayClimateCardActionRequest,
   ChangeCardActionRequest,
+  AnswerQuizActionRequest,
 } from '../ws/MessageTypes';
 
 export interface SendMessageService {
@@ -11,4 +12,5 @@ export interface SendMessageService {
   sendPlayClimateCardAction: (data: PlayClimateCardActionRequest) => void;
   sendEarnMoneyAction: () => void;
   sendChangeCardAction: (data: ChangeCardActionRequest) => void;
+  sendAnswerQuizAction: (data: AnswerQuizActionRequest) => void;
 }

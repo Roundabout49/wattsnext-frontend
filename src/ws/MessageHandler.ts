@@ -7,10 +7,12 @@ import {
   PlayClimateCardActionInformation,
   ResponseStatus,
   ChangeCardActionInformation,
+  AnswerQuizActionInformation,
   BaseInfo,
 } from './MessageTypes';
 import { GameAction } from '../context/ActionContext';
 import { EventToShow } from '../context/EventAnimationContext';
+import { QuizReveal } from '../context/QuizAnimationContext';
 import { getCatastropheSlotDomId, getEventSlotDomId } from '../utils/cardDomId';
 import { GAME_VARIANT } from '../gameConfig';
 import { Game } from '../types/Game';
@@ -24,6 +26,7 @@ export interface ResultHandlerContext {
   setPendingEvent: (event: EventToShow) => void;
   setPendingPhaseEvents: (events: EventToShow[]) => void;
   setPendingActionMessage: (message: string) => void;
+  showQuizReveal: (reveal: QuizReveal) => void;
   notify: (message: string) => void;
   playerId: string | null;
 }
@@ -196,6 +199,26 @@ export function handleChangeCardResult(
       newGameState: result.game,
     });
   });
+}
+
+/**
+ * The quiz answer is not routed through the action reducer: it drives the QuizOverlay directly.
+ * On success the reveal (correct answer + explanation + money change) is shown; the new game state
+ * rides along and is applied by the overlay once the reveal is dismissed. On an error only the
+ * player who answered is notified.
+ */
+export function handleAnswerQuizResult(
+  result: ActionResponse<AnswerQuizActionInformation>,
+  handlerContext: ResultHandlerContext
+) {
+  if (result.status !== ResponseStatus.Ok || !result.actionInfo) {
+    if (handlerContext.playerId === result.game.currentPlayerId) {
+      handlerContext.notify(errorMessages[result.status]);
+    }
+    return;
+  }
+
+  handlerContext.showQuizReveal({ ...result.actionInfo, newGameState: result.game });
 }
 
 function handleBaseInfo(

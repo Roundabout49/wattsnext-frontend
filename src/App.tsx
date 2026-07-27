@@ -7,6 +7,7 @@ import Rules from './pages/Rules';
 import { Box } from '@mui/material';
 import { GameProvider } from './context/GameContext';
 import { EventAnimationProvider } from './context/EventAnimationContext';
+import { QuizAnimationProvider } from './context/QuizAnimationContext';
 import { ActionProvider } from './context/ActionContext';
 import { CardAnimationProvider } from './context/CardAnimationContext';
 import { SessionProvider } from './context/SessionContext';
@@ -22,6 +23,7 @@ const App = () => {
       <SessionProvider>
         <GameProvider>
           <EventAnimationProvider>
+            <QuizAnimationProvider>
             <ActionProvider>
             <GameApiProvider>
               <WebSocketProvider>
@@ -53,6 +55,7 @@ const App = () => {
               </WebSocketProvider>
             </GameApiProvider>
             </ActionProvider>
+            </QuizAnimationProvider>
           </EventAnimationProvider>
         </GameProvider>
       </SessionProvider>

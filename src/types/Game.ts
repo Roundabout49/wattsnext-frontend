@@ -21,7 +21,18 @@ export interface Game {
   phases: PhaseObjective[];
   progressCardPileSize: number;
   progressPoints: number;
+  // Set while a quiz question is awaiting the team's answer; blocks all other actions.
+  pendingQuiz: PendingQuiz | null;
   // technologySizes: TechnologyEnergyMatrix;
+}
+
+// A quiz as sent to clients. The correct answer and explanation are deliberately withheld until
+// the team has answered (they only arrive in the answer response), so they cannot be read early.
+export interface PendingQuiz {
+  id: string;
+  question: string;
+  options: string[];
+  info: string | null;
 }
 
 export enum GameState {
