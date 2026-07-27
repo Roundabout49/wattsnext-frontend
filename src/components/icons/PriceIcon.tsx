@@ -8,15 +8,17 @@ interface PriceIconProps {
   color?: string;
   /** When set, shows a corner badge marking that the value was modified. */
   modification?: ModificationBadgeInfo;
+  /** Diameter in px. Defaults to the status-bar size. */
+  size?: number;
 }
 
-const PriceIcon: React.FC<PriceIconProps> = ({ price, color, modification }) => {
+const PriceIcon: React.FC<PriceIconProps> = ({ price, color, modification, size = 35 }) => {
   return (
     <Box
       sx={{
         position: 'relative',
-        width: 35,
-        height: 35,
+        width: size,
+        height: size,
         borderRadius: '50%',
         backgroundColor: '#d4972b',
         color: color ?? 'black',
@@ -24,8 +26,9 @@ const PriceIcon: React.FC<PriceIconProps> = ({ price, color, modification }) => 
         alignItems: 'center',
         justifyContent: 'center',
         fontWeight: 'bold',
-        fontSize: '1rem',
-        border: '2px solid black',
+        fontSize: size * 0.46,
+        // Same border-to-size ratio as the other icons (2px on 35px), so the default is unchanged.
+        border: `${size * (2 / 35)}px solid black`,
       }}
     >
       {price !== undefined && price}
