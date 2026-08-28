@@ -40,10 +40,28 @@ const missingUnitsAndForms = (phase: PhaseObjective): number => {
   return missingEnergy + missingForms;
 };
 
+interface SuccessRateBreakdown {
+  achieved: number;
+  missing: number;
+  // Unclamped result, so the formula shown to players always adds up; `rate` is what's displayed
+  // as the headline percentage.
+  raw: number;
+  rate: number;
+}
+
 // Success rate per the rules: achieved progress points minus a penalty per missing energy
 // unit/form (the rulebook's own -10 felt overly harsh, so this uses -5 instead).
-const successRate = (phase: PhaseObjective): number =>
-  Math.max(0, Math.min(100, phase.progressPoints.value - 5 * missingUnitsAndForms(phase)));
+const successRateBreakdown = (phase: PhaseObjective): SuccessRateBreakdown => {
+  const achieved = phase.progressPoints.value;
+  const missing = missingUnitsAndForms(phase);
+  const raw = achieved - 5 * missing;
+  return { achieved, missing, raw, rate: Math.max(0, Math.min(100, raw)) };
+};
+
+const successRateFormula = ({ achieved, missing, raw, rate }: SuccessRateBreakdown): string => {
+  const formula = `${achieved} Fortschrittspunkte − 5 × ${missing} fehlende Energieeinheiten/-formen = ${raw}%`;
+  return raw === rate ? formula : `${formula} (auf ${rate}% begrenzt)`;
+};
 
 const lossNarrative = (rate: number): string => {
   if (rate > 80) return RATE_ABOVE_80_TEXT;
@@ -79,7 +97,7 @@ const GameEndOverlay: React.FC = () => {
   // Only a loss after playing all three phases (i.e. not a bankruptcy) gets a success rate —
   // that's the case the rulebook's formula is defined for.
   const finalPhase = game?.phases[game.phaseIndex];
-  const rate = !isWon && !isBankrupt && finalPhase ? successRate(finalPhase) : null;
+  const breakdown = !isWon && !isBankrupt && finalPhase ? successRateBreakdown(finalPhase) : null;
 
   const look = isWon
     ? {
@@ -88,6 +106,7 @@ const GameEndOverlay: React.FC = () => {
         title: 'Gewonnen!',
         text: WON_TEXT,
         rate: 100,
+        formula: null,
       }
     : isBankrupt
       ? {
@@ -96,13 +115,15 @@ const GameEndOverlay: React.FC = () => {
           title: 'Verloren',
           text: 'Das Geld hat nicht gereicht, um eine fällige Zahlung zu leisten.',
           rate: null,
+          formula: null,
         }
       : {
           bg: 'rgba(90, 22, 22, 0.94)',
           emoji: '😢',
           title: 'Verloren',
-          text: rate !== null ? lossNarrative(rate) : 'Die Energiewende ist diesmal nicht gelungen.',
-          rate,
+          text: breakdown ? lossNarrative(breakdown.rate) : 'Die Energiewende ist diesmal nicht gelungen.',
+          rate: breakdown?.rate ?? null,
+          formula: breakdown ? successRateFormula(breakdown) : null,
         };
 
   return (
@@ -131,6 +152,11 @@ const GameEndOverlay: React.FC = () => {
       {look.rate !== null && (
         <Typography variant="h4" sx={{ fontWeight: 'bold', opacity: 0.85 }}>
           Erfolgsrate: {look.rate}%
+        </Typography>
+      )}
+      {look.formula && (
+        <Typography variant="body2" sx={{ opacity: 0.7, mt: -2 }}>
+          {look.formula}
         </Typography>
       )}
       <Typography variant="h6" sx={{ maxWidth: 480 }}>
