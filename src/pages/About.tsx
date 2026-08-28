@@ -23,7 +23,7 @@ export default function About() {
         „Watts Next?“ ist ein kooperatives Brettspiel zur Energiewende. Ziel des Spiels ist es,
         gemeinsam Strategien für eine nachhaltige Energieversorgung zu entwickeln und dabei
         ökologische, wirtschaftliche und gesellschaftliche Aspekte zu berücksichtigen. Es wurde im
-        Rahmen der Graduiertenschule ENzo am Karlsruher Institut für Technologie (KIT) entwickelt.
+        Rahmen der Graduiertenschule ENZo am Karlsruher Institut für Technologie (KIT) entwickelt.
         Die digitale Version überträgt das Spiel in eine interaktive Online-Umgebung und ermöglicht
         gemeinsames Spielen direkt im Browser. Für mehr Informationen zum Spiel und Zugang zu einer
         druckbaren Version, besuche die offizielle Webseite:
