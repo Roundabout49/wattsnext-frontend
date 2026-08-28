@@ -9,7 +9,7 @@ const EffectTypeIcon: React.FC<{ type: EffectType; size?: number }> = ({ type, s
     case 'MoneyAndResources':
       return <MoneyAndResourcesIcon size={size} />;
     case 'Points':
-      return <PointsIcon leafColor="green" />;
+      return <PointsIcon leafColor="green" size={size} />;
     case 'EnergySystem':
       return <EnergySystemIcon size={size} />;
     default:
