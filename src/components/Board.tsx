@@ -1,8 +1,6 @@
-import { Box, Grid, IconButton, Stack } from '@mui/material';
+import { Box, Grid, Stack } from '@mui/material';
 import { useGame } from '../context/GameContext';
 import EmptyCardSmall from './cards/EmptyCardSmall';
-import { useState } from 'react';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useCardAnimation } from '../context/CardAnimationContext';
 import { useAction } from '../context/ActionContext';
 import { useSession } from '../context/SessionContext';
@@ -36,8 +34,6 @@ const Board: React.FC = () => {
   // While an event card is flying onto a slot, keep that slot empty so the card
   // only appears once it has landed.
   const isFlyingTo = (slotId: string) => activeEvent?.slotDomId === slotId;
-
-  const [showClimateActions, setShowClimateActions] = useState(true);
 
   const selectedCard = (() => {
     if (actionState?.type === 'playCard' && actionState.cardId) {
@@ -79,46 +75,6 @@ const Board: React.FC = () => {
       }}
     >
       <Grid container spacing={1} columns={20}>
-        {/* Climate Actions */}
-        <Grid size={20}>
-          <Stack direction="row">
-            <SectionHeader label="Klimaaktionen" color="#70AD47" width={140} />
-            <IconButton onClick={() => setShowClimateActions((prev) => !prev)} size="small">
-              <ExpandMoreIcon
-                sx={{
-                  transform: showClimateActions ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.3s',
-                }}
-              />
-            </IconButton>
-          </Stack>
-        </Grid>
-        {showClimateActions &&
-          [...Array(10)].map((_, index) => {
-            const card = climateActions[index] ?? null;
-            const isSelectable = index === selectableClimateIndex;
-            const selected = isSelectable && selectedPosition === index;
-            const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
-            const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
-
-            return (
-              <Grid size={4} key={index}>
-                <BoardCardSlot
-                  card={card}
-                  area="climate-action"
-                  index={index}
-                  registerCardRef={registerCardRef}
-                  highlight={highlight}
-                  onClick={onClick}
-                />
-              </Grid>
-            );
-          })}
-
-        <Grid size={20}>
-          <Box sx={{ height: 16 }} />
-        </Grid>
-
         {/* Technology Cards */}
         <Grid size={5}>
           <TechnologyColumn
@@ -188,6 +144,35 @@ const Board: React.FC = () => {
             </div>
           </Stack>
         </Grid>
+
+        <Grid size={20}>
+          <Box sx={{ height: 16 }} />
+        </Grid>
+
+        {/* Climate Actions */}
+        <Grid size={20}>
+          <SectionHeader label="Klimaaktionen" color="#70AD47" width={140} />
+        </Grid>
+        {[...Array(10)].map((_, index) => {
+          const card = climateActions[index] ?? null;
+          const isSelectable = index === selectableClimateIndex;
+          const selected = isSelectable && selectedPosition === index;
+          const highlight = selected ? 'selected' : isSelectable ? 'selectable' : undefined;
+          const onClick = isSelectable ? () => handleSelectPosition(index) : undefined;
+
+          return (
+            <Grid size={4} key={index}>
+              <BoardCardSlot
+                card={card}
+                area="climate-action"
+                index={index}
+                registerCardRef={registerCardRef}
+                highlight={highlight}
+                onClick={onClick}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
     </Box>
   );
