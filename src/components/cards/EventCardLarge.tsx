@@ -2,9 +2,11 @@ import React from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { EventCard } from '../../types/EventCards';
 import EffectTypeIcon from '../icons/EffectTypeIcon';
+import { eventCardTextScale } from '../../utils/eventCardTextScale';
 
 const EventCardLarge: React.FC<{ card: EventCard }> = ({ card }) => {
   const headerColor = card.isCatastrophe ? '#b30000' : '#2c9aff';
+  const { bodyFontSize, effectIconSize, rowSpacing } = eventCardTextScale(card, true);
 
   return (
     <Card
@@ -64,6 +66,7 @@ const EventCardLarge: React.FC<{ card: EventCard }> = ({ card }) => {
             sx={{
               textAlign: 'center',
               lineHeight: 1.3,
+              fontSize: bodyFontSize,
             }}
           >
             {card.eventDescription}
@@ -77,8 +80,9 @@ const EventCardLarge: React.FC<{ card: EventCard }> = ({ card }) => {
               variant="body2"
               sx={{
                 textAlign: 'left',
-                marginBottom: 1,
+                marginBottom: rowSpacing,
                 lineHeight: 1.3,
+                fontSize: bodyFontSize,
               }}
             >
               {card.effectConditionDescription}
@@ -93,13 +97,13 @@ const EventCardLarge: React.FC<{ card: EventCard }> = ({ card }) => {
                   display: 'flex',
                   alignItems: 'center',
                   gap: 1,
-                  marginBottom: 1,
+                  marginBottom: rowSpacing,
                 }}
               >
                 <Box
                   sx={{
-                    width: 34,
-                    height: 34,
+                    width: effectIconSize,
+                    height: effectIconSize,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -108,7 +112,7 @@ const EventCardLarge: React.FC<{ card: EventCard }> = ({ card }) => {
                 >
                   <EffectTypeIcon type={effect.type} />
                 </Box>
-                <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
+                <Typography variant="body2" sx={{ lineHeight: 1.3, fontSize: bodyFontSize }}>
                   {effect.text}
                 </Typography>
               </Box>

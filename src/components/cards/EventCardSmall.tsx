@@ -3,6 +3,7 @@ import { CardContent, Typography, Box, Popover } from '@mui/material';
 import EventCardLarge from './EventCardLarge';
 import { EventCard } from '../../types/EventCards';
 import CardWrapperSmall from './CardWrapperSmall';
+import { eventCardNameFontSize, eventCardTextScale } from '../../utils/eventCardTextScale';
 
 const EventCardSmall: React.FC<{ card: EventCard }> = ({ card }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -17,6 +18,7 @@ const EventCardSmall: React.FC<{ card: EventCard }> = ({ card }) => {
 
   const open = Boolean(anchorEl);
   const headerColor = card.isCatastrophe ? '#b30000' : '#2c9aff';
+  const { bodyFontSize, rowSpacing } = eventCardTextScale(card, false);
 
   return (
     <div>
@@ -62,7 +64,7 @@ const EventCardSmall: React.FC<{ card: EventCard }> = ({ card }) => {
               sx={{
                 textAlign: 'center',
                 color: '#1565c0',
-                fontSize: '1.25rem',
+                fontSize: eventCardNameFontSize(card),
               }}
             >
               {card.name}
@@ -74,8 +76,9 @@ const EventCardSmall: React.FC<{ card: EventCard }> = ({ card }) => {
                   variant="body2"
                   sx={{
                     textAlign: 'left',
-                    marginBottom: 1,
+                    marginBottom: rowSpacing,
                     lineHeight: 1.3,
+                    fontSize: bodyFontSize,
                   }}
                 >
                   {card.effectConditionDescription}
@@ -90,10 +93,13 @@ const EventCardSmall: React.FC<{ card: EventCard }> = ({ card }) => {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
-                      marginBottom: 1,
+                      marginBottom: rowSpacing,
                     }}
                   >
-                    <Typography variant="body2" sx={{ lineHeight: 1.3, fontStyle: 'italic' }}>
+                    <Typography
+                      variant="body2"
+                      sx={{ lineHeight: 1.3, fontStyle: 'italic', fontSize: bodyFontSize }}
+                    >
                       {effect.text}
                     </Typography>
                   </Box>
