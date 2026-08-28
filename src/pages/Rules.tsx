@@ -72,6 +72,34 @@ export default function Rules() {
             </Button>
           </Stack>
         </Box>
+
+        {/* ONLINE-SPECIFIC NOTES */}
+        <Box sx={{ mt: 8 }}>
+          <Typography variant="h4" gutterBottom textAlign="center">
+            Besonderheiten der Onlineversion
+          </Typography>
+
+          <Typography variant="body1" textAlign="center" sx={{ mb: 2 }}>
+            Ein paar Dinge laufen in der Online-Version anders als am physischen Spieltisch:
+          </Typography>
+
+          <Box component="ul" sx={{ pl: 3, m: 0 }}>
+            <Typography component="li" variant="body1" sx={{ mb: 1.5 }}>
+              Es wird nur die <strong>Standardvariante</strong> des Spiels angeboten.
+            </Typography>
+            <Typography component="li" variant="body1" sx={{ mb: 1.5 }}>
+              Ereigniskarten werden automatisch gezogen: die erste immer zu Beginn einer Phase, die
+              zweite zu einem zufälligen Zeitpunkt im Verlauf der Phase. Zusätzlich gibt es pro
+              Phase zwei Quizfragen zu für euch unbekannten Zeitpunkten (eine richtige Antwort
+              bringt 1 Geld, eine falsche kostet 1 Geld) – haltet also immer etwas Geld in Reserve.
+            </Typography>
+            <Typography component="li" variant="body1">
+              Bedienung: Oben in der Aktionsleiste wählt ihr zuerst aus, welche Aktion ihr ausführen
+              wollt, und klickt anschließend auf die betreffenden Karten bzw. Felder. Es gibt kein
+              Drag &amp; Drop.
+            </Typography>
+          </Box>
+        </Box>
       </Box>
 
       <Box sx={{ mt: 'auto' }}>
