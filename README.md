@@ -3,6 +3,8 @@
 This is the React frontend of the online multiplayer implementation of the board game Watts Next.
 The backend can be found [here](https://github.com/niklaskerkhoff/wattsnextbackend).
 
+See `DEPLOYMENT.md` for how the app is deployed to the production server.
+
 ## What is Watts Next?
 
 Watts Next is a cooperative board game on the energy transition.
@@ -27,6 +29,8 @@ The source folder contains the following subfolders:
 | `ui/`         | Config file for rendering different actions                               |
 | `utils/`      | Unique ids for cards and card spaces                                      |
 | `ws/`         | Files concerning the websocket connection                                 |
+
+A few notable files live directly in `src/`: `base.ts` (backend URLs), `gameConfig.ts` (the `GameVariant` flag for the dormant advanced mode), `themes.ts` (the MUI theme) and `animationTimings.ts` (durations for card/die/event animations).
 
 ## Communication
 
@@ -60,17 +64,10 @@ Locally, the frontend can be started with the command `npm run dev` in the root 
 It is also necessary to run the backend for the frontend to work.
 To test the multiplayer modus locally, use an incognito window or a second browser.
 
+`.env.development` points the app at a backend on `localhost:8080` during local development. A production build has no env values set, so it falls back to its own origin and expects a reverse proxy to forward `/api` and `/ws` to the backend (see `DEPLOYMENT.md`).
+
 ## Open Issues
 
-- Display an evaluation at the end of the game, for example using the formula in the instructions to calculate the success rate.
-- Visualize the introduction of new event and catastrophe cards. This is indicated in the `baseInfo`.
-- Apply card effects with animations (climate cards and event cards).
-- Add icons to the effects of event cards according to the effect type.
-- Fully remove recycling from the game logic as this is not part of the standard game.
-- Display modifications and their reason more clearly / at all:
-  - Display the `Never` condition, for example with a red cross.
-  - Find a way to display the applied modifications, for example on hover (however, this is not yet fully implemented in the backend).
-- Display the phase they are introduced in on cards (the separation by phases is however also not yet implemented in the backend).
-- Add game instructions and specific features of the online version to the `Rules` page
+- Recycling, stacking and other advanced-mode mechanics exist in the backend and have a matching `GameVariant` flag in `gameConfig.ts`, but are dormant and not wired up to any UI. Add a mode switch once an advanced/expert mode is offered to players.
+- When a modifier fully clears a card's system-point conditions (for example the event card "Windiges Wetter"), `CardPoints.tsx` hides the conditions entirely instead of showing what would still be required without the event. Show the base conditions in that case too.
 - Add a game history logging every action.
-- Integrate the expert mode as soon as the backend offers it.
