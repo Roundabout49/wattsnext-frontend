@@ -10,6 +10,10 @@ See `DEPLOYMENT.md` for how the app is deployed to the production server.
 Watts Next is a cooperative board game on the energy transition.
 Visit the [website](https://www.enzo.kit.edu/wattsnext) for more information.
 
+## Prerequisites
+
+Node.js 20.19+ or 22.12+ (required by Vite 7).
+
 ## Structure
 
 The source folder contains the following subfolders:
