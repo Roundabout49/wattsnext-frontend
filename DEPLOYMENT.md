@@ -78,6 +78,8 @@ Each maintainer needs their own SSH access — access is per-key, not shared.
 
 ## 3. Frontend deployment
 
+> **For a one-command deploy, run `scripts/deploy.sh`** (from the repo root, inside the KIT VPN). It performs the steps below and verifies the deployed bundle matches the local build. The manual steps are kept here as reference and for troubleshooting.
+
 > **Before every upload, clear the remote staging directory (step 2 below).** If `~/wattsnext/frontend` already exists on the server, `scp -r` nests the `dist` folder _inside_ it instead of replacing its contents, and the subsequent copy step silently deploys nothing new. This has caused a stale-frontend incident before (2026-07-29) — the symptom was a frontend/backend state mismatch (backend expecting a client action the UI didn't support yet).
 
 1. **Build locally:**
